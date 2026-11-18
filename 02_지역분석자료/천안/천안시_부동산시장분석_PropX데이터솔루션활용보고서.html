@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>충청남도 천안시 부동산 시장 분석 보고서 | PropX & K-Atlas</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Pretendard Font -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Pretendard', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            navy: {
+              50: '#f0f4f8',
+              100: '#d9e2ec',
+              500: '#334e68',
+              700: '#102a43',
+              800: '#0b1d30',
+              900: '#061320',
+            },
+            point: {
+              red: '#ef4444',
+              emerald: '#10b981',
+              amber: '#f59e0b',
+              blue: '#2563eb',
+              indigo: '#4f46e5',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Pretendard', sans-serif;
+      scroll-behavior: smooth;
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+    @media print {
+      .no-print { display: none !important; }
+      body { background-color: #ffffff; }
+      .page-break { page-break-before: always; }
+      .shadow-sm, .shadow-md, .shadow-lg { box-shadow: none !important; border: 1px solid #e2e8f0; }
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- 상단 네비게이션 헤더 (로고 자동 삽입 금지 준수 / 요약 복사 버튼 필수 탑재) -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-chart-line text-blue-600 text-xl"></i>
+          <span class="font-black text-slate-900 tracking-tight text-lg">천안시 부동산 시장분석</span>
+          <span class="text-xs text-blue-700 font-semibold px-2.5 py-0.5 bg-blue-50 border border-blue-200 rounded-full">PropX & K-Atlas</span>
+        </div>
+      </div>
+      <nav class="hidden md:flex space-x-6 text-sm font-medium text-slate-600">
+        <a href="#summary" class="hover:text-blue-600 transition">핵심 요약</a>
+        <a href="#unsold" class="hover:text-blue-600 transition">미분양·청약</a>
+        <a href="#demographics" class="hover:text-blue-600 transition">인문·소득</a>
+        <a href="#migration" class="hover:text-blue-600 transition">이주·통근</a>
+        <a href="#supply" class="hover:text-blue-600 transition">공급·입주</a>
+        <a href="#development" class="hover:text-blue-600 transition">개발·미래전략</a>
+      </nav>
+      <div class="flex items-center space-x-2">
+        <!-- 규칙 7: 📋 요약 복사 기능 필수 탑재 -->
+        <button onclick="copySummaryReport()" class="no-print inline-flex items-center space-x-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow-sm transition-colors cursor-pointer">
+          <i class="fa-solid fa-clipboard"></i>
+          <span>📋 요약 복사</span>
+        </button>
+        <button onclick="window.print()" class="no-print inline-flex items-center space-x-1 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition-colors">
+          <i class="fa-solid fa-print"></i>
+          <span>인쇄</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+
+    <!-- 히어로 섹션 -->
+    <section class="bg-gradient-to-br from-slate-900 via-navy-700 to-slate-900 rounded-2xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
+      <div class="absolute -right-10 -bottom-10 opacity-10 text-9xl">
+        <i class="fa-solid fa-city"></i>
+      </div>
+      <div class="relative z-10 max-w-4xl space-y-4">
+        <div class="inline-flex items-center space-x-2 px-3 py-1 bg-blue-500/30 border border-blue-400/40 rounded-full text-xs font-medium text-blue-200">
+          <i class="fa-solid fa-calendar-check"></i>
+          <span>기준 시점: 2026년 11월 (K-Atlas 2026.08 / PropX 실데이터)</span>
+        </div>
+        <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
+          충청남도 천안시 부동산 시장 심층 분석 보고서
+        </h1>
+        <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+          HDC랩스·부동산R114 PropX 원천 DB와 KCB K-Atlas 2.0 금융·GIS 통계 및 천안 도시개발 미래전략 보고서를 기반으로, 미분양 5,100세대 돌파와 청약 양극화, 2026년 입주 가뭄과 2029년 입주 폭탄, '아산 생산-천안 소비' 직주근접 및 AI 데이터센터(AIDC) '전세권' 모멘텀을 입체 진단합니다.
+        </p>
+      </div>
+    </section>
+
+    <!-- 핵심 KPI 통계 카드 -->
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between text-slate-500 text-xs font-medium mb-2">
+          <span>미분양 세대수 (2026.07)</span>
+          <span class="p-1.5 bg-rose-50 text-rose-600 rounded-md"><i class="fa-solid fa-triangle-exclamation"></i></span>
+        </div>
+        <div class="text-2xl font-black text-rose-600 tracking-tight">5,100<span class="text-sm font-semibold ml-1 text-slate-700">세대</span></div>
+        <div class="text-xs text-rose-500 mt-1 flex items-center font-medium">
+          <i class="fa-solid fa-arrow-trend-up mr-1"></i> 전년 저점(1,032세대) 대비 5배 급증
+        </div>
+      </div>
+
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between text-slate-500 text-xs font-medium mb-2">
+          <span>2026년 입주 vs 2029년 입주</span>
+          <span class="p-1.5 bg-amber-50 text-amber-600 rounded-md"><i class="fa-solid fa-truck-ramp-box"></i></span>
+        </div>
+        <div class="text-2xl font-black text-amber-600 tracking-tight">689 <span class="text-sm font-medium text-slate-400">➔</span> 12,598<span class="text-xs font-semibold ml-1 text-slate-700">세대</span></div>
+        <div class="text-xs text-amber-600 mt-1 font-medium">
+          26년 서북구 '0' ➔ 29년 역대최대 입주
+        </div>
+      </div>
+
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between text-slate-500 text-xs font-medium mb-2">
+          <span>불당2동 가구 연소득 (K-Atlas)</span>
+          <span class="p-1.5 bg-blue-50 text-blue-600 rounded-md"><i class="fa-solid fa-sack-dollar"></i></span>
+        </div>
+        <div class="text-2xl font-black text-blue-700 tracking-tight">6,684<span class="text-sm font-semibold ml-1 text-slate-700">만원</span></div>
+        <div class="text-xs text-blue-600 mt-1 font-medium">
+          천안 1위 부촌 (주담대 2.07억 / 소비 324만)
+        </div>
+      </div>
+
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between text-slate-500 text-xs font-medium mb-2">
+          <span>아산 탕정 연계 통근 (K-Atlas)</span>
+          <span class="p-1.5 bg-emerald-50 text-emerald-600 rounded-md"><i class="fa-solid fa-briefcase"></i></span>
+        </div>
+        <div class="text-2xl font-black text-emerald-600 tracking-tight">22.65<span class="text-sm font-semibold ml-1 text-slate-700">%</span></div>
+        <div class="text-xs text-emerald-600 mt-1 font-medium">
+          탕정 통근자 연소득 7,407만원 (삼성 복지)
+        </div>
+      </div>
+    </section>
+
+    <!-- Executive Summary Section -->
+    <section id="summary" class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-6 bg-blue-600 rounded-full"></span>
+          <h2 class="text-xl font-bold text-slate-900 tracking-tight">Executive Summary (핵심 전략 요약)</h2>
+        </div>
+        <span class="text-xs font-medium text-slate-400">종합 진단 요약</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200/80 space-y-2">
+          <div class="flex items-center space-x-2 text-rose-600 font-bold text-sm">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>미분양 5,100세대 돌파 및 극단적 청약 디커플링</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            2025.10 기준 1,032세대로 소진되던 미분양이 2026년 대규모 분양 러시(11,880세대)로 인해 <strong>2026.07 기준 5,100세대로 폭증</strong>함. 호수공원 수변 프리미엄을 갖춘 <strong>엘리프성성(1순위 26.27:1)</strong>, <strong>천안아이파크 5·6단지(8.8~10.5:1)</strong>는 조기 완판된 반면, 동남구 삼룡·청당 및 서북구 직산·부대·성정 대단지는 <strong>1순위 경쟁률 0.03~0.28:1로 대거 미달</strong>되며 양극화가 극대화됨.
+          </p>
+        </div>
+
+        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200/80 space-y-2">
+          <div class="flex items-center space-x-2 text-amber-600 font-bold text-sm">
+            <i class="fa-solid fa-arrows-spin"></i>
+            <span>공급 사이클 급변: 2026년 입주 가뭄 ➔ 2029년 입주 폭탄</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            2024년 8,966세대, 2025년 6,100세대 입주에 이어 <strong>2026년에는 단 689세대(서북구 0세대)</strong>에 불과해 일시적 전세 품귀 및 반등 압력이 형성됨. 그러나 2027년 5,405세대, 2028년 4,089세대를 거쳐 <strong>2029년에는 무려 12,598세대(서북구에만 10,345세대)</strong>의 역대급 입주 폭탄이 도래하여 역전세 및 잔금 리스크 관리가 시급함.
+          </p>
+        </div>
+
+        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200/80 space-y-2">
+          <div class="flex items-center space-x-2 text-blue-600 font-bold text-sm">
+            <i class="fa-solid fa-users"></i>
+            <span>인문·소득 기반: '아산 생산 ➔ 천안 소비'와 불당2동 중심 체력</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            인구 66.4만명, 31.8만세대로 지속 성장. 천안 최고 부촌인 <strong>불당2동(연소득 6,684만원, 소비 324만원, 주담대 2.07억)</strong>과 백석·부성2동이 탄탄한 중산층을 형성. 관외 통근의 22.65%가 아산시(탕정면 연소득 7,407만원)로 향하며, 삼성 임직원의 <strong>연 1.5% 저리 주거대출 복지(최대 5억원)</strong>가 천안 고가 주택의 탄탄한 하방 안전판 역할을 수행함.
+          </p>
+        </div>
+
+        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200/80 space-y-2">
+          <div class="flex items-center space-x-2 text-emerald-600 font-bold text-sm">
+            <i class="fa-solid fa-bolt"></i>
+            <span>미래 모멘텀: AI 데이터센터 '전세권', 과성교, 부성역, 원도심</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            직산 둔포변전소(80MW) 기반 <strong>1.2조원 AI 데이터센터(AIDC) 유치로 '전세권(電勢權)' 입지 우위</strong> 확보. 2027년 하반기 <strong>과성교 개통</strong>으로 아산 탕정에서 신불당 학원가가 3분 거리로 단축되어 통합 생활권 구축. 2029년 1호선 부성역 개통, 천안역 KTX 정차 추진 및 원도심 1군 브랜드타운 재개발, 목천 용연저수지(497억) 동부권 힐링 관광벨트 추진.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 제1장: 미분양 현황 및 청약 시장 진단 -->
+    <section id="unsold" class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-6 bg-rose-600 rounded-full"></span>
+          <h2 class="text-xl font-bold text-slate-900 tracking-tight">1. 미분양 현황 및 청약 시장 양극화 분석</h2>
+        </div>
+        <span class="text-xs font-semibold px-2.5 py-1 bg-rose-50 text-rose-700 border border-rose-200 rounded-md">위험 지표 정밀 진단</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+        <!-- 차트: 미분양 추이 -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-slate-800">천안시 월별 미분양 추이 (2024.07 ~ 2026.07)</h3>
+            <span class="text-xs text-slate-500">단위: 세대</span>
+          </div>
+          <div class="h-64">
+            <canvas id="unsoldChart"></canvas>
+          </div>
+          <div class="text-xs text-slate-500 text-center mt-2">출처: HDC랩스·부동산R114 PropX 미분양추이</div>
+        </div>
+
+        <!-- 차트: 주요 단지 청약경쟁률 비교 -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-slate-800">2025~2026 주요 분양 단지 1순위 청약경쟁률</h3>
+            <span class="text-xs text-slate-500">경쟁률 (N : 1)</span>
+          </div>
+          <div class="h-64">
+            <canvas id="subscriptionChart"></canvas>
+          </div>
+          <div class="text-xs text-slate-500 text-center mt-2">출처: PropX 청약경쟁률 (단지별 실데이터)</div>
+        </div>
+      </div>
+
+      <!-- 청약 단지 전수 테이블 -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-slate-900 flex items-center space-x-1.5">
+          <i class="fa-solid fa-list-check text-blue-600"></i>
+          <span>최근 천안시 주요 분양단지 청약 성패 전수 대조표</span>
+        </h3>
+        <div class="overflow-x-auto border border-slate-200 rounded-xl custom-scrollbar">
+          <table class="w-full text-xs text-left border-collapse">
+            <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+              <tr>
+                <th class="p-3">단지명</th>
+                <th class="p-3">위치 (구/동)</th>
+                <th class="p-3 text-center">분양일</th>
+                <th class="p-3 text-center">입주예정</th>
+                <th class="p-3 text-right">총세대수</th>
+                <th class="p-3 text-right">일반공급</th>
+                <th class="p-3 text-right">1순위 청약자</th>
+                <th class="p-3 text-right">1순위 경쟁률</th>
+                <th class="p-3 text-center">결과 평가</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 text-slate-600">
+              <tr class="bg-blue-50/50 font-semibold">
+                <td class="p-3 text-blue-900 font-bold">엘리프성성호수공원(1BL)</td>
+                <td class="p-3">서북구 업성동</td>
+                <td class="p-3 text-center">2026.05</td>
+                <td class="p-3 text-center">2029.03</td>
+                <td class="p-3 text-right">546</td>
+                <td class="p-3 text-right">379</td>
+                <td class="p-3 text-right text-blue-700 font-bold">9,956</td>
+                <td class="p-3 text-right text-blue-700 font-extrabold">26.27 : 1</td>
+                <td class="p-3 text-center"><span class="px-2 py-0.5 bg-blue-100 text-blue-800 rounded font-bold">초대박 흥행</span></td>
+              </tr>
+              <tr class="bg-blue-50/30">
+                <td class="p-3 text-blue-900 font-bold">천안아이파크시티(6단지)</td>
+                <td class="p-3">서북구 성성동</td>
+                <td class="p-3 text-center">2026.03</td>
+                <td class="p-3 text-center">2029.01</td>
+                <td class="p-3 text-right">1,066</td>
+                <td class="p-3 text-right">766</td>
+                <td class="p-3 text-right text-blue-700 font-bold">8,077</td>
+                <td class="p-3 text-right text-blue-700 font-bold">10.54 : 1</td>
+                <td class="p-3 text-center"><span class="px-2 py-0.5 bg-blue-100 text-blue-800 rounded font-bold">1순위 마감</span></td>
+              </tr>
+              <tr class="bg-blue-50/30">
+                <td class="p-3 text-blue-900 font-bold">천안아이파크시티(5단지)</td>
+                <td class="p-3">서북구 성성동</td>
+                <td class="p-3 text-center">2026.03</td>
+                <td class="p-3 text-center">2029.01</td>
+                <td class="p-3 text-right">882</td>
+                <td class="p-3 text-right">662</td>
+                <td class="p-3 text-right text-blue-700 font-bold">5,848</td>
+                <td class="p-3 text-right text-blue-700 font-bold">8.83 : 1</td>
+                <td class="p-3 text-center"><span class="px-2 py-0.5 bg-blue-100 text-blue-800 rounded font-bold">1순위 마감</span></td>
+              </tr>
+              <tr>
+                <td class="p-3 font-medium">엘리프성성호수공원(2BL)</td>
+                <td class="p-3">서북구 업성동</td>
+                <td class="p-3 text-center">2026.05</td>
+                <td class="p-3 text-center">2029.03</td>
+                <td class="p-3 text-right">619</td>
+                <td class="p-3 text-right">510</td>
+                <td class="p-3 text-right">2,368</td>
+                <td class="p-3 text-right font-bold text-emerald-600">4.64 : 1</td>
+                <td class="p-3 text-center"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded">완판 성공</span></td>
+              </tr>
+              <tr>
+                <td class="p-3 font-medium">백석시그니처자이(2단지)</td>
+                <td class="p-3">서북구 백석동</td>
+                <td class="p-3 text-center">2026.06</td>
+                <td class="p-3 text-center">2029.09</td>
+                <td class="p-3 text-right">320</td>
+                <td class="p-3 text-right">304</td>
+                <td class="p-3 text-right">356</td>
+                <td class="p-3 text-right">1.17 : 1</td>
+                <td class="p-3 text-center"><span class="px-2 py-0.5 bg-slate-100 text-slate-700 rounded">1순위 마감</span></td>
+              </tr>
+              <tr>
+                <td class="p-3 font-medium">백석시그니처자이(1단지)</td>
+                <td class="p-3">서북구 백석동</td>
+                <td class="p-3 text-center">2026.06</td>
+                <td class="p-3 text-center">2029.09</td>
+                <td class="p-3 text-right">854</td>
+                <td class="p-3 text-right">792</td>
+                <td class="p-3 text-right">828</td>
+                <td class="p-3 text-right">1.05 : 1</td>
+                <td class="p-3 text-center"><span class="px-2 py-0.5 bg-slate-100 text-slate-700 rounded">1순위 마감</span></td>
+              </tr>
+              <tr class="bg-rose-50/30">
+                <td class="p-3 text-slate-900 font-medium">두산위브더제니스센트럴천안</td>
+                <td class="p-3">동남구 청당동</td>
+                <td class="p-3 text-center">2025.12</td>
+                <td class="p-3 text-center">2029.01</td>
+                <td class="p-3 text-right">1,202</td>
+                <td class="p-3 text-right">1,160</td>
+                <td class="p-3 text-right text-rose-600 font-bold">323</td>
+                <td class="p-3 text-right text-rose-600 font-bold">0.28 : 1</td>
+                <td class="p-3 text-center"><span class="px-2 py-0.5 bg-rose-100 text-rose-800 rounded font-semibold">대거 미달</span></td>
+              </tr>
+              <tr class="bg-rose-50/30">
+                <td class="p-3 text-slate-900 font-medium">천안아이파크시티(3단지)</td>
+                <td class="p-3">서북구 부대동</td>
+                <td class="p-3 text-center">2026.09</td>
+                <td class="p-3 text-center">2029.06</td>
+                <td class="p-3 text-right">896</td>
+                <td class="p-3 text-right">838</td>
+                <td class="p-3 text-right text-rose-600 font-bold">193</td>
+                <td class="p-3 text-right text-rose-600 font-bold">0.23 : 1</td>
+                <td class="p-3 text-center"><span class="px-2 py-0.5 bg-rose-100 text-rose-800 rounded font-semibold">미달</span></td>
+              </tr>
+              <tr class="bg-rose-50/30">
+                <td class="p-3 text-slate-900 font-medium">천안아이파크시티(4단지)</td>
+                <td class="p-3">서북구 부대동</td>
+                <td class="p-3 text-center">2026.09</td>
+                <td class="p-3 text-center">2029.06</td>
+                <td class="p-3 text-right">818</td>
+                <td class="p-3 text-right">771</td>
+                <td class="p-3 text-right text-rose-600 font-bold">128</td>
+                <td class="p-3 text-right text-rose-600 font-bold">0.17 : 1</td>
+                <td class="p-3 text-center"><span class="px-2 py-0.5 bg-rose-100 text-rose-800 rounded font-semibold">미달</span></td>
+              </tr>
+              <tr class="bg-rose-50/50">
+                <td class="p-3 text-slate-900 font-medium">두정역푸르지오그랑피크</td>
+                <td class="p-3">서북구 성정동</td>
+                <td class="p-3 text-center">2026.09</td>
+                <td class="p-3 text-center">2030.01</td>
+                <td class="p-3 text-right">1,438</td>
+                <td class="p-3 text-right">1,382</td>
+                <td class="p-3 text-right text-rose-600 font-bold">182</td>
+                <td class="p-3 text-right text-rose-600 font-bold">0.13 : 1</td>
+                <td class="p-3 text-center"><span class="px-2 py-0.5 bg-rose-100 text-rose-800 rounded font-semibold">대량 적체</span></td>
+              </tr>
+              <tr class="bg-rose-50/70">
+                <td class="p-3 text-slate-900 font-bold">천안동일하이빌파크레인</td>
+                <td class="p-3">서북구 직산읍</td>
+                <td class="p-3 text-center">2026.04</td>
+                <td class="p-3 text-center">2029.01</td>
+                <td class="p-3 text-right">895</td>
+                <td class="p-3 text-right">888</td>
+                <td class="p-3 text-right text-rose-600 font-bold">29</td>
+                <td class="p-3 text-right text-rose-600 font-extrabold">0.03 : 1</td>
+                <td class="p-3 text-center"><span class="px-2 py-0.5 bg-rose-200 text-rose-900 rounded font-bold">참패 (미분양)</span></td>
+              </tr>
+              <tr class="bg-rose-50/70">
+                <td class="p-3 text-slate-900 font-bold">천안동문디이스트파크시티</td>
+                <td class="p-3">동남구 삼룡동</td>
+                <td class="p-3 text-center">2026.05</td>
+                <td class="p-3 text-center">2029.03</td>
+                <td class="p-3 text-right">1,051</td>
+                <td class="p-3 text-right">498</td>
+                <td class="p-3 text-right text-rose-600 font-bold">13</td>
+                <td class="p-3 text-right text-rose-600 font-extrabold">0.03 : 1</td>
+                <td class="p-3 text-center"><span class="px-2 py-0.5 bg-rose-200 text-rose-900 rounded font-bold">참패 (미분양)</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 제2장: 인문 현황 및 정주·소득 여건 분석 -->
+    <section id="demographics" class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-6 bg-blue-600 rounded-full"></span>
+          <h2 class="text-xl font-bold text-slate-900 tracking-tight">2. 인문 현황 및 읍면동별 금융·소득 체력 분석</h2>
+        </div>
+        <span class="text-xs font-semibold px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-md">행안부 & K-Atlas 빅데이터</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+        <!-- 인구 및 세대수 추이 차트 -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-slate-800">천안시 총인구 및 세대수 추이 (2008 ~ 2025)</h3>
+            <span class="text-xs text-slate-500">단위: 명 / 세대</span>
+          </div>
+          <div class="h-64">
+            <canvas id="populationChart"></canvas>
+          </div>
+          <div class="text-xs text-slate-500 text-center mt-2">출처: 행정안전부 주민등록 인구통계 (PropX 추출)</div>
+        </div>
+
+        <!-- 읍면동 금융 수준 비교 차트 -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-slate-800">천안 주요 읍면동 가구 연소득 vs 월소비 (K-Atlas)</h3>
+            <span class="text-xs text-slate-500">단위: 만원</span>
+          </div>
+          <div class="h-64">
+            <canvas id="incomeConsumptionChart"></canvas>
+          </div>
+          <div class="text-xs text-slate-500 text-center mt-2">출처: KCB K-Atlas 2.0 타겟지역분석 (2026.08.31 기준)</div>
+        </div>
+      </div>
+
+      <!-- 읍면동 금융 테이블 -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-slate-900 flex items-center space-x-1.5">
+          <i class="fa-solid fa-coins text-amber-500"></i>
+          <span>천안시 주요 읍면동별 가구 금융 체력 지표 대조</span>
+        </h3>
+        <div class="overflow-x-auto border border-slate-200 rounded-xl custom-scrollbar">
+          <table class="w-full text-xs text-left border-collapse">
+            <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+              <tr>
+                <th class="p-3">행정동</th>
+                <th class="p-3 text-center">자치구</th>
+                <th class="p-3 text-right">가구당 연소득 (만원)</th>
+                <th class="p-3 text-right">월카드소비 (만원)</th>
+                <th class="p-3 text-right">주택담보대출잔액 (만원)</th>
+                <th class="p-3">금융 체력 및 주거 특성 평가</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 text-slate-600">
+              <tr class="bg-blue-50/50">
+                <td class="p-3 font-bold text-blue-900">불당2동</td>
+                <td class="p-3 text-center">서북구</td>
+                <td class="p-3 text-right font-extrabold text-blue-700">6,684</td>
+                <td class="p-3 text-right font-bold text-blue-700">324</td>
+                <td class="p-3 text-right font-bold text-slate-800">20,683</td>
+                <td class="p-3 font-medium text-blue-900">천안 1급지 최상위 부촌, 전문직·대기업·사업가 집중</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-bold text-slate-800">불당1동</td>
+                <td class="p-3 text-center">서북구</td>
+                <td class="p-3 text-right font-bold text-blue-600">6,054</td>
+                <td class="p-3 text-right">262</td>
+                <td class="p-3 text-right">16,679</td>
+                <td class="p-3">구불당 명문 학군지 및 안정적 고소득 실수요층</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold">백석동</td>
+                <td class="p-3 text-center">서북구</td>
+                <td class="p-3 text-right font-bold text-slate-700">5,400</td>
+                <td class="p-3 text-right">225</td>
+                <td class="p-3 text-right">15,127</td>
+                <td class="p-3">삼성산단 인접 직주근접, 탄탄한 3040 중산층</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold">부성2동</td>
+                <td class="p-3 text-center">서북구</td>
+                <td class="p-3 text-right font-bold text-slate-700">5,258</td>
+                <td class="p-3 text-right">222</td>
+                <td class="p-3 text-right">16,709</td>
+                <td class="p-3">성성·두정 연계 신흥 주거지, 젊은 고소득 근로자</td>
+              </tr>
+              <tr>
+                <td class="p-3">부성1동</td>
+                <td class="p-3 text-center">서북구</td>
+                <td class="p-3 text-right">4,720</td>
+                <td class="p-3 text-right">199</td>
+                <td class="p-3 text-right">15,791</td>
+                <td class="p-3">부성역 예정지 배후, 신규 아파트 공급지</td>
+              </tr>
+              <tr>
+                <td class="p-3">청룡동</td>
+                <td class="p-3 text-center">동남구</td>
+                <td class="p-3 text-right">4,667</td>
+                <td class="p-3 text-right">203</td>
+                <td class="p-3 text-right">13,740</td>
+                <td class="p-3">청수행정타운 배후, 법조·공무원 거주지</td>
+              </tr>
+              <tr>
+                <td class="p-3">쌍용2동</td>
+                <td class="p-3 text-center">서북구</td>
+                <td class="p-3 text-right">4,555</td>
+                <td class="p-3 text-right">175</td>
+                <td class="p-3 text-right">10,423</td>
+                <td class="p-3">전통 택지 주거지, 학군 형성 중위 가구</td>
+              </tr>
+              <tr>
+                <td class="p-3">신방동</td>
+                <td class="p-3 text-center">동남구</td>
+                <td class="p-3 text-right">4,514</td>
+                <td class="p-3 text-right">194</td>
+                <td class="p-3 text-right">11,159</td>
+                <td class="p-3">동남구 최대 주거지, 남부권 베드타운</td>
+              </tr>
+              <tr>
+                <td class="p-3">직산읍</td>
+                <td class="p-3 text-center">서북구</td>
+                <td class="p-3 text-right">4,116</td>
+                <td class="p-3 text-right">134</td>
+                <td class="p-3 text-right">9,754</td>
+                <td class="p-3">외곽 공단 밀집지, 소득 및 대출 여력 보통</td>
+              </tr>
+              <tr>
+                <td class="p-3">성정2동</td>
+                <td class="p-3 text-center">서북구</td>
+                <td class="p-3 text-right">3,941</td>
+                <td class="p-3 text-right">146</td>
+                <td class="p-3 text-right">11,252</td>
+                <td class="p-3">1인 가구 및 청년층 밀집지, 소비 여력 제한적</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 제3장: 이주 및 통근 분석 (K-Atlas) -->
+    <section id="migration" class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-6 bg-emerald-600 rounded-full"></span>
+          <h2 class="text-xl font-bold text-slate-900 tracking-tight">3. 이주 및 통근 분석 ('아산 생산 - 천안 소비' 메커니즘)</h2>
+        </div>
+        <span class="text-xs font-semibold px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md">KCB 통신·카드 빅데이터</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+        <!-- 통근 시군구 분포 도넛 차트 -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-slate-800">천안 직장인의 시군구별 통근 목적지 분포</h3>
+            <span class="text-xs text-slate-500">비중 (%)</span>
+          </div>
+          <div class="h-64">
+            <canvas id="commuteChart"></canvas>
+          </div>
+          <div class="text-xs text-slate-500 text-center mt-2">출처: K-Atlas 2.0 통근분석 (주거지 기준 2026.08)</div>
+        </div>
+
+        <!-- 전입 시군구 분포 도넛 차트 -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-slate-800">천안시 최근 6개월 전입 지역(시군구) 분포</h3>
+            <span class="text-xs text-slate-500">비중 (%)</span>
+          </div>
+          <div class="h-64">
+            <canvas id="migrationChart"></canvas>
+          </div>
+          <div class="text-xs text-slate-500 text-center mt-2">출처: K-Atlas 2.0 이주분석 (전입 기준 2026.08)</div>
+        </div>
+      </div>
+
+      <!-- 직주근접 및 삼성 복지 연계 카드 -->
+      <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-5 space-y-3">
+        <div class="flex items-center space-x-2 text-blue-900 font-bold text-sm">
+          <i class="fa-solid fa-building-columns text-blue-600"></i>
+          <span>'아산 탕정 고소득 일자리' ➔ '천안 불당·성성 소비' 결합 구조</span>
+        </div>
+        <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+          통근 분석 결과, 관외 목적지 중 <strong>충남 아산시가 22.65%</strong>로 압도적 비중을 차지함. 특히 <strong>아산시 탕정면 통근자의 평균 연소득은 7,407만원(월카드소비 331만원)</strong>으로 천안 관내 평균을 압도함. 삼성디스플레이·SDI 임직원에게 제공되는 <strong>연 1.5% 저리 주거대출 복지(최대 5억원 한도, DSR 미반영)</strong>가 천안시 신불당과 성성호수공원 신축 아파트 매수세의 강력한 하방 지지대로 작동하고 있음.
+        </p>
+      </div>
+    </section>
+
+    <!-- 제4장: 주택 공급 시장 분석 (입주 및 분양) -->
+    <section id="supply" class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-6 bg-amber-500 rounded-full"></span>
+          <h2 class="text-xl font-bold text-slate-900 tracking-tight">4. 주택 공급 시장 분석 (연도별 분양 및 입주 캘린더)</h2>
+        </div>
+        <span class="text-xs font-semibold px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-md">수급 롤러코스터 진단</span>
+      </div>
+
+      <!-- 입주 vs 분양 시계열 차트 -->
+      <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-bold text-slate-800">천안시 연도별 분양 실적 vs 입주(공급) 실적 추이 (2020 ~ 2030)</h3>
+          <span class="text-xs text-slate-500">단위: 세대</span>
+        </div>
+        <div class="h-72">
+          <canvas id="supplyCycleChart"></canvas>
+        </div>
+        <div class="text-xs text-slate-500 text-center mt-2">출처: HDC랩스·부동산R114 PropX 공급분석 원천 통계</div>
+      </div>
+
+      <!-- 천안시 노후도 맵 이미지 -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-bold text-slate-900 flex items-center space-x-1.5">
+            <i class="fa-solid fa-map-location-dot text-blue-600"></i>
+            <span>천안시 아파트 재고 연차별 노후도 공간 분포</span>
+          </h3>
+          <span class="text-xs text-slate-500">총 재고: 227,562세대</span>
+        </div>
+        <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm bg-white p-2">
+          <img src="천안노후도.png" alt="천안시 아파트 노후도 분포도" class="w-full h-auto rounded-lg object-cover">
+        </div>
+        <p class="text-xs text-slate-500 leading-relaxed">
+          ※ 1990~2000년대 조성된 쌍용동, 신부동, 봉명동 일대 구축 단지(20~30년 초과)의 노후화가 심화되면서, 성성·업성·부성 등 서북부 신규 택지로의 갈아타기 수요 압력이 지속되고 있음.
+        </p>
+      </div>
+
+      <!-- 2024~2030 주요 입주 단지 상세 테이블 -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-slate-900 flex items-center space-x-1.5">
+          <i class="fa-solid fa-calendar-days text-amber-600"></i>
+          <span>2024 ~ 2030 주요 신규 아파트 입주 예정 단지 전수 리스트</span>
+        </h3>
+        <div class="overflow-x-auto border border-slate-200 rounded-xl custom-scrollbar">
+          <table class="w-full text-xs text-left border-collapse">
+            <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+              <tr>
+                <th class="p-3 text-center">입주년월</th>
+                <th class="p-3">단지명</th>
+                <th class="p-3">자치구 / 읍면동</th>
+                <th class="p-3 text-right">총 세대수</th>
+                <th class="p-3">시공사</th>
+                <th class="p-3">입지 및 수급 파급력</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 text-slate-600">
+              <tr class="bg-amber-50/50">
+                <td class="p-3 text-center font-bold text-amber-800">2026.02</td>
+                <td class="p-3 font-bold text-slate-900">호반써밋센트럴파크(1BL)</td>
+                <td class="p-3">동남구 신방동</td>
+                <td class="p-3 text-right font-bold text-amber-700">453</td>
+                <td class="p-3">(주)호반건설</td>
+                <td class="p-3 font-medium">일봉공원 민간특례 1차, 2026년 천안 최대 입주</td>
+              </tr>
+              <tr class="bg-amber-50/50">
+                <td class="p-3 text-center font-bold text-amber-800">2026.07</td>
+                <td class="p-3 font-bold text-slate-900">트루엘시그니처천안역</td>
+                <td class="p-3">동남구 문화동</td>
+                <td class="p-3 text-right font-bold text-amber-700">236</td>
+                <td class="p-3">일성건설(주)</td>
+                <td class="p-3 font-medium">천안역 도보권 원도심 주상복합 단지</td>
+              </tr>
+              <tr>
+                <td class="p-3 text-center">2027.05</td>
+                <td class="p-3 font-semibold">호반써밋센트럴파크(2BL)</td>
+                <td class="p-3">동남구 용곡동</td>
+                <td class="p-3 text-right font-bold">1,284</td>
+                <td class="p-3">(주)호반건설</td>
+                <td class="p-3">일봉공원 특례사업 매머드 대단지 완성</td>
+              </tr>
+              <tr>
+                <td class="p-3 text-center">2027.08</td>
+                <td class="p-3 font-semibold">힐스테이트천안역스카이움</td>
+                <td class="p-3">서북구 성정동</td>
+                <td class="p-3 text-right font-bold">999</td>
+                <td class="p-3">현대건설(주)</td>
+                <td class="p-3">천안역 서부광장 49층 초고층 랜드마크</td>
+              </tr>
+              <tr>
+                <td class="p-3 text-center">2027.12</td>
+                <td class="p-3 font-semibold">천안아이파크시티(1단지)</td>
+                <td class="p-3">서북구 성성동</td>
+                <td class="p-3 text-right font-bold">1,126</td>
+                <td class="p-3">HDC현대산업개발</td>
+                <td class="p-3">성성호수공원 아이파크 대규모 브랜드타운 시발점</td>
+              </tr>
+              <tr>
+                <td class="p-3 text-center">2028.02</td>
+                <td class="p-3 font-semibold">e편한세상성성호수공원</td>
+                <td class="p-3">서북구 업성동</td>
+                <td class="p-3 text-right font-bold">1,763</td>
+                <td class="p-3">DL이앤씨(주)</td>
+                <td class="p-3">업성지구 호수 조망 특화 대단지</td>
+              </tr>
+              <tr>
+                <td class="p-3 text-center">2028.02</td>
+                <td class="p-3 font-semibold">성성자이레이크파크</td>
+                <td class="p-3">서북구 성성동</td>
+                <td class="p-3 text-right font-bold">1,104</td>
+                <td class="p-3">GS건설(주)</td>
+                <td class="p-3">성성호수공원 자이 프리미엄 타운</td>
+              </tr>
+              <tr class="bg-rose-50/50 font-semibold">
+                <td class="p-3 text-center font-extrabold text-rose-700">2029.01</td>
+                <td class="p-3 font-extrabold text-slate-900">천안아이파크시티(5·6단지)</td>
+                <td class="p-3">서북구 성성동</td>
+                <td class="p-3 text-right font-extrabold text-rose-700">1,948</td>
+                <td class="p-3">HDC현대산업개발</td>
+                <td class="p-3 text-rose-800">청약 최고 경쟁률 흥행 단지, 랜드마크 입주</td>
+              </tr>
+              <tr class="bg-rose-50/50 font-semibold">
+                <td class="p-3 text-center font-extrabold text-rose-700">2029.03</td>
+                <td class="p-3 font-extrabold text-slate-900">엘리프성성호수공원(1·2BL)</td>
+                <td class="p-3">서북구 업성동</td>
+                <td class="p-3 text-right font-extrabold text-rose-700">1,165</td>
+                <td class="p-3">계룡건설산업(주)</td>
+                <td class="p-3 text-rose-800">1순위 26:1 마감 수변 단지 입주</td>
+              </tr>
+              <tr class="bg-rose-50/50">
+                <td class="p-3 text-center font-bold text-rose-700">2029.05</td>
+                <td class="p-3 font-semibold text-slate-900">천안휴먼빌퍼스트시티</td>
+                <td class="p-3">서북구 부대동</td>
+                <td class="p-3 text-right font-bold text-rose-700">1,541</td>
+                <td class="p-3">일신건영(주)</td>
+                <td class="p-3">부대지구 대규모 단지 준공</td>
+              </tr>
+              <tr class="bg-rose-50/50">
+                <td class="p-3 text-center font-bold text-rose-700">2029.06</td>
+                <td class="p-3 font-semibold text-slate-900">천안아이파크시티(3·4단지)</td>
+                <td class="p-3">서북구 부대동</td>
+                <td class="p-3 text-right font-bold text-rose-700">1,714</td>
+                <td class="p-3">HDC현대산업개발</td>
+                <td class="p-3">아이파크 타운 완결, 잔금 리스크 관리 필요</td>
+              </tr>
+              <tr class="bg-rose-50/50">
+                <td class="p-3 text-center font-bold text-rose-700">2029.09</td>
+                <td class="p-3 font-semibold text-slate-900">백석시그니처자이(1·2단지)</td>
+                <td class="p-3">서북구 백석동</td>
+                <td class="p-3 text-right font-bold text-rose-700">1,174</td>
+                <td class="p-3">GS건설(주)</td>
+                <td class="p-3">백석동 도심 인프라 완성</td>
+              </tr>
+              <tr class="bg-rose-50/50">
+                <td class="p-3 text-center font-bold text-rose-700">2029.09</td>
+                <td class="p-3 font-semibold text-slate-900">업성푸르지오레이크시티(1·2)</td>
+                <td class="p-3">서북구 업성동</td>
+                <td class="p-3 text-right font-bold text-rose-700">1,908</td>
+                <td class="p-3">(주)대우건설</td>
+                <td class="p-3">업성지구 매머드 브랜드 타운 입주</td>
+              </tr>
+              <tr>
+                <td class="p-3 text-center">2030.01</td>
+                <td class="p-3 font-semibold">두정역푸르지오그랑피크</td>
+                <td class="p-3">서북구 성정동</td>
+                <td class="p-3 text-right font-bold">1,438</td>
+                <td class="p-3">(주)대우건설</td>
+                <td class="p-3">1호선 두정역 인접 대단지 공급 마무리</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 제5장: 도시 공간 구조 변천 및 미래 개발 전략 -->
+    <section id="development" class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-6 bg-indigo-600 rounded-full"></span>
+          <h2 class="text-xl font-bold text-slate-900 tracking-tight">5. 도시 공간 구조 변천 및 미래 발전 전략</h2>
+        </div>
+        <span class="text-xs font-semibold px-2.5 py-1 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-md">미래전략 보고서 연계</span>
+      </div>
+
+      <!-- 도심 축 변천 다이어그램 -->
+      <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-3">
+        <h3 class="text-sm font-bold text-slate-900">천안시 도심 공간 확장 연대기 (6단계 축 이동)</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-center text-xs">
+          <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-2xs">
+            <div class="font-extrabold text-slate-800">1단계</div>
+            <div class="text-blue-600 font-bold mt-1">천안역 원도심</div>
+            <div class="text-slate-400 text-3xs mt-1">전통 행정·상권</div>
+          </div>
+          <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-2xs">
+            <div class="font-extrabold text-slate-800">2단계</div>
+            <div class="text-blue-600 font-bold mt-1">신부동 터미널</div>
+            <div class="text-slate-400 text-3xs mt-1">백화점·광역교통</div>
+          </div>
+          <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-2xs">
+            <div class="font-extrabold text-slate-800">3단계</div>
+            <div class="text-blue-600 font-bold mt-1">쌍용택지지구</div>
+            <div class="text-slate-400 text-3xs mt-1">1990년대 아파트</div>
+          </div>
+          <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-2xs">
+            <div class="font-extrabold text-slate-800">4단계</div>
+            <div class="text-blue-600 font-bold mt-1">두정·백석동</div>
+            <div class="text-slate-400 text-3xs mt-1">북부 산업연계축</div>
+          </div>
+          <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-2xs">
+            <div class="font-extrabold text-slate-800">5단계</div>
+            <div class="text-blue-600 font-bold mt-1">불당·신불당</div>
+            <div class="text-slate-400 text-3xs mt-1">독점 1급지 완성</div>
+          </div>
+          <div class="bg-blue-600 text-white p-3 rounded-lg shadow-sm">
+            <div class="font-extrabold text-blue-100">6단계 (현재)</div>
+            <div class="font-black mt-1">성성호수·탕정</div>
+            <div class="text-blue-200 text-3xs mt-1">수변·골든벨트</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4대 미래 발전 전략 카드 그리드 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="p-5 rounded-xl border border-slate-200 bg-white space-y-2.5">
+          <div class="flex items-center space-x-2 text-indigo-600 font-bold text-sm">
+            <i class="fa-solid fa-server"></i>
+            <span>1.2조원 AI 데이터센터(AIDC)와 '전세권(電勢權)' 입지 우위</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            분산에너지 특별법 시행 및 전력난 속에 입지의 중심이 역세권에서 전력·수자원을 갖춘 <strong>'전세권'</strong>으로 전환됨. 직산읍 AIDC는 둔포변전소(80MW) 전력 계약과 248억원 배수지 확충으로 최적 인프라를 완비함. 판교(설계) ➔ 천안(패키징·AIDC) ➔ 아산(완성차) K-반도체 첨단 제조 생태계 완성.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-xl border border-slate-200 bg-white space-y-2.5">
+          <div class="flex items-center space-x-2 text-blue-600 font-bold text-sm">
+            <i class="fa-solid fa-bridge"></i>
+            <span>과성교(2027) & 1호선 부성역(2029) 개통 게임체인저</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            2027년 하반기 <strong>과성교 완공</strong> 시 아산 탕정 신규 단지에서 신불당 학원가·천안시청까지 차량 3분(2km)으로 직결되어 '탕정-신불당 단일 생활권'이 완성됨. 2029년 <strong>부성역 개통</strong>으로 성성·부성지구의 수도권 광역철도 접근성이 획기적으로 개선됨.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-xl border border-slate-200 bg-white space-y-2.5">
+          <div class="flex items-center space-x-2 text-emerald-600 font-bold text-sm">
+            <i class="fa-solid fa-train"></i>
+            <span>KTX 천안역 정차 추진 & GTX-C 국비 공조</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            수원-대전 무정차 KTX의 천안역 정차(일 4회) 추진으로 원도심 철도 허브 위상 복원 도모. GTX-C 연장 사업은 대광법 거리 제한(40km 기준 vs 천안 78km) 해소를 위한 법 개정 및 제5차 국가철도망 구축계획 우선 반영을 통해 지자체 재정 부담을 최소화하는 전략 가동.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-xl border border-slate-200 bg-white space-y-2.5">
+          <div class="flex items-center space-x-2 text-amber-600 font-bold text-sm">
+            <i class="fa-solid fa-tree"></i>
+            <span>동부권 용연저수지(497억) & 흑성산로 관광벨트</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            목천읍 용연저수지 497억원 투입(2024~2029)으로 둘레길·자연휴양림 조성, 흑성산로 2차선 확장 완공과 함께 독립기념관·병천 순대거리를 연계한 동부권 종합 관광벨트 구축으로 동서 균형발전 견인.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 참여자별 Action Items -->
+    <section class="bg-gradient-to-br from-slate-900 to-navy-800 text-white rounded-2xl p-6 sm:p-8 shadow-lg space-y-6">
+      <div class="flex items-center space-x-2 border-b border-slate-700 pb-4">
+        <i class="fa-solid fa-compass text-amber-400 text-xl"></i>
+        <h2 class="text-xl font-bold tracking-tight">주체별 핵심 실행 제언 (Action Items)</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 text-xs sm:text-sm">
+        <div class="bg-white/10 p-5 rounded-xl border border-white/10 space-y-2">
+          <div class="text-amber-400 font-bold text-sm flex items-center space-x-1.5">
+            <i class="fa-solid fa-helmet-safety"></i>
+            <span>건설사 및 시행사</span>
+          </div>
+          <ul class="space-y-1.5 text-slate-300">
+            <li>• 외곽지(직산·부대·동남구) 사업지는 분양 시기를 2027년 이후로 순연하거나 중도금 무이자 등 금융 혜택 필수 적용.</li>
+            <li>• 2029년 입주 폭탄(1.2만 세대)을 감안하여 준공 일정 조율 및 사전 임대 전환 플랜 마련.</li>
+          </ul>
+        </div>
+
+        <div class="bg-white/10 p-5 rounded-xl border border-white/10 space-y-2">
+          <div class="text-blue-400 font-bold text-sm flex items-center space-x-1.5">
+            <i class="fa-solid fa-key"></i>
+            <span>실수요자 및 투자자</span>
+          </div>
+          <ul class="space-y-1.5 text-slate-300">
+            <li>• 2026년 신축 입주가 689세대로 급감하므로 서북구 전세 재계약 및 갈아타기를 조기에 확정할 것.</li>
+            <li>• 청약 시 호수공원 조망권 및 신불당 연계성을 우선 고려하고, 외곽 미분양 선착순은 입지 선별 엄격화.</li>
+          </ul>
+        </div>
+
+        <div class="bg-white/10 p-5 rounded-xl border border-white/10 space-y-2">
+          <div class="text-emerald-400 font-bold text-sm flex items-center space-x-1.5">
+            <i class="fa-solid fa-landmark"></i>
+            <span>지자체 및 공공기관</span>
+          </div>
+          <ul class="space-y-1.5 text-slate-300">
+            <li>• 미분양 5,100세대 소진을 위한 인허가 속도 조절 및 HUG 미분양관리지역 지정 사전 대비.</li>
+            <li>• 과성교(2027) 및 부성역(2029) 개통을 일정대로 차질 없이 완공하여 입주기 교통대란 방지.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="bg-white border-t border-slate-200 mt-12 py-6 text-center text-xs text-slate-500 space-y-1">
+    <div>충청남도 천안시 부동산 시장 분석 종합 보고서 | PropX & K-Atlas 데이터 솔루션 기반 분석</div>
+    <div class="text-slate-400">데이터 출처: HDC랩스·부동산R114 PropX, KCB K-Atlas 2.0, 행정안전부 주민등록 인구통계, 천안시 도시계획 보고서</div>
+  </footer>
+
+  <!-- Chart.js 스크립트 & 요약 복사 기능 -->
+  <script>
+    // 1. 미분양 추이 차트
+    const ctxUnsold = document.getElementById('unsoldChart').getContext('2d');
+    new Chart(ctxUnsold, {
+      type: 'line',
+      data: {
+        labels: ['24.07', '24.09', '24.11', '25.01', '25.03', '25.06', '25.08', '25.10', '25.11', '26.01', '26.03', '26.05', '26.07'],
+        datasets: [{
+          label: '미분양 세대수',
+          data: [1590, 1249, 1087, 1199, 1353, 1126, 1106, 1032, 2566, 2614, 3113, 3162, 5100],
+          borderColor: '#ef4444',
+          backgroundColor: 'rgba(239, 68, 68, 0.1)',
+          fill: true,
+          tension: 0.3,
+          pointBackgroundColor: '#ef4444',
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          borderWidth: 2.5
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(context) { return context.raw.toLocaleString() + ' 세대'; }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: false,
+            grid: { color: '#f1f5f9' },
+            ticks: { callback: v => v.toLocaleString() }
+          },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // 2. 청약경쟁률 비교 바 차트
+    const ctxSub = document.getElementById('subscriptionChart').getContext('2d');
+    new Chart(ctxSub, {
+      type: 'bar',
+      data: {
+        labels: ['엘리프성성1', '아이파크6', '아이파크5', '엘리프성성2', '백석자이2', '백석자이1', '두산센트럴', '아이파크3', '두정푸르지오', '동문디이스트'],
+        datasets: [{
+          label: '1순위 경쟁률 (N:1)',
+          data: [26.27, 10.54, 8.83, 4.64, 1.17, 1.05, 0.28, 0.23, 0.13, 0.03],
+          backgroundColor: [
+            '#2563eb', '#3b82f6', '#60a5fa', '#10b981', '#64748b', '#94a3b8', '#f87171', '#ef4444', '#dc2626', '#b91c1c'
+          ],
+          borderRadius: 4
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(context) { return context.raw + ' : 1'; }
+            }
+          }
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            grid: { color: '#f1f5f9' }
+          },
+          y: { grid: { display: false } }
+        }
+      }
+    });
+
+    // 3. 인구 및 세대수 추이 차트
+    const ctxPop = document.getElementById('populationChart').getContext('2d');
+    new Chart(ctxPop, {
+      type: 'line',
+      data: {
+        labels: ['2008', '2010', '2012', '2014', '2016', '2018', '2020', '2022', '2024', '2025'],
+        datasets: [
+          {
+            label: '총 인구수 (명)',
+            data: [537698, 557673, 581988, 598346, 617955, 646075, 658808, 657559, 659920, 664322],
+            borderColor: '#2563eb',
+            backgroundColor: '#2563eb',
+            yAxisID: 'y',
+            tension: 0.2,
+            borderWidth: 2
+          },
+          {
+            label: '세대수 (세대)',
+            data: [209512, 221744, 232724, 243364, 254676, 273851, 291425, 302893, 312542, 317941],
+            borderColor: '#10b981',
+            backgroundColor: '#10b981',
+            yAxisID: 'y1',
+            tension: 0.2,
+            borderWidth: 2
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            type: 'linear',
+            position: 'left',
+            grid: { color: '#f1f5f9' },
+            ticks: { callback: v => (v/10000).toFixed(0) + '만' }
+          },
+          y1: {
+            type: 'linear',
+            position: 'right',
+            grid: { display: false },
+            ticks: { callback: v => (v/10000).toFixed(0) + '만' }
+          },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // 4. 읍면동 금융 소득 vs 소비 바 차트
+    const ctxInc = document.getElementById('incomeConsumptionChart').getContext('2d');
+    new Chart(ctxInc, {
+      type: 'bar',
+      data: {
+        labels: ['불당2동', '불당1동', '백석동', '부성2동', '부성1동', '청룡동', '쌍용2동', '신방동', '직산읍', '성정2동'],
+        datasets: [
+          {
+            label: '연소득 (만원)',
+            data: [6684, 6054, 5400, 5258, 4720, 4667, 4555, 4514, 4116, 3941],
+            backgroundColor: '#3b82f6',
+            borderRadius: 4
+          },
+          {
+            label: '월카드소비 (만원)',
+            data: [324, 262, 225, 222, 199, 203, 175, 194, 134, 146],
+            backgroundColor: '#f59e0b',
+            borderRadius: 4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: '#f1f5f9' }
+          },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // 5. 통근 목적지 도넛 차트
+    const ctxCom = document.getElementById('commuteChart').getContext('2d');
+    new Chart(ctxCom, {
+      type: 'doughnut',
+      data: {
+        labels: ['천안 서북구', '천안 동남구', '아산시(탕정 등)', '평택시', '세종시', '서울 강남구', '기타'],
+        datasets: [{
+          data: [72.84, 48.73, 22.65, 3.55, 2.40, 2.26, 8.57],
+          backgroundColor: ['#1d4ed8', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#cbd5e1'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right' }
+        }
+      }
+    });
+
+    // 6. 전입 지역 도넛 차트
+    const ctxMig = document.getElementById('migrationChart').getContext('2d');
+    new Chart(ctxMig, {
+      type: 'doughnut',
+      data: {
+        labels: ['천안 서북구', '천안 동남구', '아산시(배방 등)', '평택시', '세종시', '대전시', '기타'],
+        datasets: [{
+          data: [64.33, 40.56, 13.16, 3.65, 2.33, 3.31, 10.66],
+          backgroundColor: ['#2563eb', '#60a5fa', '#059669', '#d97706', '#7c3aed', '#db2777', '#94a3b8'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right' }
+        }
+      }
+    });
+
+    // 7. 입주 vs 분양 공급 사이클 차트
+    const ctxSup = document.getElementById('supplyCycleChart').getContext('2d');
+    new Chart(ctxSup, {
+      type: 'bar',
+      data: {
+        labels: ['2020', '2021', '2022', '2023', '2024', '2025', '2026', '2027(예정)', '2028(예정)', '2029(예정)', '2030(예정)'],
+        datasets: [
+          {
+            type: 'bar',
+            label: '입주 물량 (세대)',
+            data: [5769, 1458, 4030, 6712, 8966, 6100, 689, 5405, 4089, 12598, 1438],
+            backgroundColor: function(context) {
+              const val = context.raw;
+              if (val === 689) return '#f59e0b'; // 가뭄
+              if (val === 12598) return '#ef4444'; // 폭탄
+              return '#3b82f6';
+            },
+            borderRadius: 4
+          },
+          {
+            type: 'line',
+            label: '분양 물량 (세대)',
+            data: [4649, 7259, 10270, 358, 3928, 6553, 11880, null, null, null, null],
+            borderColor: '#10b981',
+            backgroundColor: '#10b981',
+            borderWidth: 2.5,
+            tension: 0.2,
+            pointRadius: 4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.dataset.label + ': ' + (context.raw ? context.raw.toLocaleString() + ' 세대' : '-');
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: '#f1f5f9' },
+            ticks: { callback: v => v.toLocaleString() }
+          },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // 규칙 7: 📋 요약 복사 기능 함수 구현
+    function copySummaryReport() {
+      const summaryText = `[천안시 부동산 시장분석 핵심 요약 보고서 - PropX & K-Atlas]
+
+1. 미분양 및 청약 시장 양극화
+- 2026.07 기준 천안시 미분양 5,100세대 돌파 (2025년 저점 1,032세대 대비 5배 급증)
+- 2026년 분양 물량만 11,880세대 쏟아지며 적체 심화
+- 청약 양극화: 엘리프성성(1순위 26.27:1), 천안아이파크 5·6단지(8.8~10.5:1) 완판 vs 동남구(삼룡·청당) 및 서북구(직산·부대·두정) 1순위 0.03~0.28:1 대거 미달
+
+2. 공급 사이클의 급변 (26년 가뭄 ➔ 29년 폭탄)
+- 2026년 입주물량: 단 689세대 (서북구 0세대)로 일시적 '입주 절벽' 및 전세 품귀
+- 2027년 5,405세대 ➔ 2028년 4,089세대 회복
+- 2029년 입주 폭탄: 무려 12,598세대 (서북구 10,345세대 집중)로 전세 역전세 위험 대비 필요
+
+3. 인문·소득 기반 ('아산 생산 - 천안 소비')
+- 천안시 인구 664,322명 / 세대수 317,941세대 (지속 증가, 세대당 2.09명)
+- 불당2동 천안 최고 부촌: 연소득 6,684만원, 월소비 324만원, 주담대 2억 683만원
+- 아산 탕정 통근율 22.65% (탕정 통근자 평균 연소득 7,407만원)
+- 삼성 임직원 연 1.5% 저리 주거대출(최대 5억원)이 천안 주택시장의 강력한 하방 지지대
+
+4. 미래 개발 및 정책 모멘텀
+- 직산 1.2조원 AI 데이터센터(AIDC) 유치: 둔포변전소(80MW) 기반 '전세권(電勢權)' 부상
+- 2027년 하반기 과성교 개통: 탕정 ➔ 신불당 학원가 차량 3분 단축
+- 2029년 1호선 부성역 개통 & KTX 천안역 정차 추진
+- 원도심 1군 브랜드타운 재개발 & 목천 용연저수지(497억) 동부권 관광벨트 구축`;
+
+      navigator.clipboard.writeText(summaryText)
+        .then(() => {
+          alert('📋 요약 보고서가 클립보드에 복사되었습니다!\n카카오톡이나 메모장에 붙여넣기 하세요.');
+        })
+        .catch(err => {
+          console.error('클립보드 복사 실패:', err);
+          alert('클립보드 복사에 실패했습니다. 브라우저 권한을 확인해주세요.');
+        });
+    }
+  </script>
+</body>
+</html>

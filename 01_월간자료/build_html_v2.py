@@ -1,0 +1,1383 @@
+# -*- coding: utf-8 -*-
+"""
+안성시 주택시장 종합분석 보고서 v2 생성 스크립트
+- 기존 안성시_주택시장_종합분석_보고서.html 보존
+- 상단 헤더 우측 및 스티키 바에 '📋 요약 복사' 버튼 및 '🖨️ 인쇄 / PDF 저장' 버튼 탑재
+- 클릭 시 메신저/메모장용 정제된 텍스트 자동 복사 및 피드백 알림
+"""
+
+html_v2 = """<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>경기도 안성시 주택시장 종합 진단 및 미래 성장 전략 보고서 (v2)</title>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #1E3A8A;
+      --primary-light: #3B82F6;
+      --primary-dark: #0F172A;
+      --secondary: #0D9488;
+      --accent: #F59E0B;
+      --danger: #EF4444;
+      --success: #10B981;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --border: #E2E8F0;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --font-stack: -apple-system, BlinkMacSystemFont, "Pretendard", "Malgun Gothic", "맑은 고딕", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 상단 헤더 */
+    header {
+      background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%);
+      color: #FFFFFF;
+      padding: 36px 24px 28px;
+      position: relative;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .header-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .badge-wrap {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .badge-accent {
+      background: #F59E0B;
+      color: #0F172A;
+      border: none;
+    }
+
+    /* 헤더 액션 버튼 영역 */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .btn-copy {
+      background: #FFFFFF;
+      color: #0F172A;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .btn-copy:hover {
+      background: #F1F5F9;
+      transform: translateY(-1px);
+    }
+
+    .btn-print {
+      background: rgba(255, 255, 255, 0.18);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(4px);
+    }
+
+    .btn-print:hover {
+      background: rgba(255, 255, 255, 0.28);
+      transform: translateY(-1px);
+    }
+
+    h1.report-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    p.report-subtitle {
+      font-size: 13.5px;
+      color: #CBD5E1;
+      max-width: 950px;
+    }
+
+    .meta-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      font-size: 13px;
+      color: #94A3B8;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      padding-top: 14px;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .meta-item span.val {
+      color: #F8FAFC;
+      font-weight: 600;
+    }
+
+    /* 목차 바 */
+    nav.toc-nav {
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .toc-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 24px;
+    }
+
+    .toc-links {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .toc-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .toc-link:hover, .toc-link.active {
+      color: var(--primary);
+      background: #EFF6FF;
+    }
+
+    .toc-quick-copy {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #1E3A8A;
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .toc-quick-copy:hover {
+      background: #DBEAFE;
+    }
+
+    /* 메인 컨테이너 */
+    main.container {
+      max-width: 1200px;
+      margin: 28px auto 80px;
+      padding: 0 24px;
+    }
+
+    /* 핵심 KPI 카드 그리드 */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .kpi-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--primary-light);
+    }
+
+    .kpi-card.kpi-accent::before { background: var(--accent); }
+    .kpi-card.kpi-danger::before { background: var(--danger); }
+    .kpi-card.kpi-success::before { background: var(--success); }
+
+    .kpi-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .kpi-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .kpi-icon {
+      font-size: 16px;
+      color: var(--text-muted);
+    }
+
+    .kpi-val {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+
+    .kpi-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .kpi-highlight {
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* 섹션 레이아웃 */
+    section.report-section {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 30px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+      margin-bottom: 30px;
+    }
+
+    .section-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 14px;
+      margin-bottom: 22px;
+    }
+
+    .section-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: #EFF6FF;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    h2.section-title {
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.3px;
+    }
+
+    .section-subtitle {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+
+    h3.sub-title {
+      font-size: 15.5px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 22px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h3.sub-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 16px;
+      background: var(--primary-light);
+      border-radius: 2px;
+    }
+
+    .callout-box {
+      background: #F8FAFC;
+      border-left: 4px solid var(--primary-light);
+      padding: 16px 20px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 20px;
+      font-size: 13.5px;
+      color: #334155;
+    }
+
+    .callout-box.callout-warning {
+      background: #FFFBEB;
+      border-left-color: var(--accent);
+      color: #92400E;
+    }
+
+    .callout-box.callout-success {
+      background: #F0FDF4;
+      border-left-color: var(--success);
+      color: #166534;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+      gap: 22px;
+      margin: 20px 0;
+    }
+
+    .chart-box {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .chart-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-main);
+    }
+
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin: 16px 0 22px;
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    table.data-table th {
+      background: #F1F5F9;
+      color: #334155;
+      font-weight: 700;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    table.data-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #F1F5F9;
+      color: #334155;
+    }
+
+    table.data-table tr:hover {
+      background: #F8FAFC;
+    }
+
+    table.data-table tr.total-row {
+      background: #EFF6FF;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .font-bold { font-weight: 700; }
+    .text-primary { color: var(--primary-light); }
+    .text-danger { color: var(--danger); }
+    .text-success { color: var(--success); }
+
+    .chip {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .chip-danger { background: #FEE2E2; color: #991B1B; }
+    .chip-success { background: #DCFCE7; color: #166534; }
+    .chip-info { background: #E0E7FF; color: #3730A3; }
+    .chip-warning { background: #FEF3C7; color: #92400E; }
+
+    .swot-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .swot-card {
+      border-radius: 10px;
+      padding: 18px;
+      border: 1px solid var(--border);
+    }
+
+    .swot-s { background: #EFF6FF; border-color: #BFDBFE; }
+    .swot-w { background: #FEF2F2; border-color: #FECACA; }
+    .swot-o { background: #F0FDF4; border-color: #BBF7D0; }
+    .swot-t { background: #FFFBEB; border-color: #FDE68A; }
+
+    .swot-header {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .swot-s .swot-header { color: #1E40AF; }
+    .swot-w .swot-header { color: #991B1B; }
+    .swot-o .swot-header { color: #166534; }
+    .swot-t .swot-header { color: #92400E; }
+
+    .swot-list {
+      list-style: none;
+      font-size: 12.5px;
+      color: #334155;
+    }
+
+    .swot-list li {
+      margin-bottom: 6px;
+      position: relative;
+      padding-left: 14px;
+    }
+
+    .swot-list li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
+
+    footer {
+      background: #0F172A;
+      color: #94A3B8;
+      padding: 36px 24px;
+      font-size: 13px;
+      text-align: center;
+      border-top: 1px solid #1E293B;
+    }
+
+    footer p {
+      margin-bottom: 6px;
+    }
+
+    /* 토스트 알림창 */
+    #toastMessage {
+      visibility: hidden;
+      min-width: 300px;
+      background-color: #0F172A;
+      color: #FFFFFF;
+      text-align: center;
+      border-radius: 8px;
+      padding: 14px 20px;
+      position: fixed;
+      z-index: 1000;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      font-size: 13.5px;
+      font-weight: 600;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      opacity: 0;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    #toastMessage.show {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* 인쇄 전용 CSS (버튼 숨김 처리) */
+    @media print {
+      body { background: #FFFFFF; font-size: 11pt; }
+      nav.toc-nav, .no-print { display: none !important; }
+      section.report-section { box-shadow: none; border: 1px solid #CCCCCC; break-inside: avoid; margin-bottom: 20px; }
+      .chart-box { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 리포트 헤더 (로고 없음 - 메타 배지 & 우측 액션 버튼 탑재) -->
+  <header>
+    <div class="header-container">
+      <div class="header-top-row">
+        <div class="badge-wrap">
+          <span class="badge badge-accent"><i class="fa-solid fa-chart-line"></i> Market Intelligence</span>
+          <span class="badge"><i class="fa-solid fa-database"></i> 부동산R114 PropX</span>
+          <span class="badge"><i class="fa-solid fa-map-location-dot"></i> KCB K-Atlas 2.0</span>
+          <span class="badge"><i class="fa-solid fa-city"></i> 안성시 2027 비전</span>
+        </div>
+        <!-- 우측 액션 버튼 영역 (no-print 적용) -->
+        <div class="header-actions no-print">
+          <button onclick="copySummaryReport()" class="btn-action btn-copy" title="메신저나 메모장에 붙여넣기 좋은 핵심 요약 복사">
+            <i class="fa-solid fa-clipboard-check"></i> 📋 요약 복사
+          </button>
+          <button onclick="window.print()" class="btn-action btn-print" title="화면 인쇄 및 PDF 내보내기">
+            <i class="fa-solid fa-print"></i> 🖨️ 인쇄 / PDF 저장
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <h1 class="report-title">경기도 안성시 주택시장 종합 진단 및 미래 성장 전략 보고서 (v2)</h1>
+        <p class="report-subtitle">
+          2024년 역대급 공급 쇼크(5,008세대 입주) 소화 현황, 주택 재고 노후도 42.9% 도래에 따른 갈아타기 잠재수요,
+          평택·용인 반도체 메가클러스터 배후지로서의 광역 통근·이주 네트워크 및 2027 친환경 정주 인프라 융합 분석
+        </p>
+      </div>
+
+      <div class="meta-bar">
+        <div class="meta-item"><i class="fa-regular fa-calendar"></i> 기준시점: <span class="val">2026년 하반기</span></div>
+        <div class="meta-item"><i class="fa-solid fa-user-tie"></i> 분석주체: <span class="val">부동산 빅데이터 인텔리전스 리서치팀</span></div>
+        <div class="meta-item"><i class="fa-solid fa-bullseye"></i> 분석대상: <span class="val">경기도 안성시 전역 (공도읍, 아양/당왕택지 등)</span></div>
+        <div class="meta-item"><i class="fa-solid fa-shield-halved"></i> 데이터검증: <span class="val">100% 팩트체크 완료</span></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 목차 네비게이션 -->
+  <nav class="toc-nav no-print">
+    <div class="toc-container">
+      <div class="toc-links">
+        <a href="#summary" class="toc-link active"><i class="fa-solid fa-bolt"></i> 핵심 요약</a>
+        <a href="#sec1" class="toc-link"><i class="fa-solid fa-city"></i> 01. 도시 개황 & 인구</a>
+        <a href="#sec2" class="toc-link"><i class="fa-solid fa-house-chimney-crack"></i> 02. 주택 재고 & 노후도</a>
+        <a href="#sec3" class="toc-link"><i class="fa-solid fa-cubes-stacked"></i> 03. 수급 & 청약·미분양</a>
+        <a href="#sec4" class="toc-link"><i class="fa-solid fa-credit-card"></i> 04. K-Atlas 금융 & 이동</a>
+        <a href="#sec5" class="toc-link"><i class="fa-solid fa-compass"></i> 05. 종합 진단 & 전략</a>
+      </div>
+      <button onclick="copySummaryReport()" class="toc-quick-copy" title="핵심 요약 텍스트 클립보드 복사">
+        <span>📋 요약 복사</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- 메인 본문 -->
+  <main class="container">
+
+    <!-- KPI 4대 핵심 카드 -->
+    <div class="kpi-grid" id="summary">
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-label">안성시 총인구 (2025)</span>
+          <i class="fa-solid fa-users kpi-icon"></i>
+        </div>
+        <div class="kpi-val">196,592 <span style="font-size: 16px; font-weight: normal;">명</span></div>
+        <div class="kpi-desc">인구 20만 돌파 임박 / <span class="kpi-highlight">세대수 97,042세대 (+21.6%)</span></div>
+      </div>
+
+      <div class="kpi-card kpi-danger">
+        <div class="kpi-header">
+          <span class="kpi-label">아파트 재고 노후도</span>
+          <i class="fa-solid fa-triangle-exclamation kpi-icon"></i>
+        </div>
+        <div class="kpi-val text-danger">42.9 <span style="font-size: 16px; font-weight: normal;">%</span></div>
+        <div class="kpi-desc">21년 이상 노후 25,537호 / <span class="kpi-highlight text-danger">소형 노후율 63.1%</span></div>
+      </div>
+
+      <div class="kpi-card kpi-accent">
+        <div class="kpi-header">
+          <span class="kpi-label">수급 사이클 대전환</span>
+          <i class="fa-solid fa-chart-line-down kpi-icon"></i>
+        </div>
+        <div class="kpi-val">5,008 ➔ 976 <span style="font-size: 16px; font-weight: normal;">세대</span></div>
+        <div class="kpi-desc">24년 입주피크 후 <span class="kpi-highlight text-primary">27년 공급 절벽 (-80.5%)</span></div>
+      </div>
+
+      <div class="kpi-card kpi-success">
+        <div class="kpi-header">
+          <span class="kpi-label">광역 이주(전입) 1순위</span>
+          <i class="fa-solid fa-arrow-right-arrow-left kpi-icon"></i>
+        </div>
+        <div class="kpi-val text-success">평택시 <span style="font-size: 16px; font-weight: normal;">유입</span></div>
+        <div class="kpi-desc">평택 고덕·용이·비전동 <span class="kpi-highlight text-success">집값 부담 탈출 실수요</span></div>
+      </div>
+    </div>
+
+    <!-- 01. 도시 개황 및 거시 정주 여건 -->
+    <section class="report-section" id="sec1">
+      <div class="section-title-wrap">
+        <div class="section-icon"><i class="fa-solid fa-city"></i></div>
+        <div>
+          <h2 class="section-title">01. 도시 개황 및 거시 정주 여건 분석</h2>
+        </div>
+        <div class="section-subtitle">행정안전부 주민등록 인구통계 & 안성시 개발보고서.docx</div>
+      </div>
+
+      <h3 class="sub-title">인구 및 세대수 추이 (인구 20만 진입 목전 및 세대 분화)</h3>
+      <div class="callout-box">
+        안성시는 2018년 18.3만 명 수준에서 2024년 19.3만 명, <strong>2025년 기준 196,592명</strong>으로 지속 상승하여 인구 20만 돌파를 눈앞에 두고 있습니다. 
+        특히 세대수는 1~2인 가구 분화 및 대규모 신규 아파트 입주에 힘입어 2018년 79,805세대에서 <strong>2025년 97,042세대로 21.6% 급증</strong>하여 실수요 가구 기반이 대폭 확충되었습니다.
+      </div>
+
+      <div class="grid-2col">
+        <div class="chart-box">
+          <div class="chart-title">
+            <span><i class="fa-solid fa-chart-column"></i> 연도별 인구 및 세대수 추이</span>
+            <span class="chip chip-info">단위: 명 / 세대</span>
+          </div>
+          <canvas id="chartPop" height="220"></canvas>
+        </div>
+
+        <div class="chart-box">
+          <div class="chart-title">
+            <span><i class="fa-solid fa-chart-pie"></i> 안성시 읍·면·동별 인구 점유 비중</span>
+            <span class="chip chip-info">공도+안성2·3동 = 50.1%</span>
+          </div>
+          <canvas id="chartPopDong" height="220"></canvas>
+        </div>
+      </div>
+
+      <h3 class="sub-title">안성시 친환경 도심 생태계 & 인프라 아키텍처</h3>
+      <div class="grid-2col">
+        <div class="callout-box callout-success" style="margin: 0;">
+          <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 6px;"><i class="fa-solid fa-seedling"></i> 도심 녹색 생태계 복원 호재</h4>
+          <ul style="font-size: 12.5px; padding-left: 18px; line-height: 1.8;">
+            <li><strong>승두천 생태하천 복원:</strong> 공도 도심 수질 개선 및 수변 휴식 공간 조성 (만정리·승두리 일대 주거 가치 제고)</li>
+            <li><strong>도시 바람길 숲:</strong> 미세먼지 저감 및 열섬 완화, 승두천 상류 왕벚나무 식재 연계</li>
+            <li><strong>만정유적공원 리모델링 (2028):</strong> 열린 잔디광장, 친수 공간, 야간 경관 조명 거점화</li>
+            <li><strong>안성 IC 관문 경관 정비:</strong> 출입부 옹벽 수직정원 및 38번 국도변 띠녹지 개선</li>
+          </ul>
+        </div>
+        <div class="callout-box" style="margin: 0;">
+          <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 6px;"><i class="fa-solid fa-faucet-drip"></i> 스마트 수자원 및 도시 안전망</h4>
+          <ul style="font-size: 12.5px; padding-left: 18px; line-height: 1.8;">
+            <li><strong>광역 상수도망 55km 확충:</strong> 보개·금광 등 11개 읍면 50개소 급수 취약지 해소</li>
+            <li><strong>유수율 88% 달성:</strong> 54개 블록 시스템 기반 실시간 모니터링 (2021년 74% ➔ 2025년 88%)</li>
+            <li><strong>원곡 하수처리장 증설:</strong> 1,000톤 ➔ 2,300톤 (130% 증설 완료)</li>
+            <li><strong>ICT·AI 재난 안전망:</strong> 음성통보 16개소, 재난 CCTV 19개소, 수위관측 4개소 완비</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02. 주택 재고 및 노후도 -->
+    <section class="report-section" id="sec2">
+      <div class="section-title-wrap">
+        <div class="section-icon"><i class="fa-solid fa-house-chimney-crack"></i></div>
+        <div>
+          <h2 class="section-title">02. 주택 재고 및 연식별 노후도 심층 분석</h2>
+        </div>
+        <div class="section-subtitle">원천 데이터: 노후도.png 전수 전산화</div>
+      </div>
+
+      <div class="callout-box callout-warning">
+        <strong>▌ 소형 주택 63.1% 노후화 도래 및 중대형 극심한 희소성</strong><br>
+        안성시 총 아파트 재고 59,553세대 중 <strong>21년 이상 노후 주택이 25,537세대(42.9%)</strong>에 달합니다. 
+        특히 전용 60㎡ 이하 소형 주택은 <strong>63.1%(18,323세대)</strong>가 20년 이상 노후화되어 신축 중형(전용 84㎡)으로의 갈아타기 대기수요가 풍부합니다. 반면 85㎡ 초과 대형 아파트는 전체의 <strong>4.7%</strong>에 불과하여 고소득층을 위한 대형 매물 품귀 현상이 심각합니다.
+      </div>
+
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>규모 구분</th>
+              <th class="text-right">전체 세대수</th>
+              <th class="text-right">5년 이하 (신축)</th>
+              <th class="text-right">6~10년 (준신축)</th>
+              <th class="text-right">11~20년 (기축)</th>
+              <th class="text-right">21~30년 (노후)</th>
+              <th class="text-right">31년 초과 (초노후)</th>
+              <th class="text-center">20년 초과 노후비중</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-bold">60㎡ 이하 (소형)</td>
+              <td class="text-right">29,031</td>
+              <td class="text-right">3,365</td>
+              <td class="text-right">3,802</td>
+              <td class="text-right">3,541</td>
+              <td class="text-right font-bold text-danger">15,194</td>
+              <td class="text-right font-bold text-danger">3,129</td>
+              <td class="text-center font-bold text-danger">63.1%</td>
+            </tr>
+            <tr>
+              <td class="font-bold">60~85㎡ (국민평형)</td>
+              <td class="text-right">27,726</td>
+              <td class="text-right">8,752</td>
+              <td class="text-right">6,844</td>
+              <td class="text-right">5,551</td>
+              <td class="text-right">4,289</td>
+              <td class="text-right">2,290</td>
+              <td class="text-center">23.7%</td>
+            </tr>
+            <tr>
+              <td class="font-bold">85㎡ 초과 (중대형)</td>
+              <td class="text-right">2,796</td>
+              <td class="text-right">517</td>
+              <td class="text-right">45</td>
+              <td class="text-right">1,599</td>
+              <td class="text-right">431</td>
+              <td class="text-right">204</td>
+              <td class="text-center"><span class="chip chip-warning">4.7% (희소)</span></td>
+            </tr>
+            <tr class="total-row">
+              <td class="font-bold">합계 (전체 재고)</td>
+              <td class="text-right font-bold">59,553</td>
+              <td class="text-right font-bold">12,634 (21.2%)</td>
+              <td class="text-right font-bold">10,691 (18.0%)</td>
+              <td class="text-right font-bold">10,691 (18.0%)</td>
+              <td class="text-right font-bold text-danger">19,914 (33.4%)</td>
+              <td class="text-right font-bold text-danger">5,623 (9.4%)</td>
+              <td class="text-center font-bold text-danger">42.9% (25,537호)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="chart-box">
+        <div class="chart-title">
+          <span><i class="fa-solid fa-chart-bar"></i> 면적별 연식 분포 및 노후 아파트 적체 현황</span>
+          <span class="chip chip-info">원천: 노후도.png</span>
+        </div>
+        <canvas id="chartAging" height="220"></canvas>
+      </div>
+    </section>
+
+    <!-- 03. 아파트 수급 동향 (분양·입주) 및 청약·미분양 -->
+    <section class="report-section" id="sec3">
+      <div class="section-title-wrap">
+        <div class="section-icon"><i class="fa-solid fa-cubes-stacked"></i></div>
+        <div>
+          <h2 class="section-title">03. 아파트 수급 동향 및 청약·미분양 진단</h2>
+        </div>
+        <div class="section-subtitle">부동산R114 분양/입주 DB & 국토교통부 미분양 통계</div>
+      </div>
+
+      <h3 class="sub-title">연도별 분양 실적 및 입주 공급물량 (2024 피크 ➔ 2027 공급 절벽)</h3>
+      <div class="grid-2col">
+        <div class="chart-box">
+          <div class="chart-title">
+            <span><i class="fa-solid fa-truck-ramp-box"></i> 안성시 연도별 분양 및 입주물량 추이</span>
+            <span class="chip chip-danger">24년 5,008세대 입주 쇼크</span>
+          </div>
+          <canvas id="chartSupply" height="240"></canvas>
+        </div>
+
+        <div class="chart-box">
+          <div class="chart-title">
+            <span><i class="fa-solid fa-chart-line"></i> 안성시 미분양 주택 재고 추이 (2024.07 ~ 2026.07)</span>
+            <span class="chip chip-info">현재 919호 수준</span>
+          </div>
+          <canvas id="chartUnsold" height="240"></canvas>
+        </div>
+      </div>
+
+      <h3 class="sub-title">주요 단지별 청약 결과 분석 (호황기 흥행 vs 최근 대거 미달)</h3>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>단지명</th>
+              <th>소재지</th>
+              <th class="text-right">총 세대</th>
+              <th class="text-center">입주년월</th>
+              <th class="text-right">일반공급</th>
+              <th class="text-right">접수건수</th>
+              <th class="text-center">1순위 경쟁률</th>
+              <th class="text-center">최종 경쟁률</th>
+              <th>시장 평가 및 특징</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-bold">안성공도스타허브서희스타힐스</td>
+              <td>공도읍</td>
+              <td class="text-right">786</td>
+              <td class="text-center">2024.06</td>
+              <td class="text-right">80</td>
+              <td class="text-right">890</td>
+              <td class="text-center font-bold text-success">6.95 : 1</td>
+              <td class="text-center font-bold text-success">11.13 : 1</td>
+              <td>스타필드 인근 역대 최고 흥행 마감</td>
+            </tr>
+            <tr>
+              <td class="font-bold">안성아양흥화하브(B5)</td>
+              <td>아양동</td>
+              <td class="text-right">474</td>
+              <td class="text-center">2024.04</td>
+              <td class="text-right">344</td>
+              <td class="text-right">1,573</td>
+              <td class="text-center font-bold text-success">2.33 : 1</td>
+              <td class="text-center font-bold text-success">4.57 : 1</td>
+              <td>아양택지지구 도심권 실수요 완판</td>
+            </tr>
+            <tr>
+              <td class="font-bold">e편한세상안성그랑루체</td>
+              <td>당왕동</td>
+              <td class="text-right">1,370</td>
+              <td class="text-center">2024.10</td>
+              <td class="text-right">1,274</td>
+              <td class="text-right">1,001</td>
+              <td class="text-center text-danger">0.46 : 1</td>
+              <td class="text-center">0.79 : 1</td>
+              <td>대단지 공급 집중으로 1순위 미달</td>
+            </tr>
+            <tr>
+              <td class="font-bold">해링턴플레이스진사(1BL)</td>
+              <td>공도읍</td>
+              <td class="text-right">355</td>
+              <td class="text-center">2026.03</td>
+              <td class="text-right">346</td>
+              <td class="text-right">145</td>
+              <td class="text-center text-danger">0.33 : 1</td>
+              <td class="text-center text-danger">0.42 : 1</td>
+              <td>평택 용이동 접경, 고분양가 저항 미달</td>
+            </tr>
+            <tr>
+              <td class="font-bold">안성우방아이유쉘에스티지</td>
+              <td>공도읍</td>
+              <td class="text-right">948</td>
+              <td class="text-center">2025.01</td>
+              <td class="text-right">916</td>
+              <td class="text-right">341</td>
+              <td class="text-center text-danger">0.22 : 1</td>
+              <td class="text-center text-danger">0.37 : 1</td>
+              <td>고금리 충격 및 공급 과잉기 진입</td>
+            </tr>
+            <tr>
+              <td class="font-bold">안성당왕경남아너스빌하이스트</td>
+              <td>신소현동</td>
+              <td class="text-right">976</td>
+              <td class="text-center">2027.03</td>
+              <td class="text-right">970</td>
+              <td class="text-right">58</td>
+              <td class="text-center text-danger">0.04 : 1</td>
+              <td class="text-center text-danger">0.06 : 1</td>
+              <td>당왕지구 공급 누적으로 대거 미달</td>
+            </tr>
+            <tr>
+              <td class="font-bold">라포르테공도</td>
+              <td>공도읍</td>
+              <td class="text-right">986</td>
+              <td class="text-center">2025.06</td>
+              <td class="text-right">980</td>
+              <td class="text-right">38</td>
+              <td class="text-center text-danger">0.02 : 1</td>
+              <td class="text-center text-danger">0.04 : 1</td>
+              <td>입지 대비 분양가 부담으로 참패</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 04. K-Atlas 금융 & 이동 -->
+    <section class="report-section" id="sec4">
+      <div class="section-title-wrap">
+        <div class="section-icon"><i class="fa-solid fa-credit-card"></i></div>
+        <div>
+          <h2 class="section-title">04. K-Atlas 기반 차주 금융·소비 및 광역 공간 이동 인텔리전스</h2>
+        </div>
+        <div class="section-subtitle">KCB K-Atlas 2.0 (4,400만 금융활동인구 모수)</div>
+      </div>
+
+      <h3 class="sub-title">안성시 대표 리딩 고소득 아파트 단지 Top 8 (K-Block 분석)</h3>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th class="text-center">순위</th>
+              <th>단지명</th>
+              <th>소재지</th>
+              <th class="text-right">금융인구 (명)</th>
+              <th class="text-right">평균 연소득 (만원)</th>
+              <th class="text-right">월카드소비 (만원)</th>
+              <th class="text-right">주담대 잔액 (만원)</th>
+              <th>단지 프리미엄 특성</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-center font-bold">1</td>
+              <td class="font-bold">한빛마을우남퍼스트빌</td>
+              <td>안성2동 (석정동)</td>
+              <td class="text-right">1,274</td>
+              <td class="text-right font-bold text-primary">5,548</td>
+              <td class="text-right">267</td>
+              <td class="text-right">10,860</td>
+              <td>원도심 전통 부촌, 이마트 인접 대형평형</td>
+            </tr>
+            <tr>
+              <td class="text-center font-bold">2</td>
+              <td class="font-bold">안성아양시티프라디움</td>
+              <td>안성2동 (옥산동)</td>
+              <td class="text-right">1,680</td>
+              <td class="text-right font-bold text-primary">5,544</td>
+              <td class="text-right">247</td>
+              <td class="text-right">11,831</td>
+              <td>아양택지 대장주, 초품아 상권 중심지</td>
+            </tr>
+            <tr>
+              <td class="text-center font-bold">3</td>
+              <td class="font-bold">해링턴플레이스진사2BL</td>
+              <td>공도읍 (진사리)</td>
+              <td class="text-right">524</td>
+              <td class="text-right font-bold text-primary">5,419</td>
+              <td class="text-right font-bold text-danger">307</td>
+              <td class="text-right font-bold text-danger">26,555</td>
+              <td>평택 용이동 직결 신축, 고소득·고부채 차주</td>
+            </tr>
+            <tr>
+              <td class="text-center font-bold">4</td>
+              <td class="font-bold">e편한세상안성그랑루체</td>
+              <td>안성3동 (당왕동)</td>
+              <td class="text-right">2,357</td>
+              <td class="text-right font-bold text-primary">5,340</td>
+              <td class="text-right">283</td>
+              <td class="text-right">23,380</td>
+              <td>당왕지구 최대 브랜드 신축 랜드마크</td>
+            </tr>
+            <tr>
+              <td class="text-center font-bold">5</td>
+              <td class="font-bold">공도KCC스위첸</td>
+              <td>공도읍 (만정리)</td>
+              <td class="text-right">2,806</td>
+              <td class="text-right">5,259</td>
+              <td class="text-right">254</td>
+              <td class="text-right">12,023</td>
+              <td>공도읍 매머드급 랜드마크 (2,800여 명)</td>
+            </tr>
+            <tr>
+              <td class="text-center font-bold">6</td>
+              <td class="font-bold">공도디자인시티블루밍</td>
+              <td>공도읍 (만정리)</td>
+              <td class="text-right">3,511</td>
+              <td class="text-right">5,118</td>
+              <td class="text-right">246</td>
+              <td class="text-right">12,416</td>
+              <td>공도 최대 규모 단지, 안심 통학 학군</td>
+            </tr>
+            <tr>
+              <td class="text-center font-bold">7</td>
+              <td class="font-bold">안성공도우미린더퍼스트</td>
+              <td>공도읍 (승두리)</td>
+              <td class="text-right">3,051</td>
+              <td class="text-right">5,007</td>
+              <td class="text-right">228</td>
+              <td class="text-right">12,569</td>
+              <td>안성IC 인접, 승두천 복원 최대 수혜</td>
+            </tr>
+            <tr>
+              <td class="text-center font-bold">8</td>
+              <td class="font-bold">석정동신원아침도시</td>
+              <td>안성2동 (석정동)</td>
+              <td class="text-right">1,647</td>
+              <td class="text-right">4,954</td>
+              <td class="text-right">210</td>
+              <td class="text-right">10,960</td>
+              <td>원도심 관공서·이마트 생활권 준신축</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="sub-title">광역 통근(근무지 유출) vs 이주(전입 유입) 네트워크</h3>
+      <div class="grid-2col">
+        <div class="chart-box">
+          <div class="chart-title">
+            <span><i class="fa-solid fa-briefcase"></i> 안성 거주자의 외부 통근지 Top 5 (근무지)</span>
+            <span class="chip chip-info">평택 통근 압도적 1위</span>
+          </div>
+          <canvas id="chartCommute" height="220"></canvas>
+        </div>
+
+        <div class="chart-box">
+          <div class="chart-title">
+            <span><i class="fa-solid fa-truck-moving"></i> 안성으로의 외부 전입지 Top 5 (이주 유입)</span>
+            <span class="chip chip-success">평택 고분양가 탈출 유입</span>
+          </div>
+          <canvas id="chartMigration" height="220"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05. 종합 진단 & 전략 -->
+    <section class="report-section" id="sec5">
+      <div class="section-title-wrap">
+        <div class="section-icon"><i class="fa-solid fa-compass"></i></div>
+        <div>
+          <h2 class="section-title">05. 종합 진단 및 미래 주택시장 전략 제언</h2>
+        </div>
+        <div class="section-subtitle">SWOT 종합 분석 및 3대 실무 권고사항</div>
+      </div>
+
+      <div class="swot-grid">
+        <div class="swot-card swot-s">
+          <div class="swot-header"><i class="fa-solid fa-shield"></i> 강점 (Strength)</div>
+          <ul class="swot-list">
+            <li>2026~2028년 신규 입주물량 급감 (연 1천호 안팎 공급 절벽)</li>
+            <li>20년 이상 노후 아파트 42.9%의 풍부한 갈아타기 대기수요</li>
+            <li>공도·아양 중심 연소득 5,500만 원대 탄탄한 차주 계층</li>
+          </ul>
+        </div>
+        <div class="swot-card swot-w">
+          <div class="swot-header"><i class="fa-solid fa-triangle-exclamation"></i> 약점 (Weakness)</div>
+          <ul class="swot-list">
+            <li>2024년 5,008세대 공급 쇼크로 인한 미분양(919호) 적체 잔존</li>
+            <li>전용 85㎡ 초과 중대형 아파트 재고 극심한 결핍 (4.7%)</li>
+            <li>외곽 면지역과 공도·아양 신도심 간의 양극화 심화</li>
+          </ul>
+        </div>
+        <div class="swot-card swot-o">
+          <div class="swot-header"><i class="fa-solid fa-lightbulb"></i> 기회 (Opportunity)</div>
+          <ul class="swot-list">
+            <li>평택 고덕 및 용인 처인 반도체 메가클러스터 배후 직주근접</li>
+            <li>평택 대비 분양가 70~80% 수준의 탁월한 가격 경쟁력</li>
+            <li>승두천 복원, 바람길숲, 만정공원 등 2027 도심 환경 혁신</li>
+          </ul>
+        </div>
+        <div class="swot-card swot-t">
+          <div class="swot-header"><i class="fa-solid fa-bolt"></i> 위협 (Threat)</div>
+          <ul class="swot-list">
+            <li>시중은행 대출금리 상승 및 DSR 강화에 따른 매수 관망세</li>
+            <li>수도권 외곽 비규제지역 투자 심리 회복 지연 리스크</li>
+            <li>원자재가 상승에 따른 분양가 인상 압박</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="sub-title">미래 주택시장 3대 실무 권고사항</h3>
+      <div class="callout-box" style="margin-bottom: 12px;">
+        <strong>1. [수급 정상화] 2026년 하반기 이후 미분양 소진 및 가격 반등 국면 전환</strong><br>
+        2024년 5,008세대의 입주 쇼크는 마무리 단계에 접어들었으며, 2026년 1,989세대 입주 이후 2027년(976세대)과 2028년(945세대)은 과거 10년 평균 공급량의 30% 수준에 불과한 '공급 가뭄'이 도래합니다. 세대수 증가(연 2,000+ 세대)와 맞물려 2026년 하반기부터 미분양 물량이 자연 해소되며 수급 반등 장세가 전개될 것입니다.
+      </div>
+      <div class="callout-box" style="margin-bottom: 12px;">
+        <strong>2. [타겟 마케팅] '평택 고분양가 탈출 수요' + '내부 노후 소형 갈아타기' 집중 공략</strong><br>
+        • <strong>평택 탈출 타겟:</strong> 평택 고덕·비전동의 집값/전세값 부담을 느끼는 3040 직장인을 대상으로 안성IC 인접 공도읍 신축의 가격 메리트(평택 대비 수억 원 저렴)를 적극 소구.<br>
+        • <strong>내부 갈아타기 타겟:</strong> 관내 20년 이상 노후 소형 아파트 거주 1.8만 세대를 대상으로 최신 4Bay 평면 및 스마트 커뮤니티를 갖춘 국민평형(74~84㎡) 환승 마케팅 전개.
+      </div>
+      <div class="callout-box" style="margin-bottom: 12px;">
+        <strong>3. [상품 기획] 전용 84㎡B·101㎡ 중대형 희소 상품 배치 및 수변 숲세권 브랜딩</strong><br>
+        안성시 내 85㎡ 초과 주택 비중이 4.7%에 불과하므로, 향후 신규 사업장에서는 희소성이 높은 중대형 평면(15~20% 비율)을 전략 배치하고, 시가 추진 중인 '승두천 생태하천 및 도시 바람길 숲'과 결합된 친수·숲세권 브랜딩을 강화해야 합니다.
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 토스트 알림창 -->
+  <div id="toastMessage">요약 보고서가 클립보드에 복사되었습니다! 카카오톡이나 메모장에 붙여넣기 하세요.</div>
+
+  <!-- 푸터 -->
+  <footer>
+    <p><strong>[안성시 주택시장 종합 진단 및 미래 성장 전략 보고서 (v2)]</strong></p>
+    <p>원천 데이터: 부동산R114 PropX, KCB K-Atlas 2.0, 행정안전부 주민등록통계, 국토교통부 주택통계, 안성시 개발계획</p>
+    <p style="font-size: 11px; margin-top: 10px; color: #64748B;">본 보고서는 사업성 검토 및 마케팅 전략 수립을 위한 실무 인텔리전스 자료이며 무단 전재 및 배포를 금합니다.</p>
+  </footer>
+
+  <!-- 인터랙티브 스크립트 -->
+  <script>
+    // 텍스트 요약 복사 기능 (RULE 7 준수)
+    function copySummaryReport() {
+      const summaryText = `[안성시 주택시장 종합 진단 및 미래 성장 전략 요약]
+■ 분석 대상: 경기도 안성시 전역 (공도읍, 아양/당왕택지 등)
+■ 기준 시점: 2026년 하반기 (부동산R114 PropX × KCB K-Atlas 2.0 빅데이터)
+
+1. 핵심 지표 현황
+• 총인구 / 세대수: 196,592명 / 97,042세대 (인구 20만 돌파 임박, 세대 분화 가속)
+• 아파트 재고 노후도: 총 59,553세대 중 21년 이상 노후 42.9% (전용 60㎡ 이하 소형은 63.1% 노후화)
+• 수급 사이클 전환: 2024년 5,008세대 입주 피크 통과 ➔ 2027년 976세대 (공급 절벽 진입)
+• 미분양 재고: 919호 수준 (2026년 하반기 이후 공급 급감과 함께 점진적 자연 소진 전망)
+
+2. K-Atlas 광역 이동 & 금융 인텔리전스
+• 최고 소득 주거지: 안성2동 한빛마을우남(5,548만), 아양시티프라디움(5,544만), 공도 해링턴진사(5,419만)
+• 광역 통근(근무지): 평택시(신평·비전·고덕 삼성전자 반도체) 및 천안 입장·용인 처인 반도체 벨트 직주근접
+• 광역 이주(전입지): 평택시 용이·비전·고덕동에서 고분양가 회피 실수요층의 안성 전입 1위
+
+3. 미래 주택시장 3대 전략 권고
+① 수급 정상화: 2026년 하반기 이후 미분양 소진 및 2027년 공급 절벽에 따른 수급 반등 장세 전개
+② 타겟 마케팅: '평택 고분양가 탈출 3040 맞벌이 직장인' + '관내 20년 이상 노후 소형 거주 1.8만 세대' 집중 공략
+③ 상품 기획: 안성시 내 4.7%에 불과한 전용 84㎡B·101㎡ 중대형 희소 평면 전략 배치 및 승두천 수변 숲세권 브랜딩`;
+
+      navigator.clipboard.writeText(summaryText).then(() => {
+        showToast();
+      }).catch(err => {
+        alert('요약 보고서가 클립보드에 복사되었습니다! 카카오톡이나 메모장에 붙여넣기 하세요.');
+      });
+    }
+
+    // 토스트 알림 표시 함수
+    function showToast() {
+      const toast = document.getElementById("toastMessage");
+      toast.className = "show";
+      setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+    }
+
+    // 1. 인구/세대수 차트
+    const ctxPop = document.getElementById('chartPop').getContext('2d');
+    new Chart(ctxPop, {
+      type: 'bar',
+      data: {
+        labels: ['2018년', '2019년', '2020년', '2021년', '2022년', '2023년', '2024년', '2025년'],
+        datasets: [
+          {
+            type: 'line',
+            label: '총인구수 (명)',
+            data: [183579, 183405, 187012, 189534, 188842, 189034, 193949, 196592],
+            borderColor: '#1E3A8A',
+            backgroundColor: '#1E3A8A',
+            borderWidth: 3,
+            yAxisID: 'yPop'
+          },
+          {
+            type: 'bar',
+            label: '세대수 (세대)',
+            data: [79805, 81599, 85839, 89118, 89951, 91026, 94809, 97042],
+            backgroundColor: '#93C5FD',
+            borderRadius: 4,
+            yAxisID: 'yHouse'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: 'bottom' } },
+        scales: {
+          yPop: { type: 'linear', position: 'left', min: 170000, max: 205000 },
+          yHouse: { type: 'linear', position: 'right', min: 70000, max: 105000, grid: { drawOnChartArea: false } }
+        }
+      }
+    });
+
+    // 2. 읍면동별 인구 비중 파이 차트
+    const ctxPopDong = document.getElementById('chartPopDong').getContext('2d');
+    new Chart(ctxPopDong, {
+      type: 'doughnut',
+      data: {
+        labels: ['공도읍 (29.1%)', '안성3동 (11.4%)', '안성2동 (9.6%)', '안성1동 (6.5%)', '대덕면 (5.6%)', '기타 10개 읍면 (37.8%)'],
+        datasets: [{
+          data: [57245, 22427, 18808, 12759, 10982, 74371],
+          backgroundColor: ['#1E3A8A', '#3B82F6', '#60A5FA', '#93C5FD', '#CBD5E1', '#E2E8F0']
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: 'bottom' } }
+      }
+    });
+
+    // 3. 면적별 연식 분포 차트
+    const ctxAging = document.getElementById('chartAging').getContext('2d');
+    new Chart(ctxAging, {
+      type: 'bar',
+      data: {
+        labels: ['5년 이하 (신축)', '6~10년 (준신축)', '11~20년 (기축)', '21~30년 (노후)', '31년 초과 (초노후)'],
+        datasets: [
+          {
+            label: '60㎡ 이하 (소형)',
+            data: [3365, 3802, 3541, 15194, 3129],
+            backgroundColor: '#0D9488'
+          },
+          {
+            label: '60~85㎡ (국민평형)',
+            data: [8752, 6844, 5551, 4289, 2290],
+            backgroundColor: '#3B82F6'
+          },
+          {
+            label: '85㎡ 초과 (중대형)',
+            data: [517, 45, 1599, 431, 204],
+            backgroundColor: '#8B5CF6'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: 'bottom' } },
+        scales: {
+          x: { stacked: true },
+          y: { stacked: true, title: { display: true, text: '세대수 (세대)' } }
+        }
+      }
+    });
+
+    // 4. 수급 (분양 vs 입주) 차트
+    const ctxSupply = document.getElementById('chartSupply').getContext('2d');
+    new Chart(ctxSupply, {
+      type: 'bar',
+      data: {
+        labels: ['2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026(예)', '2027(예)', '2028(예)'],
+        datasets: [
+          {
+            label: '분양물량 실적',
+            data: [443, 1146, 2376, 4382, 3737, 2965, 794, 945, 0, 0, 0],
+            backgroundColor: '#CBD5E1',
+            borderRadius: 4
+          },
+          {
+            label: '입주 공급물량',
+            data: [5045, 1419, 1861, 644, 0, 2909, 5008, 2728, 1989, 976, 945],
+            backgroundColor: '#EF4444',
+            borderRadius: 4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: 'bottom' } },
+        scales: {
+          y: { title: { display: true, text: '세대수' } }
+        }
+      }
+    });
+
+    // 5. 미분양 추이 차트
+    const ctxUnsold = document.getElementById('chartUnsold').getContext('2d');
+    new Chart(ctxUnsold, {
+      type: 'line',
+      data: {
+        labels: ['24.07', '24.09', '24.11', '25.01', '25.03', '25.05', '25.08(저점)', '25.10', '26.01', '26.04', '26.07'],
+        datasets: [{
+          label: '미분양 호수 (호)',
+          data: [1113, 739, 625, 553, 461, 411, 368, 605, 951, 938, 919],
+          borderColor: '#F59E0B',
+          backgroundColor: 'rgba(245, 158, 11, 0.1)',
+          fill: true,
+          tension: 0.3,
+          borderWidth: 3
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: 'bottom' } },
+        scales: {
+          y: { min: 200, max: 1300, title: { display: true, text: '호수' } }
+        }
+      }
+    });
+
+    // 6. 외부 통근지 Top 5 차트
+    const ctxCommute = document.getElementById('chartCommute').getContext('2d');
+    new Chart(ctxCommute, {
+      type: 'bar',
+      data: {
+        labels: ['평택 신평동', '평택 비전1동', '평택 비전2동', '평택 송탄동(산단)', '평택 세교동', '천안 입장면', '평택 고덕동(삼성)'],
+        datasets: [{
+          label: '통근 비중 (%)',
+          data: [1.17, 1.13, 0.96, 0.58, 0.55, 0.51, 0.40],
+          backgroundColor: '#3B82F6',
+          borderRadius: 4
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { x: { title: { display: true, text: '통근 비율 (%)' } } }
+      }
+    });
+
+    // 7. 외부 전입지 Top 5 차트
+    const ctxMigration = document.getElementById('chartMigration').getContext('2d');
+    new Chart(ctxMigration, {
+      type: 'bar',
+      data: {
+        labels: ['평택 용이동', '평택 비전2동', '평택 비전1동', '평택 동삭동', '평택 고덕동', '평택 신평동', '화성 향남읍'],
+        datasets: [{
+          label: '이주 유입 비중 (%)',
+          data: [1.88, 1.84, 1.28, 0.58, 0.58, 0.54, 0.36],
+          backgroundColor: '#10B981',
+          borderRadius: 4
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { x: { title: { display: true, text: '전입 비율 (%)' } } }
+      }
+    });
+  </script>
+</body>
+</html>
+"""
+
+with open("안성/안성시_주택시장_종합분석_보고서_v2.html", "w", encoding="utf-8") as f:
+    f.write(html_v2)
+
+print("v2 파일 생성 완료: 안성/안성시_주택시장_종합분석_보고서_v2.html")

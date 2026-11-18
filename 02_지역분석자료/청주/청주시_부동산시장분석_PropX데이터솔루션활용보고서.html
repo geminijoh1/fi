@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>충청북도 청주시 부동산 시장 분석 보고서 | PropX & K-Atlas</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Pretendard Font -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Pretendard', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            navy: {
+              50: '#f0f4f8',
+              100: '#d9e2ec',
+              500: '#334e68',
+              700: '#102a43',
+              800: '#0b1d30',
+              900: '#061320',
+            },
+            point: {
+              red: '#ef4444',
+              emerald: '#10b981',
+              amber: '#f59e0b',
+              blue: '#2563eb',
+              indigo: '#4f46e5',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Pretendard', sans-serif;
+      scroll-behavior: smooth;
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+    @media print {
+      .no-print { display: none !important; }
+      body { background-color: #ffffff; }
+      .page-break { page-break-before: always; }
+      .shadow-sm, .shadow-md, .shadow-lg { box-shadow: none !important; border: 1px solid #e2e8f0; }
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- 상단 네비게이션 헤더 (로고 자동 삽입 금지 준수 / 요약 복사 버튼 필수 탑재) -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-chart-line text-blue-600 text-xl"></i>
+          <span class="font-black text-slate-900 tracking-tight text-lg">청주시 부동산 시장분석</span>
+          <span class="text-xs text-blue-700 font-semibold px-2.5 py-0.5 bg-blue-50 border border-blue-200 rounded-full">PropX & K-Atlas</span>
+        </div>
+      </div>
+      <nav class="hidden md:flex space-x-6 text-sm font-medium text-slate-600">
+        <a href="#summary" class="hover:text-blue-600 transition">핵심 요약</a>
+        <a href="#unsold" class="hover:text-blue-600 transition">미분양·청약</a>
+        <a href="#demographics" class="hover:text-blue-600 transition">인문·소득</a>
+        <a href="#migration" class="hover:text-blue-600 transition">이주·통근</a>
+        <a href="#supply" class="hover:text-blue-600 transition">공급·입주</a>
+        <a href="#development" class="hover:text-blue-600 transition">개발·미래전략</a>
+      </nav>
+      <div class="flex items-center space-x-2">
+        <!-- 규칙 7: 📋 요약 복사 기능 필수 탑재 -->
+        <button onclick="copySummaryReport()" class="no-print inline-flex items-center space-x-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow-sm transition-colors cursor-pointer">
+          <i class="fa-solid fa-clipboard"></i>
+          <span>📋 요약 복사</span>
+        </button>
+        <button onclick="window.print()" class="no-print inline-flex items-center space-x-1 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition-colors">
+          <i class="fa-solid fa-print"></i>
+          <span>인쇄</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+
+    <!-- 히어로 섹션 -->
+    <section class="bg-gradient-to-br from-slate-900 via-navy-700 to-slate-900 rounded-2xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
+      <div class="absolute -right-10 -bottom-10 opacity-10 text-9xl">
+        <i class="fa-solid fa-city"></i>
+      </div>
+      <div class="relative z-10 max-w-4xl space-y-4">
+        <div class="inline-flex items-center space-x-2 px-3 py-1 bg-blue-500/30 border border-blue-400/40 rounded-full text-xs font-medium text-blue-200">
+          <i class="fa-solid fa-calendar-check"></i>
+          <span>기준 시점: 2026년 11월 (K-Atlas 2026.08 / PropX 실데이터)</span>
+        </div>
+        <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
+          충청북도 청주시 부동산 시장 심층 분석 보고서
+        </h1>
+        <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+          HDC랩스·부동산R114 PropX 원천 DB와 KCB K-Atlas 2.0 금융·GIS 통계 및 청주시 도시개발 미래전략 보고서를 기반으로, 미분양 400세대 선의 전국 최상위 건전성과 가경아이파크 15만 청약 통장 돌풍, SK하이닉스 M15X HBM 증설과 CTX 30분대 초연결, 51.8% 노후도 교체 압력을 입체 진단합니다.
+        </p>
+      </div>
+    </section>
+
+    <!-- 핵심 KPI 통계 카드 -->
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between text-slate-500 text-xs font-medium mb-2">
+          <span>미분양 세대수 (2026.07)</span>
+          <span class="p-1.5 bg-emerald-50 text-emerald-600 rounded-md"><i class="fa-solid fa-shield-halved"></i></span>
+        </div>
+        <div class="text-2xl font-black text-emerald-600 tracking-tight">402<span class="text-sm font-semibold ml-1 text-slate-700">세대</span></div>
+        <div class="text-xs text-emerald-600 mt-1 flex items-center font-medium">
+          <i class="fa-solid fa-check mr-1"></i> 전국 최상위 초건전 (천안 5,100세대 대비 극히 안정)
+        </div>
+      </div>
+
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between text-slate-500 text-xs font-medium mb-2">
+          <span>가경아이파크 7·8단지 1순위 청약</span>
+          <span class="p-1.5 bg-rose-50 text-rose-600 rounded-md"><i class="fa-solid fa-fire-flame-curved"></i></span>
+        </div>
+        <div class="text-2xl font-black text-rose-600 tracking-tight">149,730<span class="text-sm font-semibold ml-1 text-slate-700">명</span></div>
+        <div class="text-xs text-rose-600 mt-1 font-medium">
+          7단지 194.59:1 / 8단지 89.38:1 역대 최다 기록
+        </div>
+      </div>
+
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between text-slate-500 text-xs font-medium mb-2">
+          <span>강서2동 가구 연소득 (K-Atlas)</span>
+          <span class="p-1.5 bg-blue-50 text-blue-600 rounded-md"><i class="fa-solid fa-sack-dollar"></i></span>
+        </div>
+        <div class="text-2xl font-black text-blue-700 tracking-tight">5,871<span class="text-sm font-semibold ml-1 text-slate-700">만원</span></div>
+        <div class="text-xs text-blue-600 mt-1 font-medium">
+          테크노폴리스 (복대1동 5,822만 / 지웰시티 10.5억)
+        </div>
+      </div>
+
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between text-slate-500 text-xs font-medium mb-2">
+          <span>21년 이상 노후 아파트 비율</span>
+          <span class="p-1.5 bg-amber-50 text-amber-600 rounded-md"><i class="fa-solid fa-building"></i></span>
+        </div>
+        <div class="text-2xl font-black text-amber-600 tracking-tight">51.78<span class="text-sm font-semibold ml-1 text-slate-700">%</span></div>
+        <div class="text-xs text-amber-600 mt-1 font-medium">
+          총 130,873세대 (신축 갈아타기 대기수요 풍부)
+        </div>
+      </div>
+    </section>
+
+    <!-- Executive Summary Section -->
+    <section id="summary" class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-6 bg-blue-600 rounded-full"></span>
+          <h2 class="text-xl font-bold text-slate-900 tracking-tight">Executive Summary (핵심 전략 요약)</h2>
+        </div>
+        <span class="text-xs font-medium text-slate-400">종합 진단 요약</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200/80 space-y-2">
+          <div class="flex items-center space-x-2 text-emerald-700 font-bold text-sm">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>초건전 미분양(402세대) 및 가경아이파크 15만 청약 광풍</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            천안시가 5,100세대로 적체된 반면, 청주시는 2025년 7월 <strong>'미분양 0세대(완판)'</strong>를 거쳐 <strong>2026.07 기준 402세대</strong>로 전국 최상위 건전성을 유지함. 2026년 10월 분양된 <strong>'가경아이파크 7·8단지'에만 149,730개(최고 194.59:1)</strong>의 1순위 통장이 집중되며 역대급 흥행을 기록한 반면, 외곽 지북동 한양립스(0.22:1)는 미달되어 브랜드·입지별 쏠림 양극화가 뚜렷함.
+          </p>
+        </div>
+
+        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200/80 space-y-2">
+          <div class="flex items-center space-x-2 text-amber-600 font-bold text-sm">
+            <i class="fa-solid fa-arrows-spin"></i>
+            <span>공급 사이클 안정성: 2027년 수급 피크(9.7천 세대)와 51.8% 교체 수요</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            2025년 4,546세대 적정 공급을 거쳐 2026년 5,804세대, <strong>2027년 9,709세대</strong>로 정점에 도달하나, 천안(26년 689 ➔ 29년 12,598)과 달리 완만한 분산 입주 곡선을 형성함. 특히 <strong>21년 이상 구축이 130,873세대(51.78%)</strong>, 31년 초과가 64,663세대에 달해 신축 아파트 갈아타기 이주 압력이 향후 공급 물량을 견고하게 흡수할 전망임.
+          </p>
+        </div>
+
+        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200/80 space-y-2">
+          <div class="flex items-center space-x-2 text-blue-600 font-bold text-sm">
+            <i class="fa-solid fa-users"></i>
+            <span>인문·소득 기반: 85.6만 충청권 거점, 하이닉스·테크노폴리스 고소득 체력</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            인구 856,152명, 세대수 409,218세대로 역대 최대치 경신. K-Atlas 분석 결과 최고 부촌인 <strong>강서2동(연소득 5,871만원, 주담대 1.76억)</strong>과 <strong>복대1동(연소득 5,822만원, 소비 248만원, 지웰시티 10.5억 신고가)</strong>이 도내 최고 소비력을 견인함. 관외 통근에서 진천(3.23%), 세종(2.19%), 서울 강남(0.84%, KTX 오송역 45분)과의 초광역 연계가 밀접함.
+          </p>
+        </div>
+
+        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200/80 space-y-2">
+          <div class="flex items-center space-x-2 text-indigo-600 font-bold text-sm">
+            <i class="fa-solid fa-microchip"></i>
+            <span>미래 성장 엔진: SK하이닉스 M15X HBM 증설, CTX 30분대, 코스트코 추진</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            글로벌 HBM 수요 폭발에 따른 <strong>SK하이닉스 M15X 대규모 증설</strong>로 청주시 아파트값이 2년 8개월 만에 최대 상승폭을 주도함. <strong>CTX(충청권 광역급행철도)</strong> 추진으로 청주 도심-세종 18분, 대전 30분 초연결 완성. 평택-오송 2복선화(2030), <strong>코스트코 관내 산단 3곳 대체 부지 제안</strong>을 통한 유치 협상 재개로 자족 기능이 강화됨.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 제1장: 미분양 현황 및 청약 시장 진단 -->
+    <section id="unsold" class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-6 bg-emerald-600 rounded-full"></span>
+          <h2 class="text-xl font-bold text-slate-900 tracking-tight">1. 미분양 현황 및 청약 시장 양극화 분석</h2>
+        </div>
+        <span class="text-xs font-semibold px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md">수요 흡수력 우수</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+        <!-- 차트: 미분양 추이 -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-slate-800">청주시 월별 미분양 추이 (2024.07 ~ 2026.07)</h3>
+            <span class="text-xs text-slate-500">단위: 세대</span>
+          </div>
+          <div class="h-64">
+            <canvas id="unsoldChart"></canvas>
+          </div>
+          <div class="text-xs text-slate-500 text-center mt-2">출처: HDC랩스·부동산R114 PropX 미분양추이</div>
+        </div>
+
+        <!-- 차트: 청약경쟁률 비교 -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-slate-800">2026 주요 분양 단지 1순위 청약경쟁률</h3>
+            <span class="text-xs text-slate-500">경쟁률 (N : 1)</span>
+          </div>
+          <div class="h-64">
+            <canvas id="subscriptionChart"></canvas>
+          </div>
+          <div class="text-xs text-slate-500 text-center mt-2">출처: HDC랩스·부동산R114 PropX 청약통계</div>
+        </div>
+      </div>
+
+      <!-- 미분양 상세 테이블 -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2">
+          <i class="fa-solid fa-table-list text-blue-600"></i>
+          <span>청주시 미분양 변동 상세 현황 (2024.07 ~ 2026.07)</span>
+        </h3>
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+          <table class="w-full text-xs text-left text-slate-600">
+            <thead class="bg-slate-100 text-slate-700 font-bold uppercase border-b border-slate-200">
+              <tr>
+                <th class="px-4 py-2.5 text-center">기준 연월</th>
+                <th class="px-4 py-2.5 text-right">미분양 세대수</th>
+                <th class="px-4 py-2.5 text-right">전월 대비 증감</th>
+                <th class="px-4 py-2.5">시장 흐름 및 진단 코멘트</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-center font-semibold">2024.07</td><td class="px-4 py-2 text-right">700</td><td class="px-4 py-2 text-right text-slate-400">—</td><td class="px-4 py-2">기 분양 단지 잔여 물량 완만한 소진 국면</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-center">2024.09</td><td class="px-4 py-2 text-right">558</td><td class="px-4 py-2 text-right text-emerald-600 font-medium">▼ 142</td><td class="px-4 py-2">가을 성수기 실수요 유입 가속화</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-center">2024.11</td><td class="px-4 py-2 text-right">377</td><td class="px-4 py-2 text-right text-emerald-600 font-medium">▼ 181</td><td class="px-4 py-2">300세대 선 진입, 재고 소진 가속</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-center">2024.12</td><td class="px-4 py-2 text-right">241</td><td class="px-4 py-2 text-right text-emerald-600 font-medium">▼ 136</td><td class="px-4 py-2">연말 최저 수준 달성</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-center">2025.02</td><td class="px-4 py-2 text-right">537</td><td class="px-4 py-2 text-right text-rose-500 font-medium">▲ 296</td><td class="px-4 py-2">연초 신규 분양분 일시 편입</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-center">2025.04</td><td class="px-4 py-2 text-right">447</td><td class="px-4 py-2 text-right text-emerald-600 font-medium">▼ 90</td><td class="px-4 py-2">실수요 유입으로 지속 감소세</td></tr>
+              <tr class="bg-emerald-50/60 font-bold text-emerald-800"><td class="px-4 py-2 text-center">2025.07</td><td class="px-4 py-2 text-right text-emerald-700">0</td><td class="px-4 py-2 text-right text-emerald-700">▼ 254</td><td class="px-4 py-2">역사적 '미분양 제로(0세대)' 완전 완판 달성</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-center">2025.10</td><td class="px-4 py-2 text-right">900</td><td class="px-4 py-2 text-right text-rose-500 font-medium">▲ 722</td><td class="px-4 py-2">가을 분양 성수기 신규 미계약분 편입</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-center font-bold">2025.11</td><td class="px-4 py-2 text-right font-bold text-rose-600">1,184</td><td class="px-4 py-2 text-right text-rose-600 font-bold">▲ 284</td><td class="px-4 py-2 font-medium">단기 고점 형성 (연말 분양 물량 일시 집중)</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-center">2025.12</td><td class="px-4 py-2 text-right">748</td><td class="px-4 py-2 text-right text-emerald-600 font-medium">▼ 436</td><td class="px-4 py-2">연말 빠른 속도로 물량 소진</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-center">2026.02</td><td class="px-4 py-2 text-right">218</td><td class="px-4 py-2 text-right text-emerald-600 font-medium">▼ 530</td><td class="px-4 py-2">200세대 선 진입, 바닥 다지기</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-center font-bold text-blue-700">2026.04</td><td class="px-4 py-2 text-right font-bold text-blue-700">103</td><td class="px-4 py-2 text-right text-emerald-600 font-medium">▼ 115</td><td class="px-4 py-2">2026년 최저 바닥 기록 (초건전 국면)</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-4 py-2 text-center">2026.06</td><td class="px-4 py-2 text-right">543</td><td class="px-4 py-2 text-right text-rose-500 font-medium">▲ 210</td><td class="px-4 py-2">지북동 등 일부 분양 미달분 편입</td></tr>
+              <tr class="bg-blue-50/50 font-bold"><td class="px-4 py-2 text-center text-blue-800">2026.07</td><td class="px-4 py-2 text-right text-blue-800">402</td><td class="px-4 py-2 text-right text-emerald-600 font-bold">▼ 141</td><td class="px-4 py-2 text-blue-900">재소진 재개, 400세대 선 초건전 안정세 지속</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 청약 경쟁률 상세 테이블 -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2">
+          <i class="fa-solid fa-list-check text-blue-600"></i>
+          <span>2026 청주시 주요 신규 분양 단지 청약 결과 전수 분석</span>
+        </h3>
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+          <table class="w-full text-xs text-left text-slate-600">
+            <thead class="bg-slate-100 text-slate-700 font-bold uppercase border-b border-slate-200">
+              <tr>
+                <th class="px-3 py-2.5">단지명</th>
+                <th class="px-2 py-2.5 text-center">위치</th>
+                <th class="px-2 py-2.5 text-center">분양일</th>
+                <th class="px-2 py-2.5 text-center">입주예정</th>
+                <th class="px-2 py-2.5 text-right">총세대</th>
+                <th class="px-2 py-2.5 text-right">일반공급</th>
+                <th class="px-2 py-2.5 text-right">1순위접수</th>
+                <th class="px-2 py-2.5 text-center">1순위경쟁률</th>
+                <th class="px-2 py-2.5 text-center">지역1순위</th>
+                <th class="px-3 py-2.5">분양 성패 및 진단</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr class="bg-rose-50/70 font-semibold text-rose-900">
+                <td class="px-3 py-2 font-bold">청주가경아이파크(7단지)</td>
+                <td class="px-2 py-2 text-center">흥덕구 가경동</td>
+                <td class="px-2 py-2 text-center">2026.10</td>
+                <td class="px-2 py-2 text-center">2029.11</td>
+                <td class="px-2 py-2 text-right">543</td>
+                <td class="px-2 py-2 text-right">374</td>
+                <td class="px-2 py-2 text-right font-extrabold text-rose-600">72,777</td>
+                <td class="px-2 py-2 text-center font-extrabold text-rose-600">194.59 : 1</td>
+                <td class="px-2 py-2 text-center text-rose-600 font-bold">188.47 : 1</td>
+                <td class="px-3 py-2 text-rose-700 font-bold">역대 최고 경쟁률, 7.2만 통장 폭발 완판</td>
+              </tr>
+              <tr class="bg-rose-50/40 font-semibold text-rose-900">
+                <td class="px-3 py-2 font-bold">청주가경아이파크(8단지)</td>
+                <td class="px-2 py-2 text-center">흥덕구 가경동</td>
+                <td class="px-2 py-2 text-center">2026.10</td>
+                <td class="px-2 py-2 text-center">2029.11</td>
+                <td class="px-2 py-2 text-right">1,128</td>
+                <td class="px-2 py-2 text-right">861</td>
+                <td class="px-2 py-2 text-right font-extrabold text-rose-600">76,953</td>
+                <td class="px-2 py-2 text-center font-extrabold text-rose-600">89.38 : 1</td>
+                <td class="px-2 py-2 text-center text-rose-600 font-bold">86.56 : 1</td>
+                <td class="px-3 py-2 text-rose-700 font-bold">대단지 프리미엄, 7.6만 통장 집중 완판</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">청주푸르지오씨엘리체</td>
+                <td class="px-2 py-2 text-center">서원구 미평동</td>
+                <td class="px-2 py-2 text-center">2026.04</td>
+                <td class="px-2 py-2 text-center">2029.03</td>
+                <td class="px-2 py-2 text-right">1,351</td>
+                <td class="px-2 py-2 text-right">1,015</td>
+                <td class="px-2 py-2 text-right">6,572</td>
+                <td class="px-2 py-2 text-center font-bold text-blue-600">6.47 : 1</td>
+                <td class="px-2 py-2 text-center text-blue-600">6.28 : 1</td>
+                <td class="px-3 py-2 text-slate-600">남부권 1군 대단지 선호, 안정적 완판</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">신분평에피트더웨이시티(A2)</td>
+                <td class="px-2 py-2 text-center">서원구 장성동</td>
+                <td class="px-2 py-2 text-center">2026.10</td>
+                <td class="px-2 py-2 text-center">2029.09</td>
+                <td class="px-2 py-2 text-right">992</td>
+                <td class="px-2 py-2 text-right">830</td>
+                <td class="px-2 py-2 text-right">1,063</td>
+                <td class="px-2 py-2 text-center font-bold text-slate-700">1.28 : 1</td>
+                <td class="px-2 py-2 text-center">1.23 : 1</td>
+                <td class="px-3 py-2 text-slate-600">분평 생활권 실수요 흡수로 순위 내 마감</td>
+              </tr>
+              <tr class="bg-slate-100/70 text-slate-400">
+                <td class="px-3 py-2 line-through">청주한양립스더벨루체</td>
+                <td class="px-2 py-2 text-center">상당구 지북동</td>
+                <td class="px-2 py-2 text-center">2026.05</td>
+                <td class="px-2 py-2 text-center">2030.03</td>
+                <td class="px-2 py-2 text-right">949</td>
+                <td class="px-2 py-2 text-right">381</td>
+                <td class="px-2 py-2 text-right font-bold text-rose-500">85</td>
+                <td class="px-2 py-2 text-center font-bold text-rose-500">0.22 : 1</td>
+                <td class="px-2 py-2 text-center text-rose-500">0.21 : 1</td>
+                <td class="px-3 py-2 text-rose-500 font-semibold">외곽 입지 및 비선호로 대규모 미달</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 제2장: 인문 현황 및 정주·소득 여건 분석 -->
+    <section id="demographics" class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-6 bg-blue-600 rounded-full"></span>
+          <h2 class="text-xl font-bold text-slate-900 tracking-tight">2. 인문 현황 및 소득·금융 체력 분석</h2>
+        </div>
+        <span class="text-xs font-semibold px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-md">85.6만 메가시티 거점</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+        <!-- 차트: 인구 및 세대수 추이 -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-slate-800">청주시 인구 및 세대수 추이 (2008 ~ 2025)</h3>
+            <span class="text-xs text-slate-500">인구(명) / 세대(세대)</span>
+          </div>
+          <div class="h-64">
+            <canvas id="popChart"></canvas>
+          </div>
+          <div class="text-xs text-slate-500 text-center mt-2">출처: 행정안전부 주민등록 인구통계 (2014년 청원군 통합)</div>
+        </div>
+
+        <!-- 차트: 읍면동별 연소득 TOP 10 -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-slate-800">청주시 주요 읍면동 가구 연소득 & 월소비 TOP 10</h3>
+            <span class="text-xs text-slate-500">단위: 만원</span>
+          </div>
+          <div class="h-64">
+            <canvas id="incomeChart"></canvas>
+          </div>
+          <div class="text-xs text-slate-500 text-center mt-2">출처: KCB K-Atlas 2.0 (2026.08 기준)</div>
+        </div>
+      </div>
+
+      <!-- 읍면동 금융 지표 테이블 -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2">
+          <i class="fa-solid fa-coins text-amber-500"></i>
+          <span>청주시 읍면동별 가구 소득·소비·주담대 금융 체력 (K-Atlas)</span>
+        </h3>
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+          <table class="w-full text-xs text-left text-slate-600">
+            <thead class="bg-slate-100 text-slate-700 font-bold uppercase border-b border-slate-200">
+              <tr>
+                <th class="px-3 py-2.5">행정구역</th>
+                <th class="px-2 py-2.5 text-center">자치구</th>
+                <th class="px-2 py-2.5 text-right">가구당 연소득</th>
+                <th class="px-2 py-2.5 text-right">월카드소비</th>
+                <th class="px-2 py-2.5 text-right">주담대 약정잔액</th>
+                <th class="px-3 py-2.5">금융 체력 및 주거·산업 특성 평가</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr class="bg-blue-50/50 font-bold text-blue-900">
+                <td class="px-3 py-2">강서2동</td>
+                <td class="px-2 py-2 text-center">흥덕구</td>
+                <td class="px-2 py-2 text-right text-blue-700 font-extrabold">5,871 만원</td>
+                <td class="px-2 py-2 text-right">250 만원</td>
+                <td class="px-2 py-2 text-right text-blue-700 font-extrabold">17,562 만원</td>
+                <td class="px-3 py-2 font-medium">테크노폴리스 신축 & SK하이닉스 직주근접, 청주 최고 소득·대출 1위</td>
+              </tr>
+              <tr class="bg-blue-50/30 font-bold text-blue-900">
+                <td class="px-3 py-2">복대1동</td>
+                <td class="px-2 py-2 text-center">흥덕구</td>
+                <td class="px-2 py-2 text-right text-blue-700 font-extrabold">5,822 만원</td>
+                <td class="px-2 py-2 text-right font-extrabold">248 만원</td>
+                <td class="px-2 py-2 text-right">16,805 만원</td>
+                <td class="px-3 py-2 font-medium">신영지웰시티·현대백화점, 전통의 청주 1급지 부촌 (자족 컴팩트시티)</td>
+              </tr>
+              <tr class="hover:bg-slate-50 font-medium">
+                <td class="px-3 py-2 font-bold text-slate-800">산남동</td>
+                <td class="px-2 py-2 text-center">서원구</td>
+                <td class="px-2 py-2 text-right font-bold text-slate-800">5,113 만원</td>
+                <td class="px-2 py-2 text-right">207 만원</td>
+                <td class="px-2 py-2 text-right">11,473 만원</td>
+                <td class="px-3 py-2">법원·검찰청 법조타운 배후, 안정적 전문직 및 중산층 주거지</td>
+              </tr>
+              <tr class="hover:bg-slate-50 font-medium">
+                <td class="px-3 py-2 font-bold text-slate-800">오창읍</td>
+                <td class="px-2 py-2 text-center">청원구</td>
+                <td class="px-2 py-2 text-right font-bold text-slate-800">5,069 만원</td>
+                <td class="px-2 py-2 text-right">207 만원</td>
+                <td class="px-2 py-2 text-right">13,584 만원</td>
+                <td class="px-3 py-2">오창과학산단, 에코프로·LG엔솔 이차전지 클러스터 고소득 엔지니어</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-bold text-slate-800">오송읍</td>
+                <td class="px-2 py-2 text-center">흥덕구</td>
+                <td class="px-2 py-2 text-right font-bold text-slate-800">5,013 만원</td>
+                <td class="px-2 py-2 text-right font-bold text-slate-800">232 만원</td>
+                <td class="px-2 py-2 text-right font-bold text-slate-800">16,803 만원</td>
+                <td class="px-3 py-2">식약처 등 6대 국책기관, 바이오산단, KTX역세권 고학력 가구 밀집</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2">용담·명암·산성동</td>
+                <td class="px-2 py-2 text-center">상당구</td>
+                <td class="px-2 py-2 text-right">4,983 만원</td>
+                <td class="px-2 py-2 text-right">214 만원</td>
+                <td class="px-2 py-2 text-right">11,820 만원</td>
+                <td class="px-3 py-2">명암유원지 인근 쾌적 주거지, 공무원·자영업 고소득층</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2">가경동</td>
+                <td class="px-2 py-2 text-center">흥덕구</td>
+                <td class="px-2 py-2 text-right">4,901 만원</td>
+                <td class="px-2 py-2 text-right">204 만원</td>
+                <td class="px-2 py-2 text-right">13,692 만원</td>
+                <td class="px-3 py-2">아이파크 브랜드타운, 터미널 광역교통 거점 선호 주거지</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2">강서1동</td>
+                <td class="px-2 py-2 text-center">흥덕구</td>
+                <td class="px-2 py-2 text-right">4,783 만원</td>
+                <td class="px-2 py-2 text-right">212 만원</td>
+                <td class="px-2 py-2 text-right">13,562 만원</td>
+                <td class="px-3 py-2">서청주 IC 인접, 가경-복대 연계 신흥 주거 벨트</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2">용암2동</td>
+                <td class="px-2 py-2 text-center">상당구</td>
+                <td class="px-2 py-2 text-right">4,661 만원</td>
+                <td class="px-2 py-2 text-right">211 만원</td>
+                <td class="px-2 py-2 text-right">12,462 만원</td>
+                <td class="px-3 py-2">동남지구 신규 택지개발 연계, 젊은 가구 유입지</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2">용암1동</td>
+                <td class="px-2 py-2 text-center">상당구</td>
+                <td class="px-2 py-2 text-right">4,623 만원</td>
+                <td class="px-2 py-2 text-right">203 만원</td>
+                <td class="px-2 py-2 text-right">12,445 만원</td>
+                <td class="px-3 py-2">동남·용암 대규모 주거단지 형성, 안정적 실수요</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 이주 및 통근 분석 섹션 -->
+    <section id="migration" class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-6 bg-indigo-600 rounded-full"></span>
+          <h2 class="text-xl font-bold text-slate-900 tracking-tight">이주(전입) 및 통근 네트워크 정밀 분석</h2>
+        </div>
+        <span class="text-xs font-semibold px-2.5 py-1 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-md">충청 메가시티 중심</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+        <!-- 차트: 전입 지역 비율 -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-slate-800">청주시 전입(이주) 지역 비중 (K-Atlas)</h3>
+            <span class="text-xs text-slate-500">단위: %</span>
+          </div>
+          <div class="h-64">
+            <canvas id="migrationChart"></canvas>
+          </div>
+          <div class="text-xs text-slate-500 text-center mt-2">출처: KCB K-Atlas 2.0 (관내 63.2% + 세종·진천·대전 관외 유입)</div>
+        </div>
+
+        <!-- 차트: 통근 목적지 비율 -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-slate-800">청주시민 출퇴근 통근지 비중 (K-Atlas)</h3>
+            <span class="text-xs text-slate-500">단위: %</span>
+          </div>
+          <div class="h-64">
+            <canvas id="commutingChart"></canvas>
+          </div>
+          <div class="text-xs text-slate-500 text-center mt-2">출처: KCB K-Atlas 2.0 (흥덕구 28.3% + 진천·세종·서울 강남 초광역 통근)</div>
+        </div>
+      </div>
+
+      <!-- 통근 및 이주 핵심 코멘트 카드 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-600 space-y-2">
+          <div class="font-bold text-slate-800 flex items-center space-x-1.5 text-sm">
+            <i class="fa-solid fa-arrows-to-dot text-indigo-600"></i>
+            <span>전입(이주) 분석 요약: 세종시 및 충청권 허브</span>
+          </div>
+          <p>
+            청주시 관내 이동이 63.2%로 정주율이 매우 높은 가운데, 관외 전입 1위는 <strong>세종특별자치시(2.12%, 평균 연소득 4,989만원, 주담대 1.95억원)</strong>임. 오송-세종 BRT 축을 따라 청주 신축으로의 역유입 및 직장 발령 이주가 활발하며, 진천군(1.06%), 대전 서구(1.01%), 대전 유성구(1.01%), 충주시(0.96%), 평택시(0.92%) 순으로 유입됨.
+          </p>
+        </div>
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-600 space-y-2">
+          <div class="font-bold text-slate-800 flex items-center space-x-1.5 text-sm">
+            <i class="fa-solid fa-car text-blue-600"></i>
+            <span>통근 분석 요약: 흥덕구 자족 & 서울 강남 초광역권</span>
+          </div>
+          <p>
+            시내 통근은 <strong>흥덕구(28.34%)</strong>가 압도적이며, <strong>강서2동(통근자 연소득 6,894만원)</strong>, 옥산면(5,598만원), 봉명2동 등 하이닉스·산단 고소득 일자리가 집중됨. 관외로는 <strong>진천군(3.23%)</strong>, 세종시(2.19%), 음성군(1.72%) 산단 통근과 함께, <strong>KTX 오송역을 활용한 서울 강남구(0.84%) 및 영등포(0.57%)</strong> 초광역 통근자가 다수 포진함.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 제3장: 주택 공급 시장 분석 (입주 및 분양) -->
+    <section id="supply" class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-6 bg-amber-500 rounded-full"></span>
+          <h2 class="text-xl font-bold text-slate-900 tracking-tight">3. 주택 공급 및 입주 사이클 분석</h2>
+        </div>
+        <span class="text-xs font-semibold px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-md">수급 사이클 진단</span>
+      </div>
+
+      <!-- 공급 및 입주 사이클 차트 -->
+      <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-bold text-slate-800">청주시 연도별 입주 vs 분양 추이 및 전망 (2018 ~ 2030)</h3>
+          <span class="text-xs text-slate-500">단위: 세대</span>
+        </div>
+        <div class="h-72">
+          <canvas id="supplyCycleChart"></canvas>
+        </div>
+        <div class="text-xs text-slate-500 text-center mt-2">출처: HDC랩스·부동산R114 PropX 입주 및 분양 데이터베이스</div>
+      </div>
+
+      <!-- 노후도 현황 섹션 (이미지 및 표) -->
+      <div class="space-y-4">
+        <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2">
+          <i class="fa-solid fa-house-circle-exclamation text-amber-600"></i>
+          <span>청주시 아파트 재고 및 노후도 현황 (21년 이상 구축 51.78%)</span>
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+          <div class="md:col-span-1 border border-slate-200 rounded-xl overflow-hidden shadow-sm bg-white p-2">
+            <img src="./청주시 노후도.png" alt="청주시 아파트 노후도 현황" class="w-full h-auto rounded-lg object-contain">
+            <div class="text-center text-[11px] text-slate-400 mt-1.5">청주시 아파트 노후도 및 면적별 공급 분포</div>
+          </div>
+          <div class="md:col-span-2 overflow-x-auto rounded-xl border border-slate-200">
+            <table class="w-full text-xs text-left text-slate-600">
+              <thead class="bg-slate-100 text-slate-700 font-bold uppercase border-b border-slate-200">
+                <tr>
+                  <th class="px-3 py-2 text-center">연한 구분</th>
+                  <th class="px-2 py-2 text-right">60㎡ 이하</th>
+                  <th class="px-2 py-2 text-right">60~85㎡</th>
+                  <th class="px-2 py-2 text-right">85㎡ 초과</th>
+                  <th class="px-2 py-2 text-right font-bold text-slate-800">합계 (세대)</th>
+                  <th class="px-2 py-2 text-center font-bold">비율</th>
+                  <th class="px-3 py-2">수급 평가 및 갈아타기 압력</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr class="hover:bg-slate-50"><td class="px-3 py-1.5 text-center font-semibold">5년 이하 (신축)</td><td class="px-2 py-1.5 text-right">8,885</td><td class="px-2 py-1.5 text-right">19,193</td><td class="px-2 py-1.5 text-right">3,909</td><td class="px-2 py-1.5 text-right font-bold text-blue-600">31,987</td><td class="px-2 py-1.5 text-center font-bold text-blue-600">12.65%</td><td class="px-3 py-1.5">테크노폴리스·가경 등 신축 프리미엄</td></tr>
+                <tr class="hover:bg-slate-50"><td class="px-3 py-1.5 text-center">6~10년 (준신축)</td><td class="px-2 py-1.5 text-right">6,350</td><td class="px-2 py-1.5 text-right">31,082</td><td class="px-2 py-1.5 text-right">2,116</td><td class="px-2 py-1.5 text-right">39,548</td><td class="px-2 py-1.5 text-center">15.65%</td><td class="px-3 py-1.5">율량2·오송2산단·지웰2차 안정권</td></tr>
+                <tr class="hover:bg-slate-50"><td class="px-3 py-1.5 text-center">11~20년 (구축진입)</td><td class="px-2 py-1.5 text-right">14,722</td><td class="px-2 py-1.5 text-right">24,881</td><td class="px-2 py-1.5 text-right">10,757</td><td class="px-2 py-1.5 text-right">50,360</td><td class="px-2 py-1.5 text-center">19.92%</td><td class="px-3 py-1.5">산남·하복대 등 리모델링 수요 대두</td></tr>
+                <tr class="bg-amber-50/50 font-semibold text-amber-900"><td class="px-3 py-1.5 text-center">21~30년 (노후)</td><td class="px-2 py-1.5 text-right">38,011</td><td class="px-2 py-1.5 text-right">20,932</td><td class="px-2 py-1.5 text-right">7,267</td><td class="px-2 py-1.5 text-right font-bold">66,210</td><td class="px-2 py-1.5 text-center font-bold">26.20%</td><td class="px-3 py-1.5">용암1·개신·가경초기 신축 갈아타기 대기</td></tr>
+                <tr class="bg-rose-50/50 font-semibold text-rose-900"><td class="px-3 py-1.5 text-center">31년 초과 (극노후)</td><td class="px-2 py-1.5 text-right">35,026</td><td class="px-2 py-1.5 text-right">24,965</td><td class="px-2 py-1.5 text-right">4,672</td><td class="px-2 py-1.5 text-right font-bold text-rose-600">64,663</td><td class="px-2 py-1.5 text-center font-bold text-rose-600">25.58%</td><td class="px-3 py-1.5">사직·운천 등 원도심 재개발 필수 대상</td></tr>
+                <tr class="bg-slate-100 font-bold text-slate-800"><td class="px-3 py-2 text-center">합계 (재고)</td><td class="px-2 py-2 text-right">102,994</td><td class="px-2 py-2 text-right">121,053</td><td class="px-2 py-2 text-right">28,721</td><td class="px-2 py-2 text-right font-extrabold">252,768</td><td class="px-2 py-2 text-center">100.0%</td><td class="px-3 py-2 font-extrabold text-amber-700">21년 이상 51.78% (130,873세대) 압력</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 입주 캘린더 테이블 -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2">
+          <i class="fa-solid fa-truck-moving text-blue-600"></i>
+          <span>청주시 연도별·구별 입주 물량 현황 및 전망 (2024 ~ 2030)</span>
+        </h3>
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+          <table class="w-full text-xs text-left text-slate-600">
+            <thead class="bg-slate-100 text-slate-700 font-bold uppercase border-b border-slate-200">
+              <tr>
+                <th class="px-3 py-2.5 text-center">입주 연도</th>
+                <th class="px-3 py-2.5 text-right font-bold text-slate-900">청주시 합계</th>
+                <th class="px-2 py-2.5 text-right">상당구</th>
+                <th class="px-2 py-2.5 text-right">흥덕구</th>
+                <th class="px-2 py-2.5 text-right">서원구</th>
+                <th class="px-2 py-2.5 text-right">청원구</th>
+                <th class="px-3 py-2.5 text-center">수급 판정</th>
+                <th class="px-4 py-2.5">시장 영향 및 핵심 특징</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr class="hover:bg-slate-50"><td class="px-3 py-2 text-center font-bold">2024</td><td class="px-3 py-2 text-right font-bold">8,345</td><td class="px-2 py-2 text-right">0</td><td class="px-2 py-2 text-right">7,773</td><td class="px-2 py-2 text-right">0</td><td class="px-2 py-2 text-right">572</td><td class="px-3 py-2 text-center text-amber-600 font-bold">공급 과잉</td><td class="px-4 py-2">오송 파라곤·대광, SK뷰자이 등 흥덕구 집중 입주</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-3 py-2 text-center font-bold">2025</td><td class="px-3 py-2 text-right font-bold text-emerald-600">4,546</td><td class="px-2 py-2 text-right">0</td><td class="px-2 py-2 text-right">2,697</td><td class="px-2 py-2 text-right">1,849</td><td class="px-2 py-2 text-right">0</td><td class="px-3 py-2 text-center text-emerald-600 font-bold">수급 균형</td><td class="px-4 py-2">포레나매봉, 서한이다음 등 입주로 전세 안정세 유지</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-3 py-2 text-center font-bold">2026</td><td class="px-3 py-2 text-right font-bold text-blue-600">5,804</td><td class="px-2 py-2 text-right">742</td><td class="px-2 py-2 text-right">2,191</td><td class="px-2 py-2 text-right">2,791</td><td class="px-2 py-2 text-right">80</td><td class="px-3 py-2 text-center text-blue-600 font-bold">적정 양호</td><td class="px-4 py-2">동일하이빌 1·2단지, 더샵그리니티, 복대자이 입주</td></tr>
+              <tr class="bg-amber-50/60 font-bold text-amber-900"><td class="px-3 py-2 text-center">2027</td><td class="px-3 py-2 text-right text-amber-700 font-extrabold">9,709</td><td class="px-2 py-2 text-right">1,211</td><td class="px-2 py-2 text-right font-extrabold text-amber-700">5,524</td><td class="px-2 py-2 text-right">2,330</td><td class="px-2 py-2 text-right">644</td><td class="px-3 py-2 text-center text-amber-700 font-extrabold">공급 피크</td><td class="px-4 py-2">가경아이파크6단지, 테크노아테라, 힐스테이트사직 입주</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-3 py-2 text-center font-bold">2028</td><td class="px-3 py-2 text-right font-bold">7,705</td><td class="px-2 py-2 text-right">2,268</td><td class="px-2 py-2 text-right">1,718</td><td class="px-2 py-2 text-right">3,719</td><td class="px-2 py-2 text-right">0</td><td class="px-3 py-2 text-center text-slate-700 font-bold">다소 과다</td><td class="px-4 py-2">센텀푸르지오자이, 신분평 제일풍경채 등 입주</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-3 py-2 text-center font-bold">2029</td><td class="px-3 py-2 text-right font-bold">6,594</td><td class="px-2 py-2 text-right">0</td><td class="px-2 py-2 text-right">4,251</td><td class="px-2 py-2 text-right">2,343</td><td class="px-2 py-2 text-right">0</td><td class="px-3 py-2 text-center text-emerald-600 font-bold">적정 공급</td><td class="px-4 py-2">가경아이파크 7·8단지, 신봉 두산위브, 씨엘리체 입주</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-3 py-2 text-center font-bold">2030</td><td class="px-3 py-2 text-right font-bold">949</td><td class="px-2 py-2 text-right">949</td><td class="px-2 py-2 text-right">0</td><td class="px-2 py-2 text-right">0</td><td class="px-2 py-2 text-right">0</td><td class="px-3 py-2 text-center text-slate-500 font-bold">안정기</td><td class="px-4 py-2">한양립스더벨루체(949세대) 입주</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 주요 입주 단지 상세 리스트 (20선) -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2">
+          <i class="fa-solid fa-hotel text-blue-600"></i>
+          <span>청주시 2024~2030 주요 핵심 신규 입주 단지 리스트 (20선)</span>
+        </h3>
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+          <table class="w-full text-xs text-left text-slate-600">
+            <thead class="bg-slate-100 text-slate-700 font-bold uppercase border-b border-slate-200">
+              <tr>
+                <th class="px-3 py-2.5 text-center">입주년월</th>
+                <th class="px-3 py-2.5">단지명</th>
+                <th class="px-2 py-2.5 text-center">구 / 동</th>
+                <th class="px-2 py-2.5 text-right">총 세대수</th>
+                <th class="px-3 py-2.5">주요 시공사 / 사업형태</th>
+                <th class="px-4 py-2.5">입지 및 단지 특징</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr class="hover:bg-slate-50"><td class="px-3 py-2 text-center font-semibold">2024.03</td><td class="px-3 py-2 font-bold text-slate-800">더샵청주센트럴</td><td class="px-2 py-2 text-center">흥덕구 복대동</td><td class="px-2 py-2 text-right">986</td><td class="px-3 py-2">포스코이앤씨</td><td class="px-4 py-2">복대2구역 재개발, 지웰시티 생활권 공유</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-3 py-2 text-center font-semibold">2024.06</td><td class="px-3 py-2 font-bold text-slate-800">청주SK뷰자이</td><td class="px-2 py-2 text-center">흥덕구 봉명동</td><td class="px-2 py-2 text-right">1,745</td><td class="px-3 py-2">SK에코플랜트·GS건설</td><td class="px-4 py-2">봉명1구역 재건축 대단지 랜드마크</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-3 py-2 text-center font-semibold">2024.10</td><td class="px-3 py-2 font-bold text-slate-800">오송역파라곤센트럴시티3차</td><td class="px-2 py-2 text-center">흥덕구 오송읍</td><td class="px-2 py-2 text-right">1,754</td><td class="px-3 py-2">동양건설산업</td><td class="px-4 py-2">오송 바이오밸리 민간임대 대단지 완성</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-3 py-2 text-center font-semibold">2025.05</td><td class="px-3 py-2 font-bold text-slate-800">오송역서한이다음노블리스</td><td class="px-2 py-2 text-center">흥덕구 오송읍</td><td class="px-2 py-2 text-right">1,113</td><td class="px-3 py-2">서한</td><td class="px-4 py-2">오송 제2생명과학단지 대단지</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-3 py-2 text-center font-semibold">2025.09</td><td class="px-3 py-2 font-bold text-slate-800">한화포레나청주매봉</td><td class="px-2 py-2 text-center">서원구 모충동</td><td class="px-2 py-2 text-right">1,849</td><td class="px-3 py-2">한화건설부문</td><td class="px-4 py-2">매봉민간공원 특례사업 숲세권 대단지</td></tr>
+              <tr class="bg-blue-50/50 font-bold"><td class="px-3 py-2 text-center text-blue-700">2026.01</td><td class="px-3 py-2 text-blue-900">더샵청주그리니티</td><td class="px-2 py-2 text-center">서원구 개신동</td><td class="px-2 py-2 text-right">1,191</td><td class="px-3 py-2">포스코이앤씨</td><td class="px-4 py-2 font-normal">구룡공원 특례사업, 충북대병원 도보권 인접</td></tr>
+              <tr class="bg-blue-50/30 font-semibold"><td class="px-3 py-2 text-center text-blue-700">2026.01</td><td class="px-3 py-2">청주동일하이빌파크레인(1단지)</td><td class="px-2 py-2 text-center">서원구 개신동</td><td class="px-2 py-2 text-right">800</td><td class="px-3 py-2">동일토건</td><td class="px-4 py-2 font-normal">개신2지구 도시개발 신흥 주거단지 1차</td></tr>
+              <tr class="bg-blue-50/30 font-semibold"><td class="px-3 py-2 text-center text-blue-700">2026.04</td><td class="px-3 py-2">청주동일하이빌파크레인(2단지)</td><td class="px-2 py-2 text-center">서원구 개신동</td><td class="px-2 py-2 text-right">800</td><td class="px-3 py-2">동일토건</td><td class="px-4 py-2 font-normal">총 1,600세대 동일 브랜드타운 조성</td></tr>
+              <tr class="bg-blue-50/50 font-bold"><td class="px-3 py-2 text-center text-blue-700">2026.07</td><td class="px-3 py-2 text-blue-900">복대자이더스카이</td><td class="px-2 py-2 text-center">흥덕구 복대동</td><td class="px-2 py-2 text-right">715</td><td class="px-3 py-2">GS건설</td><td class="px-4 py-2 font-normal">복대동 중심 49층 초고층 랜드마크 단지</td></tr>
+              <tr class="bg-blue-50/30 font-semibold"><td class="px-3 py-2 text-center text-blue-700">2026.08</td><td class="px-3 py-2">해링턴플레이스테크노폴리스</td><td class="px-2 py-2 text-center">흥덕구 송절동</td><td class="px-2 py-2 text-right">602</td><td class="px-3 py-2">효성중공업</td><td class="px-4 py-2 font-normal">테크노폴리스 중심상업지 인접 주상복합</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-3 py-2 text-center font-semibold">2027.01</td><td class="px-3 py-2 font-bold text-slate-800">청주가경아이파크(6단지)</td><td class="px-2 py-2 text-center">흥덕구 가경동</td><td class="px-2 py-2 text-right font-bold">946</td><td class="px-3 py-2">HDC현대산업개발</td><td class="px-4 py-2">홍골지구 아이파크 대단지 연결축</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-3 py-2 text-center font-semibold">2027.01</td><td class="px-3 py-2 font-bold text-slate-800">신영지웰푸르지오테크노센트럴</td><td class="px-2 py-2 text-center">흥덕구 송절동</td><td class="px-2 py-2 text-right font-bold">1,034</td><td class="px-3 py-2">대우건설·신영</td><td class="px-4 py-2">테크노폴리스 랜드마크 초고층 복합단지</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-3 py-2 text-center font-semibold">2027.01</td><td class="px-3 py-2 font-bold text-slate-800">힐스테이트오송역퍼스트</td><td class="px-2 py-2 text-center">흥덕구 오송읍</td><td class="px-2 py-2 text-right font-bold">2,094</td><td class="px-3 py-2">현대건설</td><td class="px-4 py-2">오송역 도보 역세권 2천세대 대단지</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-3 py-2 text-center font-semibold">2027.06</td><td class="px-3 py-2 font-bold text-slate-800">힐스테이트어울림청주사직</td><td class="px-2 py-2 text-center">서원구 사직동</td><td class="px-2 py-2 text-right font-bold">2,330</td><td class="px-3 py-2">현대건설·금호건설</td><td class="px-4 py-2">사직3구역 원도심 메머드 재개발 랜드마크</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-3 py-2 text-center font-semibold">2027.08</td><td class="px-3 py-2 font-bold text-slate-800">청주테크노폴리스아테라</td><td class="px-2 py-2 text-center">흥덕구 송절동</td><td class="px-2 py-2 text-right font-bold">1,450</td><td class="px-3 py-2">금호건설</td><td class="px-4 py-2">분양가상한제 적용 인기 대단지</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-3 py-2 text-center font-semibold">2027.09</td><td class="px-3 py-2 font-bold text-slate-800">원봉공원힐데스하임</td><td class="px-2 py-2 text-center">상당구 용암동</td><td class="px-2 py-2 text-right font-bold">1,211</td><td class="px-3 py-2">원건설</td><td class="px-4 py-2">원봉공원 특례사업 명품 숲세권 단지</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-3 py-2 text-center font-semibold">2028.12</td><td class="px-3 py-2 font-bold text-slate-800">청주센텀푸르지오자이</td><td class="px-2 py-2 text-center">서원구 사직동</td><td class="px-2 py-2 text-right font-bold">2,271</td><td class="px-3 py-2">대우건설·GS건설</td><td class="px-4 py-2">사모2구역 초대형 원도심 재개발</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-3 py-2 text-center font-semibold">2029.02</td><td class="px-3 py-2 font-bold text-slate-800">두산위브더제니스센트럴파크</td><td class="px-2 py-2 text-center">흥덕구 신봉동</td><td class="px-2 py-2 text-right font-bold">1,618</td><td class="px-3 py-2">두산건설</td><td class="px-4 py-2">운천주공 재건축 대단지</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-3 py-2 text-center font-semibold">2029.03</td><td class="px-3 py-2 font-bold text-slate-800">청주푸르지오씨엘리체</td><td class="px-2 py-2 text-center">서원구 미평동</td><td class="px-2 py-2 text-right font-bold">1,351</td><td class="px-3 py-2">대우건설</td><td class="px-4 py-2">남부권 신흥 주거 랜드마크</td></tr>
+              <tr class="bg-rose-50/70 font-bold text-rose-900"><td class="px-3 py-2 text-center">2029.11</td><td class="px-3 py-2">청주가경아이파크(7·8단지)</td><td class="px-2 py-2 text-center">흥덕구 가경동</td><td class="px-2 py-2 text-right font-extrabold text-rose-600">1,671</td><td class="px-3 py-2">HDC현대산업개발</td><td class="px-4 py-2 font-bold">청약 15만 계좌 집중, 총 8천세대 메가타운 완결판</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 제4장: 도시 공간 구조 및 미래 개발 전략 -->
+    <section id="development" class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-6 bg-indigo-600 rounded-full"></span>
+          <h2 class="text-xl font-bold text-slate-900 tracking-tight">4. 도시 공간 구조 변천 및 미래 개발 전략</h2>
+        </div>
+        <span class="text-xs font-semibold px-2.5 py-1 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-md">청주시 미래전략 보고서 연계</span>
+      </div>
+
+      <!-- 3대 핵심 거점 비교 카드 -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2">
+          <i class="fa-solid fa-map-location-dot text-indigo-600"></i>
+          <span>청주시 주거·상업 3대 핵심 거점 입지 비교 분석</span>
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- 복대동 -->
+          <div class="bg-slate-50 p-5 rounded-xl border border-slate-200/80 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded-md">1급지 부촌</span>
+              <span class="text-xs text-slate-500 font-semibold">SK하이닉스 직주근접</span>
+            </div>
+            <h4 class="text-base font-bold text-slate-900">복대동: 자족 컴팩트 시티</h4>
+            <ul class="text-xs text-slate-600 space-y-1.5 leading-relaxed">
+              <li>• 현대백화점 충청점, 지웰시티몰, 롯데아울렛, 명문 학원가 밀집 자족 도시 구조</li>
+              <li>• <strong>전용 84㎡ 10.5억원 신고가 기록</strong> (연초 대비 ~3억원 급등)</li>
+              <li>• 8월 청주시 아파트 매매가 2년 8개월 만의 최대 상승폭 견인</li>
+            </ul>
+          </div>
+
+          <!-- 가경동 -->
+          <div class="bg-slate-50 p-5 rounded-xl border border-slate-200/80 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 bg-rose-100 text-rose-800 text-xs font-bold rounded-md">브랜드 메가타운</span>
+              <span class="text-xs text-slate-500 font-semibold">광역 버스 교통망</span>
+            </div>
+            <h4 class="text-base font-bold text-slate-900">가경동: 8천세대 아이파크시티</h4>
+            <ul class="text-xs text-slate-600 space-y-1.5 leading-relaxed">
+              <li>• 고속/시외버스터미널, 서청주·청주IC 인접 (서울 강남 1시간 30분대 주파)</li>
+              <li>• <strong>가경아이파크 7·8단지 청약 15만 계좌 집중</strong> (최고 194.59:1)</li>
+              <li>• 전용 84㎡ 8억원 돌파, 40~50평형 중대형 선호 실수요 완벽 흡수</li>
+            </ul>
+          </div>
+
+          <!-- 오송 신도시 -->
+          <div class="bg-slate-50 p-5 rounded-xl border border-slate-200/80 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-md">국가 바이오 심장</span>
+              <span class="text-xs text-slate-500 font-semibold">KTX 분기점 역세권</span>
+            </div>
+            <h4 class="text-base font-bold text-slate-900">오송 신도시: 바이오 & KTX 허브</h4>
+            <ul class="text-xs text-slate-600 space-y-1.5 leading-relaxed">
+              <li>• 식약처, 질병청 등 6대 국책기관 및 첨단의료복합단지 집적</li>
+              <li>• <strong>71만㎡ 오송역세권 도시개발</strong> 및 세종 행정수도 추가 이전 배후 효과</li>
+              <li>• 젊은 3040 세대 유입, 초등학교 1학년 12반 편성 등 아동 인구 밀집</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 미래 개발 모멘텀 3선 -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+          <div class="text-indigo-600 font-bold text-sm flex items-center space-x-1.5">
+            <i class="fa-solid fa-microchip"></i>
+            <span>SK하이닉스 HBM M15X 대규모 증설</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            AI 반도체 수요 급증에 맞추어 M15X 팹 증설 공사 가속화. 수천 명의 고소득 기술 인력 신규 유입 및 협력사 집적에 따른 <strong>지역 승수 효과(Regional Multiplier Effect)</strong>로 주거 매매·전세가 동반 상승.
+          </p>
+        </div>
+
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+          <div class="text-blue-600 font-bold text-sm flex items-center space-x-1.5">
+            <i class="fa-solid fa-train"></i>
+            <span>CTX(광역급행철도) 30분대 초연결</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            최고시속 180km CTX 추진으로 <strong>청주 도심 ➔ 세종 18분, 대전 30분 직결</strong>. 평택~오송 고속철도 2복선화(2030) 완공 시 열차 용량 2배 증편으로 오송역의 국가 철도 분기점 위상 극대화.
+          </p>
+        </div>
+
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+          <div class="text-emerald-600 font-bold text-sm flex items-center space-x-1.5">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span>코스트코 산단 3곳 대체 부지 제안</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            밀레니엄타운 감정가 상승 이슈를 극복하기 위해, 청주시가 <strong>관내 산업단지 3곳을 대체 부지로 공식 제안</strong>하여 코스트코 코리아 측과 유치 협상 재개. 대형 창고형 유통 인프라 확충 모멘텀 기대.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 제5장: 종합 결론 및 전략 제언 -->
+    <section id="conclusion" class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-6 bg-slate-800 rounded-full"></span>
+          <h2 class="text-xl font-bold text-slate-900 tracking-tight">5. 종합 결론 및 의사결정 제언</h2>
+        </div>
+        <span class="text-xs font-semibold px-2.5 py-1 bg-slate-100 text-slate-700 border border-slate-200 rounded-md">SWOT & Action Plan</span>
+      </div>
+
+      <!-- SWOT 분석 테이블 -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2">
+          <i class="fa-solid fa-table-cells-large text-slate-700"></i>
+          <span>청주시 주택 시장 SWOT 분석</span>
+        </h3>
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+          <table class="w-full text-xs text-left text-slate-600">
+            <thead class="bg-slate-100 text-slate-700 font-bold uppercase border-b border-slate-200">
+              <tr>
+                <th class="px-4 py-2.5 text-center w-28">구분</th>
+                <th class="px-4 py-2.5 w-56">핵심 요인</th>
+                <th class="px-4 py-2.5">세부 내용 및 시장 영향</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr class="hover:bg-slate-50"><td class="px-4 py-2.5 text-center font-bold text-blue-600 bg-blue-50/50">강점 (S)</td><td class="px-4 py-2.5 font-bold text-slate-800">첨단 일자리 & 초건전 미분양</td><td class="px-4 py-2.5">SK하이닉스 M15X, 오송 바이오, 오창 이차전지 기반 탄탄한 고소득 체력, 미분양 402세대의 탁월한 소화력, 가경아이파크 15만 청약 돌풍</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-4 py-2.5 text-center font-bold text-rose-600 bg-rose-50/50">약점 (W)</td><td class="px-4 py-2.5 font-bold text-slate-800">서부권 편중 및 원도심 노후화</td><td class="px-4 py-2.5">21년 이상 노후 아파트 비율 51.8%(13만 세대), 흥덕구(복대·가경·오송) 위주의 자산 쏠림 및 동서 간 인프라 격차</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-4 py-2.5 text-center font-bold text-emerald-600 bg-emerald-50/50">기회 (O)</td><td class="px-4 py-2.5 font-bold text-slate-800">광역 교통망 & 대형 유통시설</td><td class="px-4 py-2.5">CTX(청주-세종-대전 30분대), 평택-오송 2복선화(2030), KTX 오송역 환승 허브, 코스트코 산단 3곳 대체 부지 유치 추진</td></tr>
+              <tr class="hover:bg-slate-50"><td class="px-4 py-2.5 text-center font-bold text-amber-600 bg-amber-50/50">위협 (T)</td><td class="px-4 py-2.5 font-bold text-slate-800">2027년 입주 정점 일시 부담</td><td class="px-4 py-2.5">2027년 9,709세대의 일시적 입주 집중(흥덕 5,524, 서원 2,330)에 따른 일부 권역 전세 가격 일시적 출렁임 가능성</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 참여자별 실행 제언 -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+          <div class="text-blue-700 font-bold text-sm flex items-center space-x-1.5">
+            <i class="fa-solid fa-helmet-safety"></i>
+            <span>건설사 및 시행사</span>
+          </div>
+          <ul class="text-xs text-slate-600 space-y-1 leading-relaxed">
+            <li>• 가경·복대·테크노폴리스 등 검증된 1급지 및 산단 직주근접 입지 최우선 확보</li>
+            <li>• 2027년 입주 피크(9.7천 세대)와 준공 시점이 겹치지 않도록 공기 조율 및 분양 스케줄링 필요</li>
+          </ul>
+        </div>
+
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+          <div class="text-emerald-700 font-bold text-sm flex items-center space-x-1.5">
+            <i class="fa-solid fa-user-check"></i>
+            <span>실수요자 및 투자자</span>
+          </div>
+          <ul class="text-xs text-slate-600 space-y-1 leading-relaxed">
+            <li>• 노후 아파트 거주자는 2026~2027년 준공되는 개신 동일하이빌, 복대자이, 가경6단지 등 신축 선점 권장</li>
+            <li>• 하이닉스 수혜가 검증된 복대1동(지웰시티), 강서2동(테크노)은 하방 경직성이 탁월함</li>
+          </ul>
+        </div>
+
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+          <div class="text-slate-800 font-bold text-sm flex items-center space-x-1.5">
+            <i class="fa-solid fa-landmark"></i>
+            <span>지자체 및 공공기관</span>
+          </div>
+          <ul class="text-xs text-slate-600 space-y-1 leading-relaxed">
+            <li>• CTX 청주 도심 통과 역세권 환승센터 선제 구축으로 원도심 재생 시너지 창출</li>
+            <li>• 코스트코 산업단지 대체 부지 인센티브 패키지를 신속 조율하여 조기 타결 유도</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 no-print text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+      <div class="flex items-center space-x-2 text-slate-300">
+        <i class="fa-solid fa-chart-line text-blue-500"></i>
+        <span class="font-bold text-sm">청주시 부동산 시장 분석 보고서</span>
+      </div>
+      <div class="text-center md:text-right text-slate-500">
+        데이터 원천: HDC랩스·부동산R114 PropX 원천 DB & KCB K-Atlas 2.0 & 청주시 미래전략 보고서 (2026.11 기준)
+      </div>
+    </div>
+  </footer>
+
+  <!-- Chart.js 및 기능 스크립트 -->
+  <script>
+    // 1. 미분양 추이 차트
+    const ctxUnsold = document.getElementById('unsoldChart').getContext('2d');
+    new Chart(ctxUnsold, {
+      type: 'line',
+      data: {
+        labels: ['24.07', '24.09', '24.11', '24.12', '25.02', '25.04', '25.06', '25.07(완판)', '25.08', '25.10', '25.11(고점)', '25.12', '26.02', '26.04(저점)', '26.05', '26.06', '26.07'],
+        datasets: [{
+          label: '미분양 세대수',
+          data: [700, 558, 377, 241, 537, 447, 254, 0, 178, 900, 1184, 748, 218, 103, 333, 543, 402],
+          borderColor: '#10b981',
+          backgroundColor: 'rgba(16, 185, 129, 0.1)',
+          borderWidth: 2.5,
+          fill: true,
+          tension: 0.3,
+          pointBackgroundColor: function(context) {
+            const val = context.raw;
+            if (val === 0) return '#059669'; // 완판
+            if (val === 1184) return '#ef4444'; // 고점
+            if (val === 103) return '#2563eb'; // 26년 저점
+            return '#10b981';
+          },
+          pointRadius: 5
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => `${ctx.raw.toLocaleString()} 세대`
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: '#f1f5f9' },
+            ticks: { callback: v => v.toLocaleString() }
+          },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // 2. 청약경쟁률 차트
+    const ctxSub = document.getElementById('subscriptionChart').getContext('2d');
+    new Chart(ctxSub, {
+      type: 'bar',
+      data: {
+        labels: ['가경아이파크(7단지)', '가경아이파크(8단지)', '푸르지오씨엘리체', '에피트더웨이시티', '한양립스(지북동)'],
+        datasets: [{
+          label: '1순위 경쟁률 (:1)',
+          data: [194.59, 89.38, 6.47, 1.28, 0.22],
+          backgroundColor: ['#ef4444', '#f87171', '#3b82f6', '#60a5fa', '#cbd5e1'],
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => `1순위 ${ctx.raw} : 1`
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: '#f1f5f9' }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { font: { size: 10 } }
+          }
+        }
+      }
+    });
+
+    // 3. 인구 및 세대수 차트
+    const ctxPop = document.getElementById('popChart').getContext('2d');
+    new Chart(ctxPop, {
+      type: 'line',
+      data: {
+        labels: ['2008', '2010', '2012', '2014(통합)', '2016', '2018', '2020', '2022', '2024', '2025'],
+        datasets: [
+          {
+            label: '총 인구수 (명)',
+            data: [638663, 655971, 666852, 831521, 835197, 837749, 844993, 849573, 854537, 856152],
+            borderColor: '#2563eb',
+            backgroundColor: '#2563eb',
+            borderWidth: 2.5,
+            yAxisID: 'yPop',
+            tension: 0.2,
+            pointRadius: 4
+          },
+          {
+            label: '세대수 (세대)',
+            data: [237556, 247916, 254271, 330551, 341596, 353320, 376252, 393697, 404569, 409218],
+            borderColor: '#10b981',
+            backgroundColor: '#10b981',
+            borderWidth: 2,
+            borderDash: [4, 4],
+            yAxisID: 'yHH',
+            tension: 0.2,
+            pointRadius: 4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top' },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => `${ctx.dataset.label}: ${ctx.raw.toLocaleString()}`
+            }
+          }
+        },
+        scales: {
+          yPop: {
+            type: 'linear',
+            position: 'left',
+            grid: { color: '#f1f5f9' },
+            ticks: { callback: v => (v / 10000).toFixed(0) + '만명' }
+          },
+          yHH: {
+            type: 'linear',
+            position: 'right',
+            grid: { display: false },
+            ticks: { callback: v => (v / 10000).toFixed(0) + '만세대' }
+          },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // 4. 읍면동별 소득 및 소비 차트
+    const ctxInc = document.getElementById('incomeChart').getContext('2d');
+    new Chart(ctxInc, {
+      type: 'bar',
+      data: {
+        labels: ['강서2동', '복대1동', '산남동', '오창읍', '사직2동', '오송읍', '용담명암', '오근장동', '가경동', '강서1동'],
+        datasets: [
+          {
+            label: '가구당 연소득 (만원)',
+            data: [5871, 5822, 5113, 5069, 5040, 5013, 4983, 4948, 4901, 4783],
+            backgroundColor: '#3b82f6',
+            borderRadius: 4
+          },
+          {
+            label: '월카드소비 (만원)',
+            data: [250, 248, 207, 207, 198, 232, 214, 222, 204, 212],
+            backgroundColor: '#f59e0b',
+            borderRadius: 4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top' },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => `${ctx.dataset.label}: ${ctx.raw.toLocaleString()} 만원`
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: '#f1f5f9' },
+            ticks: { callback: v => v.toLocaleString() }
+          },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // 5. 전입 지역 도넛 차트
+    const ctxMig = document.getElementById('migrationChart').getContext('2d');
+    new Chart(ctxMig, {
+      type: 'doughnut',
+      data: {
+        labels: ['흥덕구(복대·가경 등)', '서원구', '청원구(오창 등)', '상당구(용암 등)', '세종시', '진천군', '대전시', '기타'],
+        datasets: [{
+          data: [22.21, 14.83, 13.15, 13.05, 2.12, 1.06, 2.02, 31.56],
+          backgroundColor: ['#2563eb', '#60a5fa', '#059669', '#34d399', '#7c3aed', '#d97706', '#db2777', '#94a3b8'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right' }
+        }
+      }
+    });
+
+    // 6. 통근 목적지 도넛 차트
+    const ctxCom = document.getElementById('commutingChart').getContext('2d');
+    new Chart(ctxCom, {
+      type: 'doughnut',
+      data: {
+        labels: ['흥덕구(하이닉스·산단)', '청원구(오창 등)', '서원구', '상당구', '진천군', '세종시', '음성군', '서울 강남/기타'],
+        datasets: [{
+          data: [28.34, 16.58, 14.05, 12.62, 3.23, 2.19, 1.72, 21.27],
+          backgroundColor: ['#1e40af', '#0284c7', '#10b981', '#6ee7b7', '#f59e0b', '#8b5cf6', '#ec4899', '#94a3b8'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right' }
+        }
+      }
+    });
+
+    // 7. 입주 vs 분양 공급 사이클 차트
+    const ctxSup = document.getElementById('supplyCycleChart').getContext('2d');
+    new Chart(ctxSup, {
+      type: 'bar',
+      data: {
+        labels: ['2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026', '2027(예정)', '2028(예정)', '2029(예정)', '2030(예정)'],
+        datasets: [
+          {
+            type: 'bar',
+            label: '입주 물량 (세대)',
+            data: [13714, 7377, 11806, 5620, 6000, 7292, 8345, 4546, 5804, 9709, 7705, 6594, 949],
+            backgroundColor: function(context) {
+              const val = context.raw;
+              if (val === 9709) return '#ef4444'; // 정점 피크
+              if (val === 4546) return '#10b981'; // 적정 저점
+              return '#3b82f6';
+            },
+            borderRadius: 4
+          },
+          {
+            type: 'line',
+            label: '분양 물량 (세대)',
+            data: [8733, 6413, 4933, 10401, 8618, 8766, 5801, 8961, 7057, null, null, null, null],
+            borderColor: '#10b981',
+            backgroundColor: '#10b981',
+            borderWidth: 2.5,
+            tension: 0.2,
+            pointRadius: 4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.dataset.label + ': ' + (context.raw ? context.raw.toLocaleString() + ' 세대' : '-');
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: '#f1f5f9' },
+            ticks: { callback: v => v.toLocaleString() }
+          },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // 규칙 7: 📋 요약 복사 기능 함수 구현
+    function copySummaryReport() {
+      const summaryText = `[청주시 부동산 시장분석 핵심 요약 보고서 - PropX & K-Atlas]
+
+1. 미분양 및 청약 시장 분석
+- 2026.07 기준 청주시 미분양 402세대 (2025.07 미분양 0세대 완판 기록 등 전국 최상위 건전성)
+- 가경아이파크 7·8단지 청약 대폭발: 1순위 접수 149,730명 (7단지 194.59:1 / 8단지 89.38:1 역대 최다 기록)
+- 청약 양극화: 가경아이파크 완판 vs 서원구 푸르지오씨엘리체(6.47:1) 선방 vs 상당구 지북동 한양립스(0.22:1) 미달
+
+2. 공급 사이클 및 노후도 현황
+- 입주 흐름: 2024년 8,345세대 ➔ 2025년 4,546세대 ➔ 2026년 5,804세대 ➔ 2027년 공급 정점 9,709세대 ➔ 2028년 7,705세대 ➔ 2029년 6,594세대
+- 노후도 압력: 총 아파트 25.2만 세대 중 21년 이상 구축이 130,873세대(51.78%), 31년 초과 64,663세대(25.58%)로 신축 갈아타기 대기수요 풍부
+
+3. 인문·소득 기반 (85.6만 충청권 거점)
+- 청주시 인구 856,152명 / 세대수 409,218세대 (지속 증가, 세대당 2.09명)
+- 소득 1위 부촌: 강서2동(연소득 5,871만원, 주담대 1.76억) & 복대1동(연소득 5,822만원, 소비 248만원, 지웰시티 10.5억 신고가)
+- 관외 통근 연계: 진천군 3.23%, 세종시 2.19%, 서울 강남구 0.84% (KTX 오송역 초광역 비즈니스 통근)
+
+4. 미래 개발 및 정책 모멘텀
+- SK하이닉스 청주사업장 M15X 증설 가속화 (AI HBM 생산 심장, 고소득 일자리 및 지역승수효과 유발)
+- 충청권 광역급행철도(CTX) 추진: 청주 도심 지하 통과, 세종 18분, 대전 30분대 직결
+- KTX 오송역 평택~오송 2복선화(2030) 및 세종 행정기관 이전 배후 효과
+- 코스트코(Costco) 청주 유치: 관내 산업단지 3곳 대체 후보지 공식 제안 및 협상 재개`;
+
+      navigator.clipboard.writeText(summaryText)
+        .then(() => {
+          alert('📋 요약 보고서가 클립보드에 복사되었습니다!\n카카오톡이나 메모장에 붙여넣기 하세요.');
+        })
+        .catch(err => {
+          console.error('클립보드 복사 실패:', err);
+          alert('클립보드 복사에 실패했습니다. 브라우저 권한을 확인해주세요.');
+        });
+    }
+  </script>
+</body>
+</html>

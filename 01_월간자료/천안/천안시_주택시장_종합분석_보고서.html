@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>충남 천안시 주택시장 종합 진단 및 미래 성장 전략 보고서</title>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0F172A;
+      --primary-accent: #1E3A8A;
+      --primary-light: #3B82F6;
+      --secondary: #0D9488;
+      --accent: #F59E0B;
+      --danger: #EF4444;
+      --success: #10B981;
+      --purple: #8B5CF6;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --border: #E2E8F0;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --font-stack: -apple-system, BlinkMacSystemFont, "Pretendard", "Malgun Gothic", "맑은 고딕", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 상단 헤더 */
+    header {
+      background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 50%, #1E293B 100%);
+      color: #FFFFFF;
+      padding: 36px 24px 28px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+    }
+
+    .header-container {
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .badge-wrap {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(8px);
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .badge-accent {
+      background: #F59E0B;
+      color: #0F172A;
+      border: none;
+      font-weight: 700;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-action {
+      background: rgba(255, 255, 255, 0.18);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(6px);
+    }
+
+    .btn-action:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .btn-copy-summary {
+      background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+      color: #0F172A;
+      border: none;
+      font-weight: 700;
+    }
+
+    .btn-copy-summary:hover {
+      background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+    }
+
+    h1.report-title {
+      font-size: 27px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+
+    p.report-subtitle {
+      font-size: 14px;
+      color: #CBD5E1;
+      max-width: 950px;
+      margin-bottom: 18px;
+    }
+
+    .meta-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      font-size: 12.5px;
+      color: #94A3B8;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      padding-top: 14px;
+    }
+
+    .meta-bar span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .meta-bar strong {
+      color: #F1F5F9;
+    }
+
+    /* 본문 레이아웃 */
+    main {
+      max-width: 1240px;
+      margin: 28px auto 60px;
+      padding: 0 20px;
+    }
+
+    /* 토스트 알림 */
+    #toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #0F172A;
+      color: #FFFFFF;
+      padding: 14px 22px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      border-left: 4px solid #10B981;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 9999;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    /* 카드 기본 */
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+      transition: box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title i {
+      color: var(--primary-light);
+    }
+
+    /* Executive Summary KPI 카드 그리드 */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+    }
+
+    .kpi-card.blue::before { background: #3B82F6; }
+    .kpi-card.emerald::before { background: #10B981; }
+    .kpi-card.amber::before { background: #F59E0B; }
+    .kpi-card.rose::before { background: #EF4444; }
+
+    .kpi-label {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .kpi-value {
+      font-size: 25px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .kpi-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .kpi-sub-badge {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .sub-danger { background: #FEE2E2; color: #DC2626; }
+    .sub-success { background: #D1FAE5; color: #059669; }
+    .sub-warning { background: #FEF3C7; color: #D97706; }
+    .sub-info { background: #DBEAFE; color: #2563EB; }
+
+    /* 인사이트 리스트 */
+    .insight-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .insight-item {
+      background: #F1F5F9;
+      border-radius: 8px;
+      padding: 16px;
+      border-left: 3px solid var(--primary-accent);
+    }
+
+    .insight-item h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary-accent);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .insight-item p {
+      font-size: 13px;
+      color: #334155;
+      line-height: 1.55;
+    }
+
+    /* 그리드 레이아웃 */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+      gap: 20px;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 290px;
+      width: 100%;
+    }
+
+    /* 표 스타일 */
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+      text-align: left;
+    }
+
+    th {
+      background: #F1F5F9;
+      color: #334155;
+      font-weight: 700;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      color: #1E293B;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: #F8FAFC;
+    }
+
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .font-bold { font-weight: 700; }
+    .text-danger { color: #DC2626; font-weight: 700; }
+    .text-success { color: #059669; font-weight: 700; }
+    .text-primary { color: #2563EB; font-weight: 700; }
+
+    /* 권역 카드 */
+    .zone-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .zone-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      background: #FAFAFA;
+      border-top: 3px solid #3B82F6;
+    }
+
+    .zone-card.z1 { border-top-color: #3B82F6; }
+    .zone-card.z2 { border-top-color: #10B981; }
+    .zone-card.z3 { border-top-color: #8B5CF6; }
+    .zone-card.z4 { border-top-color: #F59E0B; }
+
+    .zone-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .zone-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0F172A;
+    }
+
+    .zone-badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .zone-features {
+      list-style: none;
+      font-size: 12.5px;
+      color: #475569;
+    }
+
+    .zone-features li {
+      margin-bottom: 5px;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .zone-features li i {
+      margin-top: 3px;
+      font-size: 11px;
+    }
+
+    /* SWOT 카드 */
+    .swot-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+    }
+
+    .swot-card {
+      border-radius: 10px;
+      padding: 18px;
+      border: 1px solid var(--border);
+    }
+
+    .swot-s { background: #EFF6FF; border-color: #BFDBFE; }
+    .swot-w { background: #FEF2F2; border-color: #FECACA; }
+    .swot-o { background: #ECFDF5; border-color: #A7F3D0; }
+    .swot-t { background: #FFFBEB; border-color: #FDE68A; }
+
+    .swot-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .swot-s .swot-title { color: #1D4ED8; }
+    .swot-w .swot-title { color: #B91C1C; }
+    .swot-o .swot-title { color: #047857; }
+    .swot-t .swot-title { color: #B45309; }
+
+    .swot-list {
+      font-size: 12.5px;
+      color: #334155;
+      padding-left: 18px;
+      line-height: 1.6;
+    }
+
+    /* 전략 제언 */
+    .strategy-card {
+      background: #FFFFFF;
+      border-left: 4px solid var(--primary-accent);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    .strategy-card h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary-accent);
+      margin-bottom: 6px;
+    }
+
+    .strategy-card p {
+      font-size: 13px;
+      color: #334155;
+      line-height: 1.6;
+    }
+
+    /* 인쇄 전용 스타일 */
+    @media print {
+      body { background: #FFFFFF; }
+      header { padding: 20px 0; background: #0F172A !important; color: #FFF !important; }
+      .no-print { display: none !important; }
+      .card { box-shadow: none; border: 1px solid #CCC; break-inside: avoid; }
+      main { padding: 0; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 헤더 -->
+  <header>
+    <div class="header-container">
+      <div class="header-top">
+        <div class="badge-wrap">
+          <span class="badge"><i class="fa-solid fa-chart-line"></i> Market Intelligence</span>
+          <span class="badge"><i class="fa-solid fa-database"></i> 원천: PropX · K-Atlas 2.0</span>
+          <span class="badge badge-accent"><i class="fa-solid fa-map-location-dot"></i> 충남 천안시</span>
+        </div>
+        <div class="header-actions no-print">
+          <button class="btn-action btn-copy-summary" onclick="copyExecutiveSummary()">
+            <i class="fa-regular fa-clipboard"></i> 📋 요약 복사
+          </button>
+          <button class="btn-action" onclick="window.print() ">
+            <i class="fa-solid fa-print"></i> 인쇄
+          </button>
+        </div>
+      </div>
+      <h1 class="report-title">충남 천안시 주택시장 종합 진단 및 미래 성장 전략 보고서</h1>
+      <p class="report-subtitle">
+        주택 수급(분양·입주) 사이클 분석, 청약 초양극화 및 미분양 급증 진단, 주택 재고 노후도 51.8%, KCB K-Atlas 차주 금융(소득·소비·대출) 및 광역 공간 이동(통근·이주) 융합 보고서
+      </p>
+      <div class="meta-bar">
+        <span><i class="fa-regular fa-calendar"></i> 기준시점: <strong>2026년 하반기</strong></span>
+        <span><i class="fa-solid fa-users"></i> 총인구: <strong>664,322명</strong> (317,941세대)</span>
+        <span><i class="fa-solid fa-building"></i> 총 아파트 재고: <strong>204,032세대</strong></span>
+        <span><i class="fa-solid fa-triangle-exclamation"></i> 20년 초과 노후율: <strong>51.8% (105,727호)</strong></span>
+        <span><i class="fa-solid fa-shield-halved"></i> 조사/분석: <strong>부동산 빅데이터 인텔리전스팀</strong></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 메인 본문 -->
+  <main>
+
+    <!-- 0. Executive Summary -->
+    <section class="card">
+      <h2 class="card-title"><i class="fa-solid fa-bullseye"></i> Executive Summary (핵심 요약)</h2>
+      
+      <!-- KPI 카드 그리드 -->
+      <div class="kpi-grid">
+        <div class="kpi-card blue">
+          <div class="kpi-label">
+            <span>2026년 신규 분양물량</span>
+            <span class="kpi-sub-badge sub-danger">분양 러시</span>
+          </div>
+          <div class="kpi-value">11,880 <small style="font-size:15px; font-weight:600;">세대</small></div>
+          <div class="kpi-desc">서북구 10,242호 집중 (성성·업성·부대)</div>
+        </div>
+
+        <div class="kpi-card rose">
+          <div class="kpi-label">
+            <span>미분양 주택 재고 (26.07)</span>
+            <span class="kpi-sub-badge sub-danger">단기 급증</span>
+          </div>
+          <div class="kpi-value">5,100 <small style="font-size:15px; font-weight:600;">호</small></div>
+          <div class="kpi-desc">25.10월 1,032호 대비 급증 (청약 양극화)</div>
+        </div>
+
+        <div class="kpi-card amber">
+          <div class="kpi-label">
+            <span>20년 초과 노후 아파트</span>
+            <span class="kpi-sub-badge sub-warning">교체 압력</span>
+          </div>
+          <div class="kpi-value">51.8% <small style="font-size:15px; font-weight:600;">(10.57만호)</small></div>
+          <div class="kpi-desc">60㎡ 이하 소형 노후율 69.9% (5.59만호)</div>
+        </div>
+
+        <div class="kpi-card emerald">
+          <div class="kpi-label">
+            <span>탕정 통근자 평균 연소득</span>
+            <span class="kpi-sub-badge sub-success">고소득 배후</span>
+          </div>
+          <div class="kpi-value">7,407 <small style="font-size:15px; font-weight:600;">만원</small></div>
+          <div class="kpi-desc">삼성디스플레이시티 통근, 월소비 331만</div>
+        </div>
+      </div>
+
+      <!-- 4대 핵심 인사이트 -->
+      <div class="insight-list">
+        <div class="insight-item">
+          <h4><i class="fa-solid fa-scale-unbalanced-flip"></i> 1. 청약 초양극화 & 미분양 급증 (5,100호)</h4>
+          <p>성성호수공원 라인(엘리프 26:1 완판)에 통장이 쏠리며 외곽·비선호 단지(삼룡, 직산, 청당 등 0.03~0.2:1)는 대거 미달. 2026년 1.18만 분양 러시가 단기 미분양 적체 유발.</p>
+        </div>
+        <div class="insight-item">
+          <h4><i class="fa-solid fa-house-chimney-crack"></i> 2. 노후도 52% 도래 & 소형 70% 노후화</h4>
+          <p>전체 아파트 20.4만 호 중 10.57만 호가 20년 초과. 특히 전용 60㎡ 이하 소형의 70%(5.59만 호)가 노후화되어 신축 국민평형(74~84㎡) 환승 대기수요가 임계점 도달.</p>
+        </div>
+        <div class="insight-item">
+          <h4><i class="fa-solid fa-coins"></i> 3. 아산 생산-천안 소비 & 삼성 대출 복지</h4>
+          <p>아산 탕정 통근자(연소득 7,407만) 및 용인 기흥 통근자(1억 455만)의 소득 흡수. 연 1.5% 저리 최대 5억 원(DSR 미반영)의 삼성 주거대출 복지가 고가 신축 시장을 강력 지지.</p>
+        </div>
+        <div class="insight-item">
+          <h4><i class="fa-solid fa-route"></i> 4. 공간 축 이동: 불당 ➔ 성성 & 탕정 연계축</h4>
+          <p>1급지 신불당 10년 차 노후화 속에 성성호수공원 수변축 및 2027년 과성교 개통(신불당 3분 직결)에 따른 탕정 연계축이 천안의 새로운 최고급 주거타운으로 급부상.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1. 도시 개황 & 인구 추이 -->
+    <div class="grid-2">
+      <section class="card">
+        <h3 class="card-title"><i class="fa-solid fa-chart-column"></i> 천안시 연도별 인구 및 세대수 추이 (2008~2025)</h3>
+        <div class="chart-container">
+          <canvas id="chartPop"></canvas>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3 class="card-title"><i class="fa-solid fa-chart-pie"></i> 천안시 아파트 연식별 노후도 현황 (원천: 천안노후도.png)</h3>
+        <div class="chart-container">
+          <canvas id="chartAging"></canvas>
+        </div>
+      </section>
+    </div>
+
+    <!-- 2. 주택 재고 및 노후도 상세 표 -->
+    <section class="card">
+      <h3 class="card-title"><i class="fa-solid fa-table-list"></i> 천안시 아파트 면적 규모별 노후도 전수 현황표</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>면적 구분</th>
+              <th class="text-right">전체 세대수</th>
+              <th class="text-right">5년 이하 (신축)</th>
+              <th class="text-right">6~10년 (준신축)</th>
+              <th class="text-right">11~20년 (기축)</th>
+              <th class="text-right">21~30년 (노후)</th>
+              <th class="text-right">31년 초과 (초노후)</th>
+              <th class="text-right">20년 초과 노후 세대</th>
+              <th class="text-center">노후율</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-bold">60㎡ 이하 (소형)</td>
+              <td class="text-right">79,984</td>
+              <td class="text-right">5,337</td>
+              <td class="text-right">10,887</td>
+              <td class="text-right">7,828</td>
+              <td class="text-right text-danger">34,280</td>
+              <td class="text-right text-danger">21,652</td>
+              <td class="text-right text-danger font-bold">55,932</td>
+              <td class="text-center text-danger font-bold">69.9%</td>
+            </tr>
+            <tr>
+              <td class="font-bold">60~85㎡ (국민평형)</td>
+              <td class="text-right">98,106</td>
+              <td class="text-right">19,705</td>
+              <td class="text-right">18,447</td>
+              <td class="text-right">20,458</td>
+              <td class="text-right">27,085</td>
+              <td class="text-right">12,411</td>
+              <td class="text-right font-bold">39,496</td>
+              <td class="text-center font-bold">40.3%</td>
+            </tr>
+            <tr>
+              <td class="font-bold">85㎡ 초과 (중대형)</td>
+              <td class="text-right">25,941</td>
+              <td class="text-right">1,455</td>
+              <td class="text-right">3,319</td>
+              <td class="text-right">10,868</td>
+              <td class="text-right">7,190</td>
+              <td class="text-right">3,109</td>
+              <td class="text-right font-bold">10,299</td>
+              <td class="text-center font-bold">39.7%</td>
+            </tr>
+            <tr style="background: #F1F5F9; font-weight: 700;">
+              <td>전체 합계</td>
+              <td class="text-right font-bold">204,032</td>
+              <td class="text-right">26,497 (13.0%)</td>
+              <td class="text-right">32,653 (16.0%)</td>
+              <td class="text-right">39,154 (19.2%)</td>
+              <td class="text-right">68,555 (33.6%)</td>
+              <td class="text-right">37,172 (18.2%)</td>
+              <td class="text-right text-danger font-bold">105,727</td>
+              <td class="text-center text-danger font-bold">51.8%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:12px; color:var(--text-muted); margin-top:8px;">
+        * 시사점: 5년 이하 신축은 전체의 13.0%에 불과한 반면, 20년 초과 노후 주택은 51.8%로 과반을 넘어섬. 특히 소형의 70%가 노후화되어 국민평형(84㎡) 갈아타기 유효수요 막강.
+      </p>
+    </section>
+
+    <!-- 3. 수급 동향 (분양 vs 입주) & 미분양 추이 -->
+    <div class="grid-2">
+      <section class="card">
+        <h3 class="card-title"><i class="fa-solid fa-truck-ramp-box"></i> 연도별 분양 실적 vs 입주 공급 물량 (2020~2030)</h3>
+        <div class="chart-container">
+          <canvas id="chartSupply"></canvas>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3 class="card-title"><i class="fa-solid fa-triangle-exclamation"></i> 천안시 미분양 주택 재고 추이 (2024.07 ~ 2026.07)</h3>
+        <div class="chart-container">
+          <canvas id="chartUnsold"></canvas>
+        </div>
+      </section>
+    </div>
+
+    <!-- 4. 2026년 청약 경쟁률 전수 분석 표 & 차트 -->
+    <section class="card">
+      <h3 class="card-title"><i class="fa-solid fa-ranking-star"></i> 2026년 천안시 주요 단지별 청약 경쟁률 (극단적 초양극화)</h3>
+      <div class="chart-container" style="height: 320px; margin-bottom: 20px;">
+        <canvas id="chartSubscription"></canvas>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>단지명</th>
+              <th>소재지</th>
+              <th class="text-right">총세대수</th>
+              <th class="text-right">일반공급</th>
+              <th class="text-right">1순위 접수</th>
+              <th class="text-center">1순위 경쟁률</th>
+              <th class="text-center">전체 경쟁률</th>
+              <th>청약 결과 및 시장 평가</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background: #EFF6FF;">
+              <td class="font-bold">엘리프성성호수공원(1BL)</td>
+              <td>서북구 업성동</td>
+              <td class="text-right">546</td>
+              <td class="text-right">379</td>
+              <td class="text-right text-primary font-bold">9,956</td>
+              <td class="text-center text-primary font-bold">26.27 : 1</td>
+              <td class="text-center text-primary font-bold">26.27 : 1</td>
+              <td class="font-bold">천안 최고 흥행, 1만 통장 쇄도 완전 완판</td>
+            </tr>
+            <tr style="background: #EFF6FF;">
+              <td class="font-bold">천안아이파크시티(6단지)</td>
+              <td>서북구 성성동</td>
+              <td class="text-right">1,066</td>
+              <td class="text-right">766</td>
+              <td class="text-right text-primary font-bold">8,077</td>
+              <td class="text-center text-primary font-bold">10.54 : 1</td>
+              <td class="text-center text-primary font-bold">11.01 : 1</td>
+              <td class="font-bold">성성호수공원 최선호 대단지 1순위 마감</td>
+            </tr>
+            <tr style="background: #EFF6FF;">
+              <td class="font-bold">천안아이파크시티(5단지)</td>
+              <td>서북구 성성동</td>
+              <td class="text-right">882</td>
+              <td class="text-right">662</td>
+              <td class="text-right text-primary font-bold">5,848</td>
+              <td class="text-center text-primary font-bold">8.83 : 1</td>
+              <td class="text-center text-primary font-bold">9.32 : 1</td>
+              <td class="font-bold">6단지 동반 흥행, 1순위 조기 완판</td>
+            </tr>
+            <tr>
+              <td class="font-bold">엘리프성성호수공원(2BL)</td>
+              <td>서북구 업성동</td>
+              <td class="text-right">619</td>
+              <td class="text-right">510</td>
+              <td class="text-right font-bold">2,368</td>
+              <td class="text-center font-bold">4.64 : 1</td>
+              <td class="text-center font-bold">5.23 : 1</td>
+              <td>수변 조망 프리미엄으로 1순위 완판</td>
+            </tr>
+            <tr>
+              <td>백석시그니처자이(2단지)</td>
+              <td>서북구 백석동</td>
+              <td class="text-right">320</td>
+              <td class="text-right">304</td>
+              <td class="text-right">356</td>
+              <td class="text-center">1.17 : 1</td>
+              <td class="text-center">1.35 : 1</td>
+              <td>백석동 기구축 갈아타기 실수요 마감</td>
+            </tr>
+            <tr>
+              <td>업성푸르지오레이크시티(1BL)</td>
+              <td>서북구 업성동</td>
+              <td class="text-right">1,460</td>
+              <td class="text-right">1,400</td>
+              <td class="text-right">1,553</td>
+              <td class="text-center">1.11 : 1</td>
+              <td class="text-center">1.20 : 1</td>
+              <td>대단지 1순위 턱걸이 마감</td>
+            </tr>
+            <tr>
+              <td>백석시그니처자이(1단지)</td>
+              <td>서북구 백석동</td>
+              <td class="text-right">854</td>
+              <td class="text-right">792</td>
+              <td class="text-right">828</td>
+              <td class="text-center">1.05 : 1</td>
+              <td class="text-center">1.21 : 1</td>
+              <td>도심 주거지로 선방 마감</td>
+            </tr>
+            <tr style="background: #FEF2F2;">
+              <td>천안아이파크시티(3단지)</td>
+              <td>서북구 부대동</td>
+              <td class="text-right">896</td>
+              <td class="text-right">838</td>
+              <td class="text-right text-danger">193</td>
+              <td class="text-center text-danger">0.23 : 1</td>
+              <td class="text-center text-danger">0.27 : 1</td>
+              <td class="text-danger">호수공원 이격 및 북측 입지 한계 미달</td>
+            </tr>
+            <tr style="background: #FEF2F2;">
+              <td>두정역푸르지오그랑피크</td>
+              <td>서북구 성정동</td>
+              <td class="text-right">1,438</td>
+              <td class="text-right">1,382</td>
+              <td class="text-right text-danger">182</td>
+              <td class="text-center text-danger">0.13 : 1</td>
+              <td class="text-center text-danger">0.16 : 1</td>
+              <td class="text-danger">고분양가 부담 및 두정동 기공급 누적 미달</td>
+            </tr>
+            <tr style="background: #FEF2F2;">
+              <td>두산위브더제니스센트럴천안</td>
+              <td>동남구 청당동</td>
+              <td class="text-right">1,202</td>
+              <td class="text-right">1,160</td>
+              <td class="text-right text-danger">323</td>
+              <td class="text-center text-danger">0.28 : 1</td>
+              <td class="text-center text-danger">0.34 : 1</td>
+              <td class="text-danger">청당동 공급 과잉 및 분양가 부담 미달</td>
+            </tr>
+            <tr style="background: #FEF2F2;">
+              <td>천안동일하이빌파크레인</td>
+              <td>서북구 직산읍</td>
+              <td class="text-right">895</td>
+              <td class="text-right">888</td>
+              <td class="text-right text-danger">29</td>
+              <td class="text-center text-danger font-bold">0.03 : 1</td>
+              <td class="text-center text-danger font-bold">0.04 : 1</td>
+              <td class="text-danger font-bold">외곽 산단 배후지 청약 수요 부재 참패</td>
+            </tr>
+            <tr style="background: #FEF2F2;">
+              <td>천안동문디이스트파크시티</td>
+              <td>동남구 삼룡동</td>
+              <td class="text-right">1,051</td>
+              <td class="text-right">498</td>
+              <td class="text-right text-danger">13</td>
+              <td class="text-center text-danger font-bold">0.03 : 1</td>
+              <td class="text-center text-danger font-bold">0.05 : 1</td>
+              <td class="text-danger font-bold">동남구 외곽 인프라 부족 대거 미달</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 5. K-Atlas 차주 금융 프로파일 & 광역 통근 네트워크 -->
+    <div class="grid-2">
+      <section class="card">
+        <h3 class="card-title"><i class="fa-solid fa-wallet"></i> 천안시 주요 읍면동별 평균 연소득 & 소비력 (K-Atlas 2.0)</h3>
+        <div class="chart-container">
+          <canvas id="chartIncome"></canvas>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3 class="card-title"><i class="fa-solid fa-car-side"></i> 천안 거주자의 외부 통근지별 소득 수준</h3>
+        <div class="chart-container">
+          <canvas id="chartCommute"></canvas>
+        </div>
+      </section>
+    </div>
+
+    <!-- 6. 주요 4대 권역 진단 -->
+    <section class="card">
+      <h3 class="card-title"><i class="fa-solid fa-sitemap"></i> 천안시 도심 주거 4대 권역 심층 비교</h3>
+      <div class="zone-grid">
+        <div class="zone-card z1">
+          <div class="zone-header">
+            <span class="zone-name">신불당 권역</span>
+            <span class="zone-badge" style="background:#DBEAFE; color:#1D4ED8;">전통 1급지</span>
+          </div>
+          <ul class="zone-features">
+            <li><i class="fa-solid fa-check text-primary"></i> 충남 최대 명문 학원가 및 상권 독점</li>
+            <li><i class="fa-solid fa-check text-primary"></i> 천안시청, KTX 천안아산역 접근 최고</li>
+            <li><i class="fa-solid fa-triangle-exclamation text-danger"></i> 입주 8~10년 경과로 노후화 시작</li>
+            <li><i class="fa-solid fa-arrow-right text-muted"></i> 평당 2,000~2,500만 원대 시세 형성</li>
+          </ul>
+        </div>
+
+        <div class="zone-card z2">
+          <div class="zone-header">
+            <span class="zone-name">성성호수공원 권역</span>
+            <span class="zone-badge" style="background:#D1FAE5; color:#047857;">신흥 대장주</span>
+          </div>
+          <ul class="zone-features">
+            <li><i class="fa-solid fa-check text-success"></i> 성성호수공원 영구 수변 조망 프리미엄</li>
+            <li><i class="fa-solid fa-check text-success"></i> 삼성 SDI, 제2~4산단 직주근접 최상</li>
+            <li><i class="fa-solid fa-check text-success"></i> 아이파크·푸르지오·자이 1군 브랜드 타운</li>
+            <li><i class="fa-solid fa-triangle-exclamation text-danger"></i> 2029년 대규모 입주 집중 리스크</li>
+          </ul>
+        </div>
+
+        <div class="zone-card z3">
+          <div class="zone-header">
+            <span class="zone-name">탕정-신불당 연계축</span>
+            <span class="zone-badge" style="background:#EDE9FE; color:#6D28D9;">과성교 수혜</span>
+          </div>
+          <ul class="zone-features">
+            <li><i class="fa-solid fa-check text-primary"></i> 과성교(2027)로 신불당 3분 직결 생활권</li>
+            <li><i class="fa-solid fa-check text-primary"></i> 신불당 학원가 셔틀 + 농어촌 특별전형</li>
+            <li><i class="fa-solid fa-check text-primary"></i> 탕정 삼성디스플레이 저리 주거대출 흡수</li>
+            <li><i class="fa-solid fa-arrow-right text-muted"></i> 3040 맞벌이 학부모 선호 극대화</li>
+          </ul>
+        </div>
+
+        <div class="zone-card z4">
+          <div class="zone-header">
+            <span class="zone-name">천안역 원도심 재개발</span>
+            <span class="zone-badge" style="background:#FEF3C7; color:#B45309;">도시 재생</span>
+          </div>
+          <ul class="zone-features">
+            <li><i class="fa-solid fa-check text-primary"></i> 천안역 도시재생 & 복합환승센터 개발</li>
+            <li><i class="fa-solid fa-check text-primary"></i> 복자여고, 천안고 등 전통 명문 학군</li>
+            <li><i class="fa-solid fa-check text-primary"></i> 신세계백화점, 고속터미널 상권 인접</li>
+            <li><i class="fa-solid fa-triangle-exclamation text-danger"></i> 서북구 대비 주거환경 정비 시간 소요</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. 종합 평가 (SWOT) & 전략적 제언 -->
+    <section class="card">
+      <h3 class="card-title"><i class="fa-solid fa-chess-knight"></i> 천안시 주택시장 SWOT 및 전략적 제언</h3>
+      
+      <div class="swot-grid" style="margin-bottom: 20px;">
+        <div class="swot-card swot-s">
+          <div class="swot-title"><i class="fa-solid fa-shield"></i> 강점 (Strength)</div>
+          <ul class="swot-list">
+            <li>20년 초과 노후 아파트 51.8%(소형 70%)의 대기수요</li>
+            <li>불당2동(6,684만), 불당1동(6,054만) 등 충남 최고 소득</li>
+            <li>성성호수공원 라인의 압도적 청약 완판 파워 (최고 26:1)</li>
+            <li>삼성 임직원 연 1.5% 저리 주거대출(5억) 금융 백업</li>
+          </ul>
+        </div>
+
+        <div class="swot-card swot-w">
+          <div class="swot-title"><i class="fa-solid fa-triangle-exclamation"></i> 약점 (Weakness)</div>
+          <ul class="swot-list">
+            <li>2026년 1.18만 분양 러시로 미분양 5,100호 적체</li>
+            <li>성성호수 외곽 및 원도심·직산 청약 참패 (초양극화)</li>
+            <li>서북구(4,900만) vs 동남구(4,354만)의 심각한 지역 격차</li>
+            <li>85㎡ 초과 대형 평형 재고 결핍 (12.7%)</li>
+          </ul>
+        </div>
+
+        <div class="swot-card swot-o">
+          <div class="swot-title"><i class="fa-solid fa-lightbulb"></i> 기회 (Opportunity)</div>
+          <ul class="swot-list">
+            <li>과성교(2027) 개통으로 탕정-신불당 단일 메가주거벨트 형성</li>
+            <li>수도권 1호선 부성역(2029) 및 GTX-C 천안 연장 추진</li>
+            <li>직산 1.2조 AI 데이터센터(AIDC) 유치 및 첨단 전세권 확보</li>
+            <li>2026년 신규 입주 물량 689호(서북구 0호)로 일시적 급감</li>
+          </ul>
+        </div>
+
+        <div class="swot-card swot-t">
+          <div class="swot-title"><i class="fa-solid fa-radiation"></i> 위협 (Threat)</div>
+          <ul class="swot-list">
+            <li>2029년 12,598세대 대규모 입주 집중에 따른 전세가 흔들림</li>
+            <li>고금리 기조 유지에 따른 실수요자 분양가 저항</li>
+            <li>수도권 외곽 비규제지역 투자 유입 제한</li>
+            <li>AIDC 특고압선 매설 등 주민 수용성 갈등 리스크</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 전략 제언 3개 -->
+      <div class="strategy-card">
+        <h4>1. [미분양 해소 전략] 2026년 입주 공백(689세대)을 활용한 준공 전 미분양 자연 소진</h4>
+        <p>
+          현재 미분양 5,100호는 2026년 상반기 11,880세대 분양 집중에 따른 '단기 적체 착시'입니다. 2026년 천안시 전체 신규 입주는 단 689세대(서북구는 0호)에 불과하므로, 공급 공백기를 활용하여 계약금 정액제 및 중도금 무이자 혜택을 통해 준공 전 잔여 매물을 순차 소진시키는 마케팅이 유효합니다.
+        </p>
+      </div>
+
+      <div class="strategy-card">
+        <h4>2. [타겟 마케팅] '노후 소형 5.6만 세대 환승' & '아산 탕정 삼성 대출 복지' 집중 공략</h4>
+        <p>
+          20년 이상 노후 소형 아파트에 거주하는 55,932세대의 주거 상향 욕구를 흡수할 전용 74~84㎡ 국민평형 환승 프로모션을 전개해야 합니다. 아울러 연 1.5% 저리 5억 원 대출(DSR 미적용)이 가능한 삼성디스플레이 탕정 사업장(통근자 소득 7,407만 원) 임직원을 겨냥하여 '신불당 학원가 공유 + 직주근접' 가치를 극대화해야 합니다.
+        </p>
+      </div>
+
+      <div class="strategy-card">
+        <h4>3. [상품 및 리스크 관리] 2029년 입주 쇼크(1.26만) 대비 및 중대형(84~114㎡) 희소 상품화</h4>
+        <p>
+          2029년 성성·부대·업성 지구에 1.2만 세대 이상의 입주가 일시에 쏟아지므로 사전 전세 매칭 및 탄력적 입주 기간 운영 등 역전세 방어책이 요구됩니다. 반면 천안시 아파트 중대형 재고는 12.7%에 불과하므로 불당·성성의 고소득층을 겨냥한 전용 99~114㎡ 테라스 및 펜트하우스 특화 상품을 기획하여 틈새 시장을 선점할 것을 권고합니다.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 토스트 알림창 -->
+  <div id="toast"><i class="fa-solid fa-circle-check"></i> 요약 보고서가 클립보드에 복사되었습니다! 카카오톡이나 메모장에 붙여넣기 하세요.</div>
+
+  <!-- 차트 스크립트 & 클립보드 복사 로직 -->
+  <script>
+    // 📋 요약 복사 기능 (사용자 글로벌 룰 #7 완벽 준수)
+    function copyExecutiveSummary() {
+      const summaryText = `[충남 천안시 주택시장 종합 진단 및 미래 성장 전략 보고서 - 핵심 요약]
+■ 기준시점: 2026년 하반기 (부동산R114 PropX & KCB K-Atlas 2.0 빅데이터)
+■ 인구 및 가구: 총인구 664,322명 / 세대수 317,941세대 (세대당 2.09명)
+
+1. 수급 사이클 및 청약 초양극화 진단
+- 2026년 분양 러시: 총 11,880세대 신규 분양 (서북구 10,242호 집중)
+- 청약 시장 극단적 초양극화: 성성호수공원(엘리프 1BL 26.27:1, 아이파크 6단지 10.54:1) 대박 완판 vs 외곽·비선호(삼룡동 동문 0.03:1, 직산 동일 0.03:1, 청당 두산 0.28:1) 대거 미달
+- 미분양 주택 급증: 2025.10월 1,032호 ➔ 2026.07월 5,100호로 급증 (단기 분양 집중 및 쏠림에 따른 착시 적체)
+
+2. 아파트 재고 노후도 51.8% 및 잠재 갈아타기 수요
+- 총 아파트 재고: 204,032세대 중 20년 초과 노후 주택 105,727세대 (51.8%)
+- 특히 전용 60㎡ 이하 소형 79,984세대 중 69.9%(55,932세대)가 20년 초과 극단적 노후화
+- 5년 이하 신축은 13.0%(26,497세대)에 불과해 신축 국민평형(74~84㎡) 갈아타기 욕구 임계점
+
+3. K-Atlas 기반 차주 금융 및 광역 공간 이동 (소득·소비·통근)
+- 동별 소득 1위: 불당2동(연 6,684만 / 월카드소비 324만 / 주담대 2.07억) ➔ 불당1동(6,054만) ➔ 백석동(5,400만) ➔ 부성2동(5,258만, 성성 신흥부촌)
+- 서북구(4,900만) vs 동남구(4,354만) 소득 격차 546만 원
+- 외부 통근 1위: 아산시 탕정면(삼성디스플레이시티) 통근 비중 2.76% (통근자 평균 연소득 7,407만 원, 월소비 331만 원)
+- 삼성 임직원 주거복지: 연 1.5% 저리 최대 5억 대출(DSR 미적용)이 천안·아산 고가 신축을 강력 지지
+
+4. 공간 축 이동 및 미래 교통 비전
+- 주거 선호 축 이동: 불당(1급지 노후화) ➔ 성성호수공원(수변 신흥대장) & 탕정-과성교 연계축(2027 개통, 신불당 3분 직결)
+- 교통/산업 호재: 수도권 1호선 부성역(2029), GTX-C 천안 연장 추진, KTX 천안역 정차, 직산 1.2조 AI 데이터센터(AIDC)`;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(summaryText).then(() => {
+          showToast();
+        }).catch(err => {
+          console.error('클립보드 복사 실패:', err);
+          fallbackCopyText(summaryText);
+        });
+      } else {
+        fallbackCopyText(summaryText);
+      }
+    }
+
+    function fallbackCopyText(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showToast();
+      } catch (err) {
+        alert('요약 복사에 실패했습니다. 브라우저 설정을 확인해주세요.');
+      }
+      document.body.removeChild(textArea);
+    }
+
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3500);
+    }
+
+    // Chart.js 전역 설정
+    Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Pretendard", sans-serif';
+    Chart.defaults.color = '#64748B';
+
+    // 1. 인구 및 세대수 차트
+    const ctxPop = document.getElementById('chartPop').getContext('2d');
+    new Chart(ctxPop, {
+      type: 'bar',
+      data: {
+        labels: ['2008년', '2010년', '2012년', '2014년', '2016년', '2018년', '2020년', '2022년', '2024년', '2025년'],
+        datasets: [
+          {
+            type: 'line',
+            label: '총인구수 (명)',
+            data: [537698, 557673, 581988, 598346, 617955, 646075, 658808, 657559, 659920, 664322],
+            borderColor: '#3B82F6',
+            backgroundColor: '#3B82F6',
+            borderWidth: 3,
+            pointRadius: 4,
+            yAxisID: 'yPop',
+            tension: 0.2
+          },
+          {
+            type: 'bar',
+            label: '총 세대수 (세대)',
+            data: [209512, 221744, 232724, 243364, 254676, 273851, 291425, 302893, 312542, 317941],
+            backgroundColor: 'rgba(148, 163, 184, 0.45)',
+            hoverBackgroundColor: 'rgba(148, 163, 184, 0.7)',
+            borderRadius: 4,
+            yAxisID: 'yHouse'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top' },
+          tooltip: {
+            callbacks: {
+              label: function(c) {
+                return c.dataset.label + ': ' + Number(c.raw).toLocaleString();
+              }
+            }
+          }
+        },
+        scales: {
+          yPop: {
+            type: 'linear',
+            position: 'left',
+            min: 500000,
+            max: 700000,
+            ticks: { callback: v => (v/10000) + '만' }
+          },
+          yHouse: {
+            type: 'linear',
+            position: 'right',
+            min: 180000,
+            max: 350000,
+            grid: { drawOnChartArea: false },
+            ticks: { callback: v => (v/10000) + '만' }
+          }
+        }
+      }
+    });
+
+    // 2. 노후도 도넛 차트
+    const ctxAging = document.getElementById('chartAging').getContext('2d');
+    new Chart(ctxAging, {
+      type: 'doughnut',
+      data: {
+        labels: ['5년 이하 신축 (13.0%)', '6~10년 준신축 (16.0%)', '11~20년 기축 (19.2%)', '21~30년 노후 (33.6%)', '31년 초과 초노후 (18.2%)'],
+        datasets: [{
+          data: [26497, 32653, 39154, 68555, 37172],
+          backgroundColor: ['#10B981', '#3B82F6', '#94A3B8', '#F59E0B', '#EF4444'],
+          borderWidth: 2,
+          borderColor: '#FFFFFF'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right' },
+          tooltip: {
+            callbacks: {
+              label: function(c) {
+                return c.label + ': ' + Number(c.raw).toLocaleString() + '세대';
+              }
+            }
+          }
+        },
+        cutout: '58%'
+      }
+    });
+
+    // 3. 분양 실적 vs 입주 공급 물량 차트
+    const ctxSupply = document.getElementById('chartSupply').getContext('2d');
+    new Chart(ctxSupply, {
+      type: 'bar',
+      data: {
+        labels: ['2020년', '2021년', '2022년', '2023년', '2024년', '2025년', '2026년', '2027년', '2028년', '2029년', '2030년'],
+        datasets: [
+          {
+            label: '분양 물량 (세대)',
+            data: [4649, 7259, 10270, 358, 3928, 6553, 11880, null, null, null, null],
+            backgroundColor: '#3B82F6',
+            borderRadius: 4
+          },
+          {
+            label: '입주 공급 물량 (세대)',
+            data: [5769, 1458, 4030, 6712, 8966, 6100, 689, 5405, 4089, 12598, 1438],
+            backgroundColor: '#10B981',
+            borderRadius: 4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top' },
+          tooltip: {
+            callbacks: {
+              label: function(c) {
+                return c.dataset.label + ': ' + Number(c.raw || 0).toLocaleString() + '세대';
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { callback: v => Number(v).toLocaleString() }
+          }
+        }
+      }
+    });
+
+    // 4. 미분양 추이 차트
+    const ctxUnsold = document.getElementById('chartUnsold').getContext('2d');
+    new Chart(ctxUnsold, {
+      type: 'line',
+      data: {
+        labels: ['24.07', '24.09', '24.11', '24.12', '25.02', '25.04', '25.06', '25.08', '25.10', '25.11', '25.12', '26.01', '26.02', '26.04', '26.06', '26.07'],
+        datasets: [{
+          label: '천안시 미분양 호수',
+          data: [1590, 1249, 1087, 1331, 1089, 1353, 1126, 1106, 1032, 2566, 2769, 2614, 3361, 3060, 3939, 5100],
+          borderColor: '#EF4444',
+          backgroundColor: 'rgba(239, 68, 68, 0.12)',
+          fill: true,
+          tension: 0.25,
+          borderWidth: 3,
+          pointRadius: 4,
+          pointBackgroundColor: '#EF4444'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top' },
+          tooltip: {
+            callbacks: {
+              label: function(c) {
+                return '미분양: ' + Number(c.raw).toLocaleString() + '호';
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 6000,
+            ticks: { callback: v => Number(v).toLocaleString() }
+          }
+        }
+      }
+    });
+
+    // 5. 청약 경쟁률 수평 바 차트
+    const ctxSub = document.getElementById('chartSubscription').getContext('2d');
+    new Chart(ctxSub, {
+      type: 'bar',
+      data: {
+        labels: [
+          '엘리프성성(1BL)', '아이파크(6단지)', '아이파크(5단지)', '엘리프성성(2BL)',
+          '백석자이(2단지)', '업성푸르지오(1BL)', '백석자이(1단지)', '청당두산위브',
+          '아이파크(3단지)', '용곡두산위브', '아이파크(4단지)', '두정역푸르지오',
+          '업성푸르지오(2단지)', '직산동일하이빌', '삼룡동문디이스트'
+        ],
+        datasets: [{
+          label: '1순위 청약 경쟁률 (:1)',
+          data: [26.27, 10.54, 8.83, 4.64, 1.17, 1.11, 1.05, 0.28, 0.23, 0.24, 0.17, 0.13, 0.12, 0.03, 0.03],
+          backgroundColor: [
+            '#1D4ED8', '#2563EB', '#3B82F6', '#60A5FA',
+            '#10B981', '#10B981', '#10B981', '#EF4444',
+            '#EF4444', '#EF4444', '#EF4444', '#EF4444',
+            '#EF4444', '#DC2626', '#DC2626'
+          ],
+          borderRadius: 4
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(c) {
+                return '1순위 경쟁률: ' + c.raw + ' : 1';
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            title: { display: true, text: '1순위 경쟁률 (:1)' }
+          }
+        }
+      }
+    });
+
+    // 6. 읍면동별 소득 및 소비 차트
+    const ctxInc = document.getElementById('chartIncome').getContext('2d');
+    new Chart(ctxInc, {
+      type: 'bar',
+      data: {
+        labels: ['불당2동', '불당1동', '백석동', '쌍용3동', '부성2동', '부성1동', '청룡동', '신방동', '신안동', '직산읍'],
+        datasets: [
+          {
+            label: '평균 연소득 (만원)',
+            data: [6684, 6054, 5400, 5340, 5258, 4720, 4667, 4514, 4340, 4116],
+            backgroundColor: '#3B82F6',
+            borderRadius: 4
+          },
+          {
+            label: '월 카드소비 (만원)',
+            data: [324, 262, 225, 225, 222, 199, 203, 194, 149, 134],
+            backgroundColor: '#F59E0B',
+            borderRadius: 4
+          }
+        ]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top' },
+          tooltip: {
+            callbacks: {
+              label: function(c) {
+                return c.dataset.label + ': ' + Number(c.raw).toLocaleString() + '만원';
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            ticks: { callback: v => Number(v).toLocaleString() }
+          }
+        }
+      }
+    });
+
+    // 7. 외부 통근지별 소득 차트
+    const ctxComm = document.getElementById('chartCommute').getContext('2d');
+    new Chart(ctxComm, {
+      type: 'bar',
+      data: {
+        labels: ['용인 기흥 서농동', '아산 탕정면', '아산 인주면', '아산 배방읍', '아산 온양3동', '아산 둔포면', '청주 오창읍', '아산 음봉면', '서울 강남 역삼1동'],
+        datasets: [{
+          label: '통근자 평균 연소득 (만원)',
+          data: [10455, 7407, 6867, 5514, 5439, 5303, 5310, 5034, 5012],
+          backgroundColor: [
+            '#8B5CF6', '#10B981', '#3B82F6', '#60A5FA',
+            '#94A3B8', '#94A3B8', '#94A3B8', '#94A3B8', '#F59E0B'
+          ],
+          borderRadius: 4
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(c) {
+                return '평균 연소득: ' + Number(c.raw).toLocaleString() + '만원';
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            ticks: { callback: v => Number(v).toLocaleString() + '만' }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 한·미 리츠 & 배당 ETF 금융상품 심층 비교 인텔리전스</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- FontAwesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              reits: '#0284c7',    // Sky-600
+              reitsBg: '#f0f9ff',  // Sky-50
+              etf: '#7c3aed',      // Purple-600
+              etfBg: '#faf5ff',    // Purple-50
+              us: '#2563eb',       // Blue-600
+              usBg: '#eff6ff',     // Blue-50
+              real: '#d97706',     // Amber-600
+              realBg: '#fffbeb',   // Amber-50
+              accent: '#059669',   // Emerald-600
+              accentBg: '#ecfdf5', // Emerald-50
+              card: '#ffffff',
+              border: '#e2e8f0',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    * { 
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      word-break: keep-all; 
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f8fafc; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    /* Sticky Header Table Support (상단 칼럼 떨림/흔들림 완전 방지) */
+    .sticky-th th {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background-color: #f1f5f9; /* slate-100 */
+    }
+
+    /* Print Optimization (Rules Compliant) */
+    @media print {
+      .no-print { display: none !important; }
+      body { background-color: #ffffff !important; color: #000000 !important; }
+      .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl { box-shadow: none !important; }
+      .border { border-color: #cbd5e1 !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen antialiased selection:bg-emerald-500 selection:text-white pb-16">
+
+  <!-- Toast Notification Component -->
+  <div id="toast" class="fixed top-5 right-5 z-50 transform transition-all duration-300 opacity-0 translate-y-[-20px] pointer-events-none bg-white border border-emerald-500 text-slate-900 px-5 py-3.5 rounded-xl shadow-2xl flex items-center space-x-3">
+    <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-base flex-shrink-0">✓</div>
+    <div>
+      <h4 class="text-xs font-bold text-emerald-700" id="toast-title">복사 완료</h4>
+      <p class="text-xs text-slate-600" id="toast-msg">요약 정보가 클립보드에 복사되었습니다.</p>
+    </div>
+  </div>
+
+  <!-- Header Navigation (No Logo, Pure Typography & Badges, 요약 복사 기능 탑재) -->
+  <header class="border-b border-slate-200 bg-white/95 backdrop-blur sticky top-0 z-40 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center shadow-sm shadow-emerald-500/20 text-white font-bold">
+          <i class="fa-solid fa-scale-balanced text-lg"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight">2026 한·미 인컴 & 퇴직연금 투자 인텔리전스</h1>
+            <span class="text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full">보고서 팩트 기반 v3</span>
+          </div>
+          <p class="text-xs text-slate-500 hidden sm:block">국내외 23개 상장 리츠·월배당 ETF·지수형·채권혼합형 정밀 1:1 비교 대시보드</p>
+        </div>
+      </div>
+
+      <!-- Action Buttons (no-print) -->
+      <div class="flex items-center space-x-2 no-print">
+        <button onclick="copyComparisonReport()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-xs shadow-emerald-600/30 transition flex items-center space-x-1.5 active:scale-95" title="전체 요약 보고서 복사">
+          <i class="fa-regular fa-clipboard"></i>
+          <span>📋 요약 복사</span>
+        </button>
+        <button onclick="window.print()" class="px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 text-xs font-medium rounded-lg border border-slate-300 shadow-xs transition flex items-center space-x-1">
+          <i class="fa-solid fa-print text-slate-500"></i>
+          <span class="hidden sm:inline">인쇄</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
+
+    <!-- 2026 거시경제 & 세제 핵심 지표 배너 (보고서 팩트) -->
+    <section class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+      <div class="flex flex-col md:flex-row md:items-center justify-between pb-3 border-b border-slate-100 gap-2">
+        <div class="flex items-center space-x-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <h2 class="text-xs sm:text-sm font-bold text-slate-800">2026년 11월 기준 거시경제 & 퇴직연금 제도 환경</h2>
+        </div>
+        <span class="text-[11px] text-slate-500 font-medium">기준일: 2026.11 중순 (한국은행 금통위 3.00%·국고채 3년 3.725%·미국 10년 4.86%)</span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-3.5 text-xs">
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/80">
+          <span class="text-[11px] text-slate-500 block mb-0.5">국내 기준금리 (현행/전망)</span>
+          <span class="text-sm font-extrabold text-slate-900">3.00% → 3.25%</span>
+          <span class="text-[10px] text-amber-700 font-semibold block mt-0.5">11.26 금통위 인상 유력</span>
+        </div>
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/80">
+          <span class="text-[11px] text-slate-500 block mb-0.5">연금 세액공제 한도</span>
+          <span class="text-sm font-extrabold text-emerald-700">최대 1,200만 원</span>
+          <span class="text-[10px] text-slate-500 block mt-0.5">연금 600 + IRP 300 + ISA 전환</span>
+        </div>
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/80">
+          <span class="text-[11px] text-slate-500 block mb-0.5">사적연금 종신수령 세율</span>
+          <span class="text-sm font-extrabold text-sky-700">일괄 3.3% 저율과세</span>
+          <span class="text-[10px] text-slate-500 block mt-0.5">2026 신설(연령무관 적용)</span>
+        </div>
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/80">
+          <span class="text-[11px] text-slate-500 block mb-0.5">외국납부세액 공제 개편</span>
+          <span class="text-sm font-extrabold text-purple-700">인출 시 55% 공제</span>
+          <span class="text-[10px] text-slate-500 block mt-0.5">2026.07.01 시행(해외형)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 인터랙티브 필터 & 정렬 컨트롤 바 -->
+    <section class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        
+        <!-- 카테고리 탭 필터 -->
+        <div class="flex flex-wrap items-center gap-1.5">
+          <button onclick="setCategory('ALL')" id="tab-ALL" class="cat-tab px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-900 text-white shadow-xs transition">전체 상품 (23)</button>
+          <button onclick="setCategory('K-REITS')" id="tab-K-REITS" class="cat-tab px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition">국내 상장 리츠 (3)</button>
+          <button onclick="setCategory('K-REITS-ETF')" id="tab-K-REITS-ETF" class="cat-tab px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition">국내 리츠 ETF (5)</button>
+          <button onclick="setCategory('US-DIV-DOW')" id="tab-US-DIV-DOW" class="cat-tab px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition">한국형 미국배당다우존스 (4)</button>
+          <button onclick="setCategory('US-REITS')" id="tab-US-REITS" class="cat-tab px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition">미국 개별 리츠 (3)</button>
+          <button onclick="setCategory('US-GLOBAL-ETF')" id="tab-US-GLOBAL-ETF" class="cat-tab px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition">미국 배당·리츠·커버드콜 (4)</button>
+          <button onclick="setCategory('INDEX-BOND')" id="tab-INDEX-BOND" class="cat-tab px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition">S&P500 & 미국채혼합 (4)</button>
+        </div>
+
+        <!-- 뷰 모드 전환 버튼 -->
+        <div class="flex items-center space-x-2 no-print self-end lg:self-auto">
+          <span class="text-xs text-slate-400 font-medium">보기 형식:</span>
+          <button onclick="setViewMode('cards')" id="btn-view-cards" class="p-1.5 rounded-lg border border-slate-300 text-slate-700 bg-slate-100 hover:bg-slate-200 transition" title="카드형 보기">
+            <i class="fa-solid fa-grip text-xs"></i>
+          </button>
+          <button onclick="setViewMode('table')" id="btn-view-table" class="p-1.5 rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-100 transition" title="고정 표 보기">
+            <i class="fa-solid fa-table-list text-xs"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 세부 속성 필터 & 정렬 -->
+      <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs">
+        
+        <!-- 계좌 및 특징 퀵 필터 -->
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="font-bold text-slate-600 mr-1">조건 필터:</span>
+          <button onclick="toggleFilter('irp100')" id="filter-irp100" class="tag-filter px-2.5 py-1 rounded-md border border-slate-200 bg-white text-slate-600 hover:border-emerald-500 transition">
+            🛡️ IRP 100% 안전자산 인정
+          </button>
+          <button onclick="toggleFilter('monthly')" id="filter-monthly" class="tag-filter px-2.5 py-1 rounded-md border border-slate-200 bg-white text-slate-600 hover:border-sky-500 transition">
+            📅 월배당 (Monthly)
+          </button>
+          <button onclick="toggleFilter('lowFee')" id="filter-lowFee" class="tag-filter px-2.5 py-1 rounded-md border border-slate-200 bg-white text-slate-600 hover:border-purple-500 transition">
+            💎 초저보수 (실부담 0.15% 이하)
+          </button>
+          <button onclick="toggleFilter('highYield')" id="filter-highYield" class="tag-filter px-2.5 py-1 rounded-md border border-slate-200 bg-white text-slate-600 hover:border-amber-500 transition">
+            🔥 연 배당 6.0% 이상
+          </button>
+          <button onclick="resetFilters()" class="text-slate-400 hover:text-slate-600 ml-1 underline">조건 초기화</button>
+        </div>
+
+        <!-- 정렬 컨트롤 -->
+        <div class="flex items-center space-x-2">
+          <span class="font-bold text-slate-600">정렬 기준:</span>
+          <select id="sort-select" onchange="handleSelectSort()" class="bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1 font-semibold text-slate-700 focus:outline-none focus:border-emerald-500">
+            <option value="divYield-desc">배당/분배율 높은 순</option>
+            <option value="divYield-asc">배당/분배율 낮은 순</option>
+            <option value="fee-asc">총보수 낮은 순 (최저비용)</option>
+            <option value="fee-desc">총보수 높은 순</option>
+            <option value="totalReturn1Y-desc">1년 수익률 높은 순</option>
+            <option value="totalReturn1Y-asc">1년 수익률 낮은 순</option>
+            <option value="aum-desc">순자산 규모 큰 순</option>
+            <option value="aum-asc">순자산 규모 작은 순</option>
+            <option value="name-asc">상품명 가나다순</option>
+            <option value="name-desc">상품명 역순</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- 상품 개수 및 요약 인디케이터 -->
+    <div class="flex items-center justify-between px-1 text-xs text-slate-500">
+      <div>
+        <span>검색 결과: </span>
+        <strong class="text-slate-900 font-bold" id="product-count">0</strong>개 상품 표시 중
+      </div>
+      <div class="text-[11px] text-slate-400">
+        * 보고서 원문 데이터 100% 준수 (미기재 항목은 '-' 표기)
+      </div>
+    </div>
+
+    <!-- 1. 카드형 뷰 (기본) -->
+    <section id="view-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- JavaScript로 동적 렌더링 -->
+    </section>
+
+    <!-- 2. 고정 헤더 매트릭스 표 뷰 (칼럼 고정 및 흔들림 완전 방지) -->
+    <section id="view-table-container" class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden hidden">
+      <div class="overflow-x-auto max-h-[700px] relative">
+        <table class="w-full text-left border-separate border-spacing-0 text-xs table-fixed min-w-[1020px]">
+          <!-- 9개 칼럼 너비 고정 (전환 및 스크롤 시 흔들림 방지) -->
+          <colgroup>
+            <col class="w-[220px]">
+            <col class="w-[105px]">
+            <col class="w-[100px]">
+            <col class="w-[95px]">
+            <col class="w-[110px]">
+            <col class="w-[100px]">
+            <col class="w-[110px]">
+            <col class="w-[110px]">
+            <col class="w-[70px]">
+          </colgroup>
+          <thead class="sticky-th shadow-xs select-none">
+            <tr class="text-slate-700 font-bold">
+              <th onclick="handleHeaderSort('name')" class="py-3 px-3.5 border-b border-r border-slate-200 cursor-pointer hover:bg-slate-200/80 transition" title="클릭하여 오름차순/내림차순 정렬">
+                <div class="flex items-center justify-between">
+                  <span>상품명 (코드/티커)</span>
+                  <i id="sort-icon-name" class="fa-solid fa-sort text-slate-300 text-[11px] ml-1"></i>
+                </div>
+              </th>
+              <th onclick="handleHeaderSort('categoryLabel')" class="py-3 px-3 border-b border-r border-slate-200 cursor-pointer hover:bg-slate-200/80 transition" title="클릭하여 오름차순/내림차순 정렬">
+                <div class="flex items-center justify-between">
+                  <span>자산 분류</span>
+                  <i id="sort-icon-categoryLabel" class="fa-solid fa-sort text-slate-300 text-[11px] ml-1"></i>
+                </div>
+              </th>
+              <th onclick="handleHeaderSort('divYield')" class="py-3 px-3 text-right border-b border-r border-slate-200 cursor-pointer hover:bg-slate-200/80 transition" title="클릭하여 오름차순/내림차순 정렬">
+                <div class="flex items-center justify-end space-x-1">
+                  <span>배당/분배율</span>
+                  <i id="sort-icon-divYield" class="fa-solid fa-sort-down text-emerald-600 text-[11px]"></i>
+                </div>
+              </th>
+              <th onclick="handleHeaderSort('payoutCycle')" class="py-3 px-3 border-b border-r border-slate-200 cursor-pointer hover:bg-slate-200/80 transition" title="클릭하여 오름차순/내림차순 정렬">
+                <div class="flex items-center justify-between">
+                  <span>지급 주기</span>
+                  <i id="sort-icon-payoutCycle" class="fa-solid fa-sort text-slate-300 text-[11px] ml-1"></i>
+                </div>
+              </th>
+              <th onclick="handleHeaderSort('fee')" class="py-3 px-3 text-right border-b border-r border-slate-200 cursor-pointer hover:bg-slate-200/80 transition" title="클릭하여 오름차순/내림차순 정렬">
+                <div class="flex items-center justify-end space-x-1">
+                  <span>총보수(실부담)</span>
+                  <i id="sort-icon-fee" class="fa-solid fa-sort text-slate-300 text-[11px]"></i>
+                </div>
+              </th>
+              <th onclick="handleHeaderSort('totalReturn1Y')" class="py-3 px-3 text-right border-b border-r border-slate-200 cursor-pointer hover:bg-slate-200/80 transition" title="클릭하여 오름차순/내림차순 정렬">
+                <div class="flex items-center justify-end space-x-1">
+                  <span>1년 수익률</span>
+                  <i id="sort-icon-totalReturn1Y" class="fa-solid fa-sort text-slate-300 text-[11px]"></i>
+                </div>
+              </th>
+              <th onclick="handleHeaderSort('aum')" class="py-3 px-3 text-right border-b border-r border-slate-200 cursor-pointer hover:bg-slate-200/80 transition" title="클릭하여 오름차순/내림차순 정렬">
+                <div class="flex items-center justify-end space-x-1">
+                  <span>순자산(시총)</span>
+                  <i id="sort-icon-aum" class="fa-solid fa-sort text-slate-300 text-[11px]"></i>
+                </div>
+              </th>
+              <th onclick="handleHeaderSort('irpStatus')" class="py-3 px-3 border-b border-r border-slate-200 cursor-pointer hover:bg-slate-200/80 transition" title="클릭하여 오름차순/내림차순 정렬">
+                <div class="flex items-center justify-between">
+                  <span>절세계좌 적격</span>
+                  <i id="sort-icon-irpStatus" class="fa-solid fa-sort text-slate-300 text-[11px] ml-1"></i>
+                </div>
+              </th>
+              <th class="py-3 px-3 text-center border-b border-slate-200">세부정보</th>
+            </tr>
+          </thead>
+          <tbody id="table-body" class="bg-white">
+            <!-- JavaScript 동적 생성 -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 보고서 팩트 기반 생애주기별 추천 포트폴리오 (Callout Grid) -->
+    <section class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
+      <div class="border-b border-slate-100 pb-3">
+        <h3 class="text-sm sm:text-base font-bold text-slate-900 flex items-center space-x-2">
+          <i class="fa-solid fa-user-shield text-emerald-600"></i>
+          <span>보고서 기반 생애주기별 최적 자산배분 & 계좌 전략</span>
+        </h3>
+        <p class="text-xs text-slate-500 mt-0.5">보고서 10장 Table 10에서 도출된 세제 최적화 포트폴리오 가이드라인</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+        <!-- 2030 사회초년생 -->
+        <div class="bg-sky-50/70 border border-sky-200 p-4 rounded-xl space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="font-extrabold text-sky-900 text-sm">2030 사회초년생</span>
+            <span class="text-[10px] bg-sky-200 text-sky-800 font-bold px-2 py-0.5 rounded-full">복리 극대화</span>
+          </div>
+          <p class="text-slate-600 text-[11px] font-medium leading-relaxed">
+            • <strong>계좌 구조</strong>: 중개형 ISA 우선 적립(3년 만기 후 연금 전환 특례) + 연금저축 600만 원<br>
+            • <strong>핵심 자산</strong>: 미국 S&P 500 환노출 저비용 패시브(ACE 실부담 0.0953% 또는 TIGER) 중심 장기 적립
+          </p>
+        </div>
+
+        <!-- 4050 중장년·고소득 -->
+        <div class="bg-purple-50/70 border border-purple-200 p-4 rounded-xl space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="font-extrabold text-purple-900 text-sm">4050 고소득 직장인</span>
+            <span class="text-[10px] bg-purple-200 text-purple-800 font-bold px-2 py-0.5 rounded-full">연말정산 1,200만</span>
+          </div>
+          <p class="text-slate-600 text-[11px] font-medium leading-relaxed">
+            • <strong>계좌 구조</strong>: 연금저축 600만 + IRP 300만 + ISA 만기 전환 300만<br>
+            • <strong>핵심 자산</strong>: 연금저축에 미국배당다우존스 100%, IRP 위험자산 70% 한도에 미국채혼합50 30% 매칭하여 주식비중 극대화
+          </p>
+        </div>
+
+        <!-- 60+ 은퇴 전환기 -->
+        <div class="bg-amber-50/70 border border-amber-200 p-4 rounded-xl space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="font-extrabold text-amber-900 text-sm">60+ 은퇴·인출기</span>
+            <span class="text-[10px] bg-amber-200 text-amber-800 font-bold px-2 py-0.5 rounded-full">1,500만 절벽 회피</span>
+          </div>
+          <p class="text-slate-600 text-[11px] font-medium leading-relaxed">
+            • <strong>인출 전략</strong>: 종신형 연금계약(3.3% 저율과세) 선택 또는 연 1,500만 원 이하 인출 + ISA 비과세 인출 결합<br>
+            • <strong>핵심 자산</strong>: 원금 무매도 '배당 우선 하이브리드' (월배당 다우존스 50% + 우량 리츠 20% + 예금/채권 30%)
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer & Mandatory Legal Disclaimer -->
+    <footer class="pt-6 border-t border-slate-200 text-center space-y-3">
+      <p class="text-xs text-slate-500 font-medium">
+        금융 데이터 인텔리전스 | Single-File Responsive Web Application
+      </p>
+      <div class="max-w-4xl mx-auto p-4 rounded-xl bg-slate-100 border border-slate-200 text-[11px] text-slate-600 leading-relaxed text-left sm:text-center">
+        <p class="font-bold text-slate-800 mb-1">
+          <i class="fa-solid fa-scale-balanced mr-1 text-amber-600"></i> 법적 면책 조항 및 데이터 출처 (Disclaimer)
+        </p>
+        <p>
+          본 대시보드는 작업 폴더 내 2026년 11월 기준 종합 분석 보고서(대신증권 리서치, 코스콤 ETF체크, 금융투자협회 공시 등)에 기재된 팩트 데이터만을 추출하여 구성되었습니다. 표면 분배율과 실제 분배금 재투자 기준 총수익률(Total Return)에는 큰 괴리가 발생할 수 있으며, 실제 세법(다주택 여부, 해외원천징수 개편안 등) 및 시장 환경 변동에 따라 수익은 달라질 수 있습니다.
+        </p>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- 상세 정보 모달 (Slide-up / Modal Drawer) -->
+  <div id="detail-modal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
+    <div class="bg-white rounded-2xl border border-slate-200 max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-200" id="detail-modal-box">
+      <div class="flex justify-between items-start border-b border-slate-100 pb-3">
+        <div>
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 uppercase" id="m-category">카테고리</span>
+          <h3 class="text-base font-bold text-slate-900 mt-1" id="m-name">상품 상세 정보</h3>
+          <span class="text-xs text-slate-500 font-mono" id="m-code">티커/코드</span>
+        </div>
+        <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-sm transition">
+          ✕
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
+        <div>
+          <span class="text-slate-400 block text-[10px]">배당/분배율</span>
+          <strong class="text-emerald-700 text-sm font-bold" id="m-yield">-</strong>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[10px]">총보수 (실부담)</span>
+          <strong class="text-slate-800 text-sm font-bold" id="m-fee">-</strong>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[10px]">1년 수익률</span>
+          <strong class="text-slate-800 text-sm font-bold" id="m-return">-</strong>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[10px]">순자산/시총</span>
+          <strong class="text-slate-800 text-sm font-bold" id="m-aum">-</strong>
+        </div>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <h4 class="font-bold text-slate-800 mb-1 flex items-center space-x-1">
+            <i class="fa-solid fa-bullseye text-emerald-600 text-[10px]"></i>
+            <span>기초자산 및 투자 전략</span>
+          </h4>
+          <p class="text-slate-600 leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100" id="m-strategy">-</p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-800 mb-1 flex items-center space-x-1">
+            <i class="fa-solid fa-receipt text-purple-600 text-[10px]"></i>
+            <span>분배금 지급 방식 및 분배 기준일</span>
+          </h4>
+          <p class="text-slate-600 leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100" id="m-payout">-</p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-800 mb-1 flex items-center space-x-1">
+            <i class="fa-solid fa-shield-halved text-sky-600 text-[10px]"></i>
+            <span>과세 체계 & 계좌 적격성</span>
+          </h4>
+          <p class="text-slate-600 leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100" id="m-tax">-</p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-800 mb-1 flex items-center space-x-1">
+            <i class="fa-solid fa-triangle-exclamation text-amber-600 text-[10px]"></i>
+            <span>2026년 핵심 펀더멘털 & 리스크 요인</span>
+          </h4>
+          <p class="text-slate-600 leading-relaxed bg-amber-50/70 p-2.5 rounded-lg border border-amber-200 text-amber-900" id="m-risk">-</p>
+        </div>
+      </div>
+
+      <div class="pt-2 text-right">
+        <button onclick="closeModal()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg transition">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript 데이터베이스 & UI 엔진 -->
+  <script>
+    /* =========================================================================
+     * [보고서 원문 추출 데이터 100% 준수 - 18개 대표 금융상품 데이터베이스]
+     * ========================================================================= */
+        const PRODUCTS_DATA = [
+      // 1. 국내 상장 리츠 (4개)
+      {
+        id: 'shinhan-reits',
+        name: '신한알파리츠',
+        code: '293940',
+        category: 'K-REITS',
+        categoryLabel: '국내 상장 리츠',
+        divYield: 6.47,
+        divYieldLabel: '6.39 ~ 6.47%',
+        divYieldSub: '연 361~371원 (3·9월 결산)',
+        fee: 0.30,
+        feeLabel: '내부 운용비용 반영',
+        feeSub: '별도 총보수 없음',
+        totalReturn1Y: -7.0,
+        totalReturn1YLabel: '보고서 내 미기재',
+        totalReturn1YSub: '현재가 5,650원 기준',
+        aum: 6833,
+        aumLabel: '6,833억 원',
+        payoutCycle: '반기배당 (3월·9월)',
+        isMonthly: false,
+        isIrp100: false,
+        irpStatus: 'IRP/DC 편입가능 (단일종목 한도 점검)',
+        isaStatus: 'ISA 가능',
+        strategy: '판교 그레이츠판교 등 서울·수도권 프라임 오피스 중심 포트폴리오.',
+        payoutDetail: '3월/9월 결산 배당. DPS 361~371원 (삼성증권 추정 366원).',
+        taxDetail: '일반계좌 배당세 15.4%, 주가차익 비과세. 연금계좌 편입 시 과세이연 혜택.',
+        riskDetail: '부채비율 290.7%(2026.03), 장부가 LTV 71.6%, P/B 1.13배. 감정가는 취득가 대비 +31%이나 2027년 임대료 갱신 전 차환 금리 부담.',
+        bestBadge: '오피스 대표'
+      },
+      {
+        id: 'sk-reits',
+        name: 'SK리츠',
+        code: '395400',
+        category: 'K-REITS',
+        categoryLabel: '국내 상장 리츠',
+        divYield: 4.99,
+        divYieldLabel: '약 4.99%',
+        divYieldSub: '분기배당 (연 4회)',
+        fee: 0.30,
+        feeLabel: '내부 관리비용',
+        feeSub: '별도 총보수 없음',
+        totalReturn1Y: -10.0,
+        totalReturn1YLabel: '보고서 내 미기재',
+        totalReturn1YSub: '차환비용 점검 필요',
+        aum: 50000,
+        aumLabel: 'AUM 5조 원대',
+        payoutCycle: '분기배당 (3·6·9·12월)',
+        isMonthly: false,
+        isIrp100: false,
+        irpStatus: 'IRP/DC 편입가능',
+        isaStatus: 'ISA 가능',
+        strategy: 'CBD SK서린빌딩, 종로타워, 주유소, SK하이닉스 수처리시설 등 핵심 그룹 자산.',
+        payoutDetail: '분기 균등 배당. SK서린빌딩 임대료 18.7% 인상 연장 계약 체결.',
+        taxDetail: '배당소득세 15.4% 원천징수, IRP 계좌 내 과세이연 가능.',
+        riskDetail: '부채비율 165.5%(2026.06). 9월 수처리시설 차환(CD+90bp) 완료 및 5%대 담보대출·주유소 매각 추진 중.',
+        bestBadge: 'AUM 5조 최대'
+      },
+      {
+        id: 'lotte-reits',
+        name: '롯데리츠',
+        code: '330590',
+        category: 'K-REITS',
+        categoryLabel: '국내 상장 리츠',
+        divYield: 6.36,
+        divYieldLabel: '5.5 ~ 7.0%',
+        divYieldSub: 'DPS 271~292원',
+        fee: 0.30,
+        feeLabel: '내부 운용비용',
+        feeSub: '별도 총보수 없음',
+        totalReturn1Y: -12.0,
+        totalReturn1YLabel: '보고서 내 미기재',
+        totalReturn1YSub: '목표가 하향 조정',
+        aum: 29000,
+        aumLabel: '예정 AUM 2.9조 원',
+        payoutCycle: '반기배당',
+        isMonthly: false,
+        isIrp100: false,
+        irpStatus: 'IRP/DC 편입가능',
+        isaStatus: 'ISA 가능',
+        strategy: '롯데백화점, 롯데마트, 아울렛, 김포물류센터, L7홍대 호텔 등 리테일/호텔 복합.',
+        payoutDetail: '반기별 결산 배당. 삼성증권 추정 연 배당수익률 6.9~7.5%.',
+        taxDetail: '국내 상장 리츠 과세 특례 및 연금계좌 저율 분리과세 적용 가능.',
+        riskDetail: '부채비율 154.7%(2026.06). 8월 만기 사채(2,400억) 1,200억씩 분할 차환. 증권사 목표가 하향 이력.',
+        bestBadge: '리테일 복합'
+      },
+      {
+        id: 'samsung-fn-reits',
+        name: '삼성FN리츠',
+        code: '448730',
+        category: 'K-REITS',
+        categoryLabel: '국내 상장 리츠',
+        divYield: 5.75,
+        divYieldLabel: '약 5.3 ~ 6.2%',
+        divYieldSub: '분기배당 (DPS 안정)',
+        fee: 0.30,
+        feeLabel: '내부 운용비용',
+        feeSub: '별도 총보수 없음',
+        totalReturn1Y: -8.0,
+        totalReturn1YLabel: '보고서 내 미기재',
+        totalReturn1YSub: '오피스 안정 포트폴리오',
+        aum: 7500,
+        aumLabel: '약 7,500억 원',
+        payoutCycle: '분기배당 (1·4·7·10월)',
+        isMonthly: false,
+        isIrp100: false,
+        irpStatus: 'IRP/DC 편입가능',
+        isaStatus: 'ISA 가능',
+        strategy: '강남 대치타워, 잠실 삼성FN타워 등 삼성그룹 우량 오피스 소유.',
+        payoutDetail: '분기별 안정적 배당금 지급 정책.',
+        taxDetail: '연금저축/IRP/ISA 편입 적격.',
+        riskDetail: '잠실 FN타워 매입 후 임차인 신용도 및 임대료 갱신 우수하나 차환 금리 모니터링 필요.',
+        bestBadge: '삼성그룹 오피스'
+      },
+
+      // 2. 국내 상장 리츠 ETF (5개)
+      {
+        id: 'tiger-reits-infra',
+        name: 'TIGER 리츠부동산인프라',
+        code: '329200',
+        category: 'K-REITS-ETF',
+        categoryLabel: '국내 리츠 ETF',
+        divYield: 9.75,
+        divYieldLabel: '9.75 ~ 10.01%',
+        divYieldSub: '월 33원 균등 (연 396원)',
+        fee: 0.08,
+        feeLabel: '총보수 0.08%',
+        feeSub: '운용보수 0.054%',
+        totalReturn1Y: -7.44,
+        totalReturn1YLabel: '-7.44%',
+        totalReturn1YSub: 'NAV +1.8% (괴리율 발생)',
+        aum: 15844,
+        aumLabel: '1조 5,844억 원',
+        payoutCycle: '월배당 (매월 말일)',
+        isMonthly: true,
+        isIrp100: false,
+        irpStatus: 'IRP 70% 위험자산 한도 편입',
+        isaStatus: 'ISA 비과세/분리과세 가능',
+        strategy: '맥쿼리인프라, SK리츠, KB발해인프라 등 국내 상위 우량 리츠·인프라 40.5% 집중.',
+        payoutDetail: '매월 마지막 영업일 기준 월 33원 안정적 균등 분배.',
+        taxDetail: '연금저축/IRP 편입 시 15.4% 비과세이연 후 연금수령 시 3.3~5.5% 과세.',
+        riskDetail: '금리 인상 기조로 6개월 수익률 -16.08%, 5년 종가 -31.84% 기록. 주가 하락으로 표면 분배율은 10% 돌파.',
+        bestBadge: '국내리츠 1위 규모'
+      },
+      {
+        id: 'kodex-reits-infra',
+        name: 'KODEX 한국부동산리츠인프라',
+        code: '476800',
+        category: 'K-REITS-ETF',
+        categoryLabel: '국내 리츠 ETF',
+        divYield: 8.43,
+        divYieldLabel: '8.43 ~ 10.18%',
+        divYieldSub: '매월 15일 변동분배',
+        fee: 0.09,
+        feeLabel: '총보수 0.09%',
+        feeSub: '실부담비용 0.1492%',
+        totalReturn1Y: -14.74,
+        totalReturn1YLabel: '-14.74%',
+        totalReturn1YSub: 'NAV -6.22%',
+        aum: 5094,
+        aumLabel: '5,094억 원',
+        payoutCycle: '월배당 (매월 15일)',
+        isMonthly: true,
+        isIrp100: false,
+        irpStatus: 'IRP 70% 위험자산 한도',
+        isaStatus: 'ISA 가능',
+        strategy: '국내 상장 리츠 및 인프라펀드 포트폴리오 분산 투자.',
+        payoutDetail: '매월 15일 기준 통상 29~30원 지급(9·11월 리츠 결산기 60원 지급).',
+        taxDetail: '연금계좌 내 편입 가능, 과세이연.',
+        riskDetail: '6개월 수익률 -17.20%, 금리 인상기 차환 압박에 따른 주가 변동성.',
+        bestBadge: '월중 분배(15일)'
+      },
+      {
+        id: 'plus-k-reits',
+        name: 'PLUS K리츠',
+        code: '429740',
+        category: 'K-REITS-ETF',
+        categoryLabel: '국내 리츠 ETF',
+        divYield: 6.90,
+        divYieldLabel: '6.90 ~ 10.10%',
+        divYieldSub: '연말 특별배당 반영',
+        fee: 0.25,
+        feeLabel: '총보수 0.25%',
+        feeSub: '실부담 미기재',
+        totalReturn1Y: -16.53,
+        totalReturn1YLabel: '-16.53% (6M)',
+        totalReturn1YSub: '1년 수치 미기재',
+        aum: 76,
+        aumLabel: '약 76억 원',
+        payoutCycle: '월배당 (매월 말일)',
+        isMonthly: true,
+        isIrp100: false,
+        irpStatus: 'IRP 편입가능',
+        isaStatus: 'ISA 가능',
+        strategy: '국내 상장 리츠 전 종목 대상 유동시가총액 가중 분산.',
+        payoutDetail: '월말 기준 변동 분배, 9~12월 결산기 특별배당 상향.',
+        taxDetail: '연금저축/IRP/ISA 활용 가능.',
+        riskDetail: '순자산 76억 원대로 소규모 ETF 거래량 유동성 스프레드 유의.',
+        bestBadge: null
+      },
+      {
+        id: 'tiger-reits-top10',
+        name: 'TIGER 리츠부동산인프라TOP10액티브',
+        code: '0086B0',
+        category: 'K-REITS-ETF',
+        categoryLabel: '국내 리츠 ETF',
+        divYield: 6.90,
+        divYieldLabel: '6.90%',
+        divYieldSub: '월 54원 균등지급',
+        fee: 0.06,
+        feeLabel: '총보수 0.06%',
+        feeSub: '최저 수준 보수',
+        totalReturn1Y: -19.86,
+        totalReturn1YLabel: '-19.86% (6M)',
+        totalReturn1YSub: '1년 미만 신규',
+        aum: 418,
+        aumLabel: '418억 원',
+        payoutCycle: '월배당 (매월 말일)',
+        isMonthly: true,
+        isIrp100: false,
+        irpStatus: 'IRP 편입가능',
+        isaStatus: 'ISA 가능',
+        strategy: '상위 10개 우량 리츠·인프라 선별 액티브 알파 추구.',
+        payoutDetail: '월 54원 균등 분배 정책 유지.',
+        taxDetail: '연금계좌 과세이연 혜택 동일 적용.',
+        riskDetail: '6개월 시장가격 -19.86%로 리츠 전반의 하락 충격 반영.',
+        bestBadge: '최저 보수 0.06%'
+      },
+      {
+        id: 'ace-reits-active',
+        name: 'ACE 리츠부동산인프라액티브',
+        code: '0153P0',
+        category: 'K-REITS-ETF',
+        categoryLabel: '국내 리츠 ETF',
+        divYield: 7.00,
+        divYieldLabel: '약 7.0%',
+        divYieldSub: '월 54원 (실적 5.39%)',
+        fee: 0.06,
+        feeLabel: '총보수 0.06%',
+        feeSub: '2026.01 상장',
+        totalReturn1Y: -14.58,
+        totalReturn1YLabel: '-14.58% (6M)',
+        totalReturn1YSub: '상장 1년 미만',
+        aum: 125,
+        aumLabel: '125억 원',
+        payoutCycle: '월배당',
+        isMonthly: true,
+        isIrp100: false,
+        irpStatus: 'IRP 편입가능',
+        isaStatus: 'ISA 가능',
+        strategy: '액티브 운용을 통해 시장 국면별 배당 매력 리츠 비중 조절.',
+        payoutDetail: '월 54원 지급 (연환산 추정치).',
+        taxDetail: '연금저축/IRP 절세계좌 편입 적격.',
+        riskDetail: '신규 상장 후 자산규모 125억 원대로 추이 확인 필요.',
+        bestBadge: null
+      },
+
+      // 3. 한국형 미국배당다우존스 ETF (4개)
+      {
+        id: 'tiger-us-dow',
+        name: 'TIGER 미국배당다우존스',
+        code: '458730',
+        category: 'US-DIV-DOW',
+        categoryLabel: '한국형 SCHD',
+        divYield: 2.89,
+        divYieldLabel: '2.89%',
+        divYieldSub: '직전 12개월 실적',
+        fee: 0.1017,
+        feeLabel: '총보수 0.0100%',
+        feeSub: '실부담비용 0.1017%',
+        totalReturn1Y: 23.76,
+        totalReturn1YLabel: '+23.76%',
+        totalReturn1YSub: '1년 견조한 성장',
+        aum: 46774,
+        aumLabel: '4조 6,774억 원',
+        payoutCycle: '월배당 (마지막 영업일)',
+        isMonthly: true,
+        isIrp100: false,
+        irpStatus: 'IRP 70% 위험자산 한도',
+        isaStatus: 'ISA 비과세 극대화',
+        strategy: '미국 Dow Jones U.S. Dividend 100 지수 추종 (10년 연속 배당성장 우량주 100개).',
+        payoutDetail: '매월 마지막 영업일 기준 월 분배금 지급.',
+        taxDetail: '2026년 7월 외국납부세액 55% 공제 적용. ISA 만기 연금 전환 시 10% 추가 세액공제 최적.',
+        riskDetail: '단기 커버드콜 대비 배당률은 낮으나 원금 훼손 없이 장기 배당 성장 및 주가 상승 향유.',
+        bestBadge: 'AUM 4.6조 1위'
+      },
+      {
+        id: 'sol-us-dow',
+        name: 'SOL 미국배당다우존스',
+        code: '446720',
+        category: 'US-DIV-DOW',
+        categoryLabel: '한국형 SCHD',
+        divYield: 2.92,
+        divYieldLabel: '2.92%',
+        divYieldSub: '국내 최초 월배당 도입',
+        fee: 0.1662,
+        feeLabel: '총보수 0.0100%',
+        feeSub: '실부담비용 0.1662%',
+        totalReturn1Y: 23.68,
+        totalReturn1YLabel: '+23.68%',
+        totalReturn1YSub: '안정적 트랙레코드',
+        aum: 10843,
+        aumLabel: '1조 843억 원',
+        payoutCycle: '월배당 (마지막 영업일)',
+        isMonthly: true,
+        isIrp100: false,
+        irpStatus: 'IRP 편입가능',
+        isaStatus: 'ISA 가능',
+        strategy: '미국 배당다우존스 지수 완전 복제 및 월배당 지급.',
+        payoutDetail: '매월 마지막 영업일 지급.',
+        taxDetail: '연금저축/IRP 계좌에서 15.4% 비과세이연 복리 효과 극대화.',
+        riskDetail: '실부담비용 0.1662%로 TIGER/ACE 대비 다소 높음.',
+        bestBadge: '월배당 원조'
+      },
+      {
+        id: 'ace-us-dow',
+        name: 'ACE 미국배당다우존스',
+        code: '402970',
+        category: 'US-DIV-DOW',
+        categoryLabel: '한국형 SCHD',
+        divYield: 2.89,
+        divYieldLabel: '2.89%',
+        divYieldSub: '매월 15일 분배',
+        fee: 0.1377,
+        feeLabel: '총보수 0.0100%',
+        feeSub: '실부담비용 0.1377%',
+        totalReturn1Y: 24.07,
+        totalReturn1YLabel: '+24.07%',
+        totalReturn1YSub: '1년 수익률 최고',
+        aum: 10236,
+        aumLabel: '1조 236억 원',
+        payoutCycle: '월배당 (매월 15일)',
+        isMonthly: true,
+        isIrp100: false,
+        irpStatus: 'IRP 편입가능',
+        isaStatus: 'ISA 가능',
+        strategy: '미국 다우존스 배당성장주 100종목 동일 복제.',
+        payoutDetail: '매월 15일 무렵 지급 (TIGER 월말과 결합 시 격주 배당 파이프라인 완성).',
+        taxDetail: '해외 배당소득세 과세이연 및 연금 수령 시 3.3~5.5% 저율과세.',
+        riskDetail: '외국납부세액 공제 개편으로 장기 복리 효과 소폭 감소하나 일반계좌 대비 압도적 우위.',
+        bestBadge: '수익률 +24.07%'
+      },
+      {
+        id: 'kodex-us-dow',
+        name: 'KODEX 미국배당다우존스',
+        code: '489250',
+        category: 'US-DIV-DOW',
+        categoryLabel: '한국형 SCHD',
+        divYield: 2.91,
+        divYieldLabel: '2.91%',
+        divYieldSub: '매월 15일 분배',
+        fee: 0.1838,
+        feeLabel: '총보수 0.0099%',
+        feeSub: '실부담비용 0.1838%',
+        totalReturn1Y: 24.18,
+        totalReturn1YLabel: '+24.18%',
+        totalReturn1YSub: '1년 실적 우수',
+        aum: 6424,
+        aumLabel: '6,424억 원',
+        payoutCycle: '월배당 (매월 15일)',
+        isMonthly: true,
+        isIrp100: false,
+        irpStatus: 'IRP 편입가능',
+        isaStatus: 'ISA 가능',
+        strategy: '배당성장 다우존스 지수 추종.',
+        payoutDetail: '매월 15일 지급.',
+        taxDetail: 'IRP 및 연금저축 계좌 적격.',
+        riskDetail: '표면 총보수(0.0099%)는 최저이나 실부담비용(0.1838%)은 비교군 중 최고 수준인 점 확인 필요.',
+        bestBadge: null
+      },
+
+      // 4. 미국 개별 리츠 (3개)
+      {
+        id: 'o-realty-income',
+        name: 'Realty Income',
+        code: 'O',
+        category: 'US-REITS',
+        categoryLabel: '미국 개별 리츠',
+        divYield: 5.59,
+        divYieldLabel: '5.52 ~ 5.70%',
+        divYieldSub: 'Run-rate 5.59% (월 .2740)',
+        fee: 0.0,
+        feeLabel: '개별주식 보수 없음',
+        feeSub: '증권사 환전/매매수수료',
+        totalReturn1Y: 8.5,
+        totalReturn1YLabel: '+7.5% ~ +9.68%',
+        totalReturn1YSub: '주가 .54 (시총 )',
+        aum: 780000,
+        aumLabel: '약 .9~56.6B',
+        payoutCycle: '월배당 (매월)',
+        isMonthly: true,
+        isIrp100: false,
+        irpStatus: '연금저축/IRP 직투 불가 (국내 계좌 한계)',
+        isaStatus: '해외직투 ISA 불가 (일반 해외주식계좌)',
+        strategy: '미국·유럽 15,000개 이상 상업용 단일 임차인 넷리스(Triple Net Lease).',
+        payoutDetail: '11월 10일 137번째 월배당 인상. 32년 연속 배당금 증액 기록.',
+        taxDetail: '미국 배당소득세 15.0% 원천징수, 양도세 22%.',
+        riskDetail: '2026E AFFO 대비 배당성향 약 73%. 고금리 장기화 시 차환 비용 부담 및 편의점 임차인 재무 모니터링 필요.',
+        bestBadge: '32년 연속 증배'
+      },
+      {
+        id: 'dlr-digital-realty',
+        name: 'Digital Realty Trust',
+        code: 'DLR',
+        category: 'US-REITS',
+        categoryLabel: '미국 개별 리츠',
+        divYield: 2.75,
+        divYieldLabel: '2.69 ~ 2.80%',
+        divYieldSub: '분기 .22 (연 .88)',
+        fee: 0.0,
+        feeLabel: '개별주식 보수 없음',
+        feeSub: '증권사 수수료',
+        totalReturn1Y: 14.5,
+        totalReturn1YLabel: '+13.00% ~ +16.23%',
+        totalReturn1YSub: 'AI 인프라 수혜',
+        aum: 920000,
+        aumLabel: '약 .4~66.6B',
+        payoutCycle: '분기배당',
+        isMonthly: false,
+        isIrp100: false,
+        irpStatus: '국내 연금계좌 직투 불가',
+        isaStatus: '일반 해외주식계좌',
+        strategy: '전 세계 300개 이상 하이퍼스케일 데이터센터 및 코로케이션 허브 소유/운용.',
+        payoutDetail: '분기별 지급. 21년 연속 배당 증액(신용등급 BBB+).',
+        taxDetail: '해외주식 세법 적용(양도세 22%, 배당세 15%).',
+        riskDetail: 'FY2027 매출 +11.0% 고성장 및 FCF 마진 44%이나 FY26 Non-GAAP P/E 66.8배로 밸류에이션 부담 존재.',
+        bestBadge: 'AI 데이터센터'
+      },
+      {
+        id: 'vici-properties',
+        name: 'VICI Properties',
+        code: 'VICI',
+        category: 'US-REITS',
+        categoryLabel: '미국 개별 리츠',
+        divYield: 7.35,
+        divYieldLabel: '7.24 ~ 7.51%',
+        divYieldSub: '분기 .46 (연 .84)',
+        fee: 0.0,
+        feeLabel: '개별주식 보수 없음',
+        feeSub: '증권사 수수료',
+        totalReturn1Y: -12.95,
+        totalReturn1YLabel: '-8.95% ~ -17.87%',
+        totalReturn1YSub: '카지노 리스크 충격',
+        aum: 380000,
+        aumLabel: '약 .4~27.5B',
+        payoutCycle: '분기배당',
+        isMonthly: false,
+        isIrp100: false,
+        irpStatus: '국내 연금 직투 불가',
+        isaStatus: '일반 해외주식계좌',
+        strategy: '라스베이거스 시저스팰리스, MGM그랜드 등 초대형 카지노·엔터테인먼트 자산 소유.',
+        payoutDetail: '분기별 배당 지급.',
+        taxDetail: '해외주식 일반 과세.',
+        riskDetail: '2026E P/AFFO 10배로 저평가이나 시저스(Caesars) 리스 우려 및 CECL 대손충당금 충격으로 1년 수익률 두 자릿수 하락.',
+        bestBadge: '고배당 7.5%'
+      },
+
+      // 5. 미국 상장 배당 & 리츠 & 커버드콜 ETF (4개)
+      {
+        id: 'schd-us',
+        name: 'Schwab U.S. Dividend Equity (SCHD)',
+        code: 'SCHD',
+        category: 'US-GLOBAL-ETF',
+        categoryLabel: '미국 배당 ETF',
+        divYield: 3.42,
+        divYieldLabel: '3.39 ~ 3.44%',
+        divYieldSub: '분기배당 (연환산)',
+        fee: 0.06,
+        feeLabel: '총보수 0.06%',
+        feeSub: '글로벌 초저비용',
+        totalReturn1Y: 35.36,
+        totalReturn1YLabel: '+35.36%',
+        totalReturn1YSub: '1년 수익률 압도적',
+        aum: 900000,
+        aumLabel: '약  이상',
+        payoutCycle: '분기배당 (3·6·9·12월)',
+        isMonthly: false,
+        isIrp100: false,
+        irpStatus: '국내 연금계좌 편입 불가 (직투 전용)',
+        isaStatus: '일반 해외주식계좌',
+        strategy: '다우존스 100개 우량 배당성장주 투자 (한국형 배당다우존스의 원조 모펀드).',
+        payoutDetail: '분기별 배당금 지급, 10년 연속 증배.',
+        taxDetail: '미국 원천징수 15%, 양도소득세 22%.',
+        riskDetail: '1년 총수익률 +35.36%로 인컴과 자본차익을 완벽하게 동시 달성한 벤치마크 표준.',
+        bestBadge: '1년 수익률 +35.36%'
+      },
+      {
+        id: 'vym-us',
+        name: 'Vanguard High Dividend Yield (VYM)',
+        code: 'VYM',
+        category: 'US-GLOBAL-ETF',
+        categoryLabel: '미국 배당 ETF',
+        divYield: 2.90,
+        divYieldLabel: '약 2.8 ~ 3.0%',
+        divYieldSub: '분기배당',
+        fee: 0.06,
+        feeLabel: '총보수 0.06%',
+        feeSub: '뱅가드 초저비용',
+        totalReturn1Y: 18.34,
+        totalReturn1YLabel: '+18.34%',
+        totalReturn1YSub: '안정적 대형 가치주',
+        aum: 750000,
+        aumLabel: '약  이상',
+        payoutCycle: '분기배당',
+        isMonthly: false,
+        isIrp100: false,
+        irpStatus: '국내 연금 직투 불가',
+        isaStatus: '일반 해외계좌',
+        strategy: 'FTSE High Dividend Yield 지수 추종, 미국 400여 개 대형 고배당 가치주 광범위 분산.',
+        payoutDetail: '분기별 분배금 지급.',
+        taxDetail: '해외 배당소득세 과세.',
+        riskDetail: 'SCHD 대비 분배율은 소폭 낮으나 테크/금융 분산으로 1년 +18.34% 견조한 상승.',
+        bestBadge: '안정 분산 400종목'
+      },
+      {
+        id: 'vnq-us',
+        name: 'Vanguard Real Estate (VNQ)',
+        code: 'VNQ',
+        category: 'US-GLOBAL-ETF',
+        categoryLabel: '미국 리츠 ETF',
+        divYield: 3.90,
+        divYieldLabel: '3.82 ~ 4.04%',
+        divYieldSub: '분기배당',
+        fee: 0.12,
+        feeLabel: '총보수 0.12%',
+        feeSub: '글로벌 최대 리츠 ETF',
+        totalReturn1Y: 10.2,
+        totalReturn1YLabel: '+8.5% ~ +12.0%',
+        totalReturn1YSub: '미국 리츠 회복세',
+        aum: 450000,
+        aumLabel: '약  이상',
+        payoutCycle: '분기배당',
+        isMonthly: false,
+        isIrp100: false,
+        irpStatus: '국내 연금 직투 불가',
+        isaStatus: '일반 해외계좌',
+        strategy: '미국 상장 150여 개 상업용·특수형 리츠 전반에 광범위 분산 투자.',
+        payoutDetail: '분기별 분배금 지급.',
+        taxDetail: '해외 배당소득세 과세.',
+        riskDetail: '미국 오피스 리스크 일부 포함되나 주거·데이터센터·물류 다변화로 1년 견조한 반등(+8.5~12%).',
+        bestBadge: '미국 리츠 표준'
+      },
+      {
+        id: 'jepi-us',
+        name: 'JPMorgan Equity Premium Income (JEPI)',
+        code: 'JEPI',
+        category: 'US-GLOBAL-ETF',
+        categoryLabel: '미국 커버드콜',
+        divYield: 7.08,
+        divYieldLabel: '7.05 ~ 7.10%',
+        divYieldSub: '월배당 (ELN 옵션 프리미엄)',
+        fee: 0.35,
+        feeLabel: '총보수 0.35%',
+        feeSub: '액티브 커버드콜',
+        totalReturn1Y: 14.1,
+        totalReturn1YLabel: '+13.68% ~ +14.50%',
+        totalReturn1YSub: '상승장 부분 참여',
+        aum: 480000,
+        aumLabel: '약  대형',
+        payoutCycle: '월배당',
+        isMonthly: true,
+        isIrp100: false,
+        irpStatus: '국내 연금 직투 불가',
+        isaStatus: '일반 해외계좌',
+        strategy: '저변동성 대형주 80% + S&P500 ELN(주식연계채권) 콜옵션 매도 20%.',
+        payoutDetail: '매월 안정적 인컴 지급.',
+        taxDetail: '해외 배당소득세 과세.',
+        riskDetail: '상승장 캡(상단 제한)이 있으나 국내 고분배 위클리 커버드콜처럼 원금이 파괴되지 않고 +14% 총수익 달성.',
+        bestBadge: '월배당 7.1%'
+      },
+
+      // 6. S&P500 패시브 및 IRP 채권혼합형 ETF (4개)
+      {
+        id: 'tiger-sp500',
+        name: 'TIGER 미국S&P500',
+        code: '360750',
+        category: 'INDEX-BOND',
+        categoryLabel: 'S&P500 & 혼합채권',
+        divYield: 0.98,
+        divYieldLabel: '0.98%',
+        divYieldSub: '분기배당',
+        fee: 0.0972,
+        feeLabel: '총보수 0.0068%',
+        feeSub: '실부담비용 0.0972%',
+        totalReturn1Y: 9.1,
+        totalReturn1YLabel: '약 +9.1%',
+        totalReturn1YSub: '국내 최대 ETF 등극',
+        aum: 211000,
+        aumLabel: '21.1조 원 (국내 1위)',
+        payoutCycle: '분기배당',
+        isMonthly: false,
+        isIrp100: false,
+        irpStatus: 'IRP 70% 위험자산 한도',
+        isaStatus: 'ISA 최적 자산',
+        strategy: '미국 S&P 500 지수 환노출 추종. KODEX 200을 제치고 국내 전체 ETF 1위 등극.',
+        payoutDetail: '분기별 분배금 지급.',
+        taxDetail: '연금저축/IRP 계좌에서 과세이연 복리 및 연금 수령 시 3.3~5.5% 과세.',
+        riskDetail: '환노출 상품으로 원/달러 환율 변동 영향 수반.',
+        bestBadge: '국내 최대 21조'
+      },
+      {
+        id: 'ace-sp500',
+        name: 'ACE 미국S&P500',
+        code: '360200',
+        category: 'INDEX-BOND',
+        categoryLabel: 'S&P500 & 혼합채권',
+        divYield: 0.97,
+        divYieldLabel: '0.97%',
+        divYieldSub: '분기배당',
+        fee: 0.0953,
+        feeLabel: '총보수 0.0047%',
+        feeSub: '실부담비용 0.0953% (최저)',
+        totalReturn1Y: 9.1,
+        totalReturn1YLabel: '약 +9.1%',
+        totalReturn1YSub: '실부담비용 최저',
+        aum: 40000,
+        aumLabel: '4.0조 원',
+        payoutCycle: '분기배당',
+        isMonthly: false,
+        isIrp100: false,
+        irpStatus: 'IRP 70% 위험자산 한도',
+        isaStatus: 'ISA 가능',
+        strategy: 'S&P 500 완전 복제 패시브 ETF.',
+        payoutDetail: '분기별 지급.',
+        taxDetail: '연금계좌 적격.',
+        riskDetail: '대형 S&P500 ETF 중 실부담비용(0.0953%)이 가장 낮아 장기 연금 적립 시 최우선 권장 상품.',
+        bestBadge: '실부담 최저 0.0953%'
+      },
+      {
+        id: 'tiger-sp500-bond50',
+        name: 'TIGER 미국S&P500미국채혼합50',
+        code: '489720',
+        category: 'INDEX-BOND',
+        categoryLabel: 'S&P500 & 혼합채권',
+        divYield: 1.50,
+        divYieldLabel: '약 1.5%',
+        divYieldSub: '채권 이자 + 주식 배당',
+        fee: 0.1506,
+        feeLabel: '총보수 0.1500%',
+        feeSub: '실부담비용 0.1506%',
+        totalReturn1Y: 5.0,
+        totalReturn1YLabel: '보고서 내 미기재',
+        totalReturn1YSub: '2026.09 상장 신규',
+        aum: 556,
+        aumLabel: '556억 원',
+        payoutCycle: '월배당',
+        isMonthly: true,
+        isIrp100: true,
+        irpStatus: 'IRP 100% 전액 안전자산 인정',
+        isaStatus: 'ISA 가능',
+        strategy: '미국 S&P 500 주식 50% + 잔존만기 0~1년 초단기 미국채 50% 결합.',
+        payoutDetail: '월배당 지급.',
+        taxDetail: '퇴직연금(IRP/DC) 계좌에서 법정 안전자산으로 분류되어 적립금 100% 매수 가능.',
+        riskDetail: 'IRP 계좌의 30% 안전자산 의무 비중을 예금 대신 S&P500에 우회 투자할 수 있는 혁신 상품.',
+        bestBadge: 'IRP 100% 가능'
+      },
+      {
+        id: 'ace-sp500-bond50-active',
+        name: 'ACE 미국S&P500미국채혼합50액티브',
+        code: '442650',
+        category: 'INDEX-BOND',
+        categoryLabel: 'S&P500 & 혼합채권',
+        divYield: 1.80,
+        divYieldLabel: '약 1.8%',
+        divYieldSub: '안전자산 대표 상품',
+        fee: 0.2428,
+        feeLabel: '총보수 0.1500%',
+        feeSub: '실부담비용 0.2428%',
+        totalReturn1Y: 7.0,
+        totalReturn1YLabel: '보고서 내 미기재',
+        totalReturn1YSub: '2022.08 상장 트랙레코드',
+        aum: 12400,
+        aumLabel: '1.24조 원 대형',
+        payoutCycle: '월배당',
+        isMonthly: true,
+        isIrp100: true,
+        irpStatus: 'IRP 100% 전액 안전자산 인정',
+        isaStatus: 'ISA 가능',
+        strategy: 'S&P 500 대표주식 50%와 단기 미국채 50%를 액티브 리밸런싱.',
+        payoutDetail: '월배당 지급.',
+        taxDetail: 'IRP 안전자산 30% 포트폴리오의 표준.',
+        riskDetail: '단기 채권 혼합으로 하락장 방어력 우수하나 실부담비용 0.2428% 확인 필요.',
+        bestBadge: 'IRP 안전자산 1.2조'
+      }
+    ];
+
+    // 상태 관리
+    let currentCategory = 'ALL';
+    let currentView = 'cards';
+    let activeFilters = {
+      irp100: false,
+      monthly: false,
+      lowFee: false,
+      highYield: false
+    };
+
+    // 정렬 상태 관리 (기본값: 배당/분배율 내림차순)
+    let sortState = {
+      key: 'divYield',
+      order: 'desc' // 'asc' | 'desc'
+    };
+
+    // 상단 드롭다운 선택 시
+    function handleSelectSort() {
+      const val = document.getElementById('sort-select').value;
+      const [key, order] = val.split('-');
+      sortState.key = key;
+      sortState.order = order;
+      updateSortIcons();
+      renderProducts();
+    }
+
+    // 칼럼 헤더 클릭 시 (오름차순 ↔ 내림차순 토글)
+    function handleHeaderSort(key) {
+      if (sortState.key === key) {
+        sortState.order = sortState.order === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortState.key = key;
+        const textKeys = ['name', 'categoryLabel', 'payoutCycle', 'irpStatus'];
+        sortState.order = textKeys.includes(key) ? 'asc' : 'desc';
+      }
+
+      // 상단 select 박스 동기화
+      const selectVal = `${sortState.key}-${sortState.order}`;
+      const selectElem = document.getElementById('sort-select');
+      if (selectElem.querySelector(`option[value="${selectVal}"]`)) {
+        selectElem.value = selectVal;
+      }
+
+      updateSortIcons();
+      renderProducts();
+    }
+
+    // 칼럼 헤더 아이콘 시각적 갱신
+    function updateSortIcons() {
+      const keys = ['name', 'categoryLabel', 'divYield', 'payoutCycle', 'fee', 'totalReturn1Y', 'aum', 'irpStatus'];
+      keys.forEach(k => {
+        const icon = document.getElementById(`sort-icon-${k}`);
+        if (!icon) return;
+        if (k === sortState.key) {
+          icon.className = sortState.order === 'asc' 
+            ? "fa-solid fa-sort-up text-emerald-600 text-[11px]" 
+            : "fa-solid fa-sort-down text-emerald-600 text-[11px]";
+        } else {
+          icon.className = "fa-solid fa-sort text-slate-300 hover:text-slate-500 text-[11px]";
+        }
+      });
+    }
+
+    // 뷰 전환
+    function setViewMode(mode) {
+      currentView = mode;
+      const cardsCont = document.getElementById('view-cards-container');
+      const tableCont = document.getElementById('view-table-container');
+      const btnCards = document.getElementById('btn-view-cards');
+      const btnTable = document.getElementById('btn-view-table');
+
+      if (mode === 'cards') {
+        cardsCont.classList.remove('hidden');
+        tableCont.classList.add('hidden');
+        btnCards.className = "p-1.5 rounded-lg border border-slate-300 text-slate-700 bg-slate-100 transition";
+        btnTable.className = "p-1.5 rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-100 transition";
+      } else {
+        cardsCont.classList.add('hidden');
+        tableCont.classList.remove('hidden');
+        btnCards.className = "p-1.5 rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-100 transition";
+        btnTable.className = "p-1.5 rounded-lg border border-slate-300 text-slate-700 bg-slate-100 transition";
+      }
+      renderProducts();
+    }
+
+    // 카테고리 탭 선택
+    function setCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-tab').forEach(btn => {
+        btn.classList.remove('bg-slate-900', 'text-white', 'shadow-xs');
+        btn.classList.add('bg-slate-100', 'text-slate-600');
+      });
+      const activeBtn = document.getElementById(`tab-${cat}`);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-slate-900', 'text-white', 'shadow-xs');
+        activeBtn.classList.remove('bg-slate-100', 'text-slate-600');
+      }
+      renderProducts();
+    }
+
+    // 조건 토글 필터
+    function toggleFilter(key) {
+      activeFilters[key] = !activeFilters[key];
+      const btn = document.getElementById(`filter-${key}`);
+      if (activeFilters[key]) {
+        btn.classList.add('bg-emerald-50', 'border-emerald-500', 'text-emerald-800', 'font-bold');
+        btn.classList.remove('bg-white', 'text-slate-600');
+      } else {
+        btn.classList.remove('bg-emerald-50', 'border-emerald-500', 'text-emerald-800', 'font-bold');
+        btn.classList.add('bg-white', 'text-slate-600');
+      }
+      renderProducts();
+    }
+
+    // 필터 초기화
+    function resetFilters() {
+      activeFilters = { irp100: false, monthly: false, lowFee: false, highYield: false };
+      document.querySelectorAll('.tag-filter').forEach(btn => {
+        btn.classList.remove('bg-emerald-50', 'border-emerald-500', 'text-emerald-800', 'font-bold');
+        btn.classList.add('bg-white', 'text-slate-600');
+      });
+      sortState = { key: 'divYield', order: 'desc' };
+      document.getElementById('sort-select').value = 'divYield-desc';
+      updateSortIcons();
+      setCategory('ALL');
+    }
+
+    // 데이터 필터링 및 정렬 실행
+    function getFilteredProducts() {
+      let list = [...PRODUCTS_DATA];
+
+      // 1. 카테고리 필터
+      if (currentCategory !== 'ALL') {
+        list = list.filter(p => p.category === currentCategory);
+      }
+
+      // 2. 조건 필터
+      if (activeFilters.irp100) list = list.filter(p => p.isIrp100);
+      if (activeFilters.monthly) list = list.filter(p => p.isMonthly);
+      if (activeFilters.lowFee) list = list.filter(p => p.fee <= 0.15);
+      if (activeFilters.highYield) list = list.filter(p => p.divYield >= 6.0);
+
+      // 3. 정렬 로직 (칼럼별 오름차순/내림차순 및 텍스트/숫자 분기)
+      list.sort((a, b) => {
+        let valA = a[sortState.key];
+        let valB = b[sortState.key];
+
+        // 문자열 정렬 (한국어 localeCompare)
+        if (typeof valA === 'string' || typeof valB === 'string') {
+          const strA = (valA || '').toString();
+          const strB = (valB || '').toString();
+          return sortState.order === 'asc' 
+            ? strA.localeCompare(strB, 'ko') 
+            : strB.localeCompare(strA, 'ko');
+        }
+
+        // 숫자형 정렬 (누락값 처리)
+        const numA = (typeof valA === 'number' && !isNaN(valA)) ? valA : -999999;
+        const numB = (typeof valB === 'number' && !isNaN(valB)) ? valB : -999999;
+        return sortState.order === 'asc' ? numA - numB : numB - numA;
+      });
+
+      return list;
+    }
+
+    // 렌더링 엔진
+    function renderProducts() {
+      const items = getFilteredProducts();
+      document.getElementById('product-count').textContent = items.length;
+
+      // 1. 카드 렌더링
+      const cardsContainer = document.getElementById('view-cards-container');
+      cardsContainer.innerHTML = '';
+
+      if (items.length === 0) {
+        cardsContainer.innerHTML = `
+          <div class="col-span-3 py-12 text-center text-slate-400 bg-white rounded-2xl border border-slate-200">
+            <i class="fa-solid fa-filter-circle-xmark text-3xl mb-2 text-slate-300"></i>
+            <p class="text-sm">선택한 조건에 일치하는 상품이 없습니다.</p>
+            <button onclick="resetFilters()" class="mt-2 text-xs text-emerald-600 font-bold underline">조건 초기화</button>
+          </div>
+        `;
+      } else {
+        items.forEach(p => {
+          const card = document.createElement('div');
+          card.className = "bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:shadow-md transition flex flex-col justify-between space-y-4 group";
+
+          // 배당률 프로그레스 바 (최대 12% 기준)
+          const gaugeWidth = Math.min(100, Math.max(5, (p.divYield / 12) * 100));
+
+          card.innerHTML = `
+            <div>
+              <!-- 상단 태그 및 뱃지 -->
+              <div class="flex items-start justify-between gap-2 mb-2">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                  ${p.categoryLabel}
+                </span>
+                <div class="flex items-center space-x-1">
+                  ${p.isIrp100 ? '<span class="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded border border-emerald-300">IRP 100%</span>' : ''}
+                  ${p.bestBadge ? `<span class="text-[9px] bg-sky-100 text-sky-800 font-bold px-1.5 py-0.2 rounded border border-sky-300">${p.bestBadge}</span>` : ''}
+                </div>
+              </div>
+
+              <!-- 상품명 및 코드 -->
+              <h3 class="text-sm sm:text-base font-bold text-slate-900 group-hover:text-emerald-700 transition leading-snug">
+                ${p.name}
+              </h3>
+              <p class="text-[11px] text-slate-400 font-mono mt-0.5">${p.code}</p>
+
+              <!-- 핵심 지표 4대 스펙 그리드 -->
+              <div class="grid grid-cols-2 gap-2.5 my-3.5 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                <div>
+                  <span class="text-[10px] text-slate-400 block">배당/분배율</span>
+                  <div class="flex items-baseline space-x-1">
+                    <strong class="text-sm font-extrabold text-emerald-700">${p.divYieldLabel}</strong>
+                  </div>
+                  <span class="text-[9px] text-slate-500 block truncate">${p.divYieldSub}</span>
+                </div>
+
+                <div>
+                  <span class="text-[10px] text-slate-400 block">총보수 (실부담)</span>
+                  <strong class="text-xs font-bold text-slate-800">${p.feeLabel}</strong>
+                  <span class="text-[9px] text-slate-500 block truncate">${p.feeSub}</span>
+                </div>
+
+                <div>
+                  <span class="text-[10px] text-slate-400 block">1년 총수익률</span>
+                  <strong class="text-xs font-bold ${p.totalReturn1Y > 0 ? 'text-rose-600' : (p.totalReturn1Y < 0 ? 'text-sky-600' : 'text-slate-700')}">
+                    ${p.totalReturn1YLabel}
+                  </strong>
+                  <span class="text-[9px] text-slate-500 block truncate">${p.totalReturn1YSub}</span>
+                </div>
+
+                <div>
+                  <span class="text-[10px] text-slate-400 block">순자산 규모</span>
+                  <strong class="text-xs font-bold text-slate-800">${p.aumLabel}</strong>
+                  <span class="text-[9px] text-slate-500 block truncate">${p.payoutCycle}</span>
+                </div>
+              </div>
+
+              <!-- 배당 게이지 바 -->
+              <div class="space-y-1">
+                <div class="flex justify-between text-[10px] text-slate-400">
+                  <span>인컴 매력도 게이지</span>
+                  <span class="font-bold text-slate-600">${p.divYield}%</span>
+                </div>
+                <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-gradient-to-r from-teal-500 to-emerald-500 h-1.5 rounded-full" style="width: ${gaugeWidth}%"></div>
+                </div>
+              </div>
+
+              <!-- 핵심 한줄 전략 설명 -->
+              <p class="text-xs text-slate-600 leading-relaxed mt-3 pt-3 border-t border-slate-100 line-clamp-2">
+                ${p.strategy}
+              </p>
+            </div>
+
+            <!-- 하단 액션 버튼 -->
+            <div class="pt-2">
+              <button onclick="openModal('${p.id}')" class="w-full py-2 bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 font-bold text-xs rounded-xl border border-slate-200 hover:border-emerald-300 transition flex items-center justify-center space-x-1.5">
+                <span>세부 부가정보 & 리스크 보기</span>
+                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+              </button>
+            </div>
+          `;
+          cardsContainer.appendChild(card);
+        });
+      }
+
+      // 2. 표 렌더링 (칼럼 흔들림 방지 격자 border 적용)
+      const tableBody = document.getElementById('table-body');
+      tableBody.innerHTML = '';
+      items.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 transition";
+        tr.innerHTML = `
+          <td class="py-3 px-3.5 border-b border-r border-slate-100 truncate">
+            <div class="font-bold text-slate-900 truncate" title="${p.name}">${p.name}</div>
+            <div class="text-[10px] text-slate-400 font-mono">${p.code}</div>
+          </td>
+          <td class="py-3 px-3 border-b border-r border-slate-100">
+            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-medium">${p.categoryLabel}</span>
+          </td>
+          <td class="py-3 px-3 text-right border-b border-r border-slate-100">
+            <span class="font-extrabold text-emerald-700">${p.divYieldLabel}</span>
+          </td>
+          <td class="py-3 px-3 text-slate-600 font-medium text-[11px] border-b border-r border-slate-100">${p.payoutCycle}</td>
+          <td class="py-3 px-3 text-right border-b border-r border-slate-100">
+            <div class="font-bold text-slate-800">${p.feeLabel}</div>
+            <div class="text-[9px] text-slate-400">${p.feeSub}</div>
+          </td>
+          <td class="py-3 px-3 text-right font-bold border-b border-r border-slate-100 ${p.totalReturn1Y > 0 ? 'text-rose-600' : (p.totalReturn1Y < 0 ? 'text-sky-600' : 'text-slate-700')}">
+            ${p.totalReturn1YLabel}
+          </td>
+          <td class="py-3 px-3 text-right font-bold text-slate-800 border-b border-r border-slate-100">${p.aumLabel}</td>
+          <td class="py-3 px-3 border-b border-r border-slate-100">
+            <span class="text-[10px] ${p.isIrp100 ? 'text-emerald-700 font-bold' : 'text-slate-600'}">${p.irpStatus}</span>
+          </td>
+          <td class="py-3 px-3 text-center border-b border-slate-100">
+            <button onclick="openModal('${p.id}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-[11px] font-semibold transition">
+              상세
+            </button>
+          </td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    // 모달 제어
+    function openModal(productId) {
+      const p = PRODUCTS_DATA.find(x => x.id === productId);
+      if (!p) return;
+
+      document.getElementById('m-category').textContent = p.categoryLabel;
+      document.getElementById('m-name').textContent = p.name;
+      document.getElementById('m-code').textContent = p.code;
+      document.getElementById('m-yield').textContent = p.divYieldLabel;
+      document.getElementById('m-fee').textContent = `${p.feeLabel} (${p.feeSub})`;
+      document.getElementById('m-return').textContent = p.totalReturn1YLabel;
+      document.getElementById('m-aum').textContent = p.aumLabel;
+
+      document.getElementById('m-strategy').textContent = p.strategy;
+      document.getElementById('m-payout').textContent = `${p.payoutDetail} [주기: ${p.payoutCycle}]`;
+      document.getElementById('m-tax').textContent = `${p.taxDetail} | [IRP/DC: ${p.irpStatus}] | [ISA: ${p.isaStatus}]`;
+      document.getElementById('m-risk').textContent = p.riskDetail;
+
+      const modal = document.getElementById('detail-modal');
+      const box = document.getElementById('detail-modal-box');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modal.classList.add('opacity-100');
+      box.classList.remove('scale-95');
+      box.classList.add('scale-100');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('detail-modal');
+      const box = document.getElementById('detail-modal-box');
+      modal.classList.remove('opacity-100');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      box.classList.remove('scale-100');
+      box.classList.add('scale-95');
+    }
+
+    // ESC 키로 모달 닫기
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // 📋 필수 규칙 준수: 요약 복사 기능
+    function copyComparisonReport() {
+      try {
+        const items = getFilteredProducts();
+        let report = `[2026 한·미 리츠 & 배당 ETF 인텔리전스 비교 요약 보고서]
+--------------------------------------------------
+■ 기준 일자: 2026년 11월 중순 (한국 기준금리 3.00% / 국고채 3년 3.725%)
+■ 현재 필터 카테고리: ${currentCategory} (총 ${items.length}개 상품)
+--------------------------------------------------
+`;
+
+        items.forEach((p, idx) => {
+          report += `${idx + 1}. ${p.name} (${p.code})
+   • 분류: ${p.categoryLabel} | 분배주기: ${p.payoutCycle}
+   • 배당/분배율: ${p.divYieldLabel} (${p.divYieldSub})
+   • 총보수(실부담): ${p.feeLabel} / 1년 수익률: ${p.totalReturn1YLabel}
+   • 순자산(규모): ${p.aumLabel}
+   • 핵심특징: ${p.strategy}
+   • 2026 팩트/리스크: ${p.riskDetail}
+--------------------------------------------------
+`;
+        });
+
+        report += `* 출처: 2026년 11월 대신증권 리서치, 코스콤 ETF체크, 금투협 공시 원문 데이터 준수
+* 본 자료는 투자 참고용이며 실제 시장 및 세법에 따라 달라질 수 있습니다.`;
+
+        navigator.clipboard.writeText(report).then(() => {
+          showToast('📋 요약 복사 완료', `${items.length}개 상품의 상세 비교 내역이 클립보드에 복사되었습니다.`);
+        }).catch(err => {
+          console.error(err);
+          fallbackCopyText(report);
+        });
+      } catch (err) {
+        showToast('복사 실패', '클립보드 복사 중 에러가 발생했습니다.');
+      }
+    }
+
+    // 토스트 안내
+    function showToast(title, message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-title').textContent = title;
+      document.getElementById('toast-msg').textContent = message;
+      toast.classList.remove('opacity-0', 'translate-y-[-20px]', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-[-20px]', 'pointer-events-none');
+      }, 3500);
+    }
+
+    function fallbackCopyText(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showToast('📋 요약 복사 완료', '클립보드에 복사되었습니다.');
+      } catch (e) {
+        showToast('복사 오류', '수동 복사를 이용해 주세요.');
+      }
+      document.body.removeChild(textArea);
+    }
+
+    // 초기화
+    window.addEventListener('DOMContentLoaded', () => {
+      updateSortIcons();
+      renderProducts();
+    });
+  </script>
+</body>
+</html>

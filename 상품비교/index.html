@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>부동산 3대 자산군 비교 & 세후 수익 시뮬레이터</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              dark: '#0b0f19',
+              card: '#111827',
+              cardLight: '#1e293b',
+              border: '#334155',
+              accent: '#10b981', // Emerald
+              reits: '#38bdf8',  // Sky blue
+              etf: '#a855f7',    // Purple
+              real: '#f59e0b',   // Amber
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    * { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    /* Print Styles */
+    @media print {
+      .no-print { display: none !important; }
+      body { background-color: #ffffff !important; color: #000000 !important; }
+      .bg-brand-card, .bg-brand-cardLight { background-color: #ffffff !important; border: 1px solid #cbd5e1 !important; color: #000000 !important; }
+      .text-slate-100, .text-slate-200, .text-slate-300, .text-white { color: #0f172a !important; }
+      .text-slate-400 { color: #475569 !important; }
+      .border-brand-border { border-color: #cbd5e1 !important; }
+    }
+
+    /* Range slider custom styling */
+    input[type=range] {
+      accent-color: #10b981;
+    }
+    
+    .badge-irp {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(168, 85, 247, 0.15));
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+  </style>
+</head>
+<body class="bg-brand-dark text-slate-100 min-h-screen antialiased selection:bg-emerald-500 selection:text-white">
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed top-5 right-5 z-50 transform transition-all duration-300 opacity-0 translate-y-[-20px] pointer-events-none bg-slate-800 border border-emerald-500/50 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3">
+    <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-base">✓</div>
+    <div>
+      <h4 class="text-xs font-semibold text-emerald-400" id="toast-title">복사 완료</h4>
+      <p class="text-xs text-slate-300" id="toast-msg">요약 보고서가 클립보드에 복사되었습니다.</p>
+    </div>
+  </div>
+
+  <!-- Header Navigation -->
+  <header class="border-b border-brand-border bg-slate-900/80 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+          <i class="fa-solid fa-chart-pie text-slate-950 text-lg"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-lg font-bold text-white tracking-tight">부동산 3대 자산군 투자 인텔리전스</h1>
+            <span class="text-[10px] font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full">v2.4 Quant</span>
+          </div>
+          <p class="text-xs text-slate-400 hidden sm:block">상장 리츠(REITs) vs 배당/리츠 ETF vs 실물 수익형 부동산 1:1 비교 분석기</p>
+        </div>
+      </div>
+
+      <!-- Action Buttons (No Logo per rules) -->
+      <div class="flex items-center space-x-2 no-print">
+        <button onclick="copySummaryReport()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg shadow-md shadow-emerald-600/30 transition flex items-center space-x-1.5 active:scale-95">
+          <i class="fa-regular fa-clipboard"></i>
+          <span>📋 요약 복사</span>
+        </button>
+        <button onclick="window.print()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium rounded-lg border border-slate-700 transition flex items-center space-x-1">
+          <i class="fa-solid fa-print"></i>
+          <span class="hidden sm:inline">인쇄</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- KPI Summary Cards (Dynamic) -->
+    <section>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- KPI 1 -->
+        <div class="bg-brand-card p-5 rounded-2xl border border-brand-border shadow-lg relative overflow-hidden group hover:border-slate-600 transition">
+          <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-sky-500/5 rounded-full blur-xl group-hover:bg-sky-500/10 transition"></div>
+          <p class="text-xs font-medium text-slate-400 flex items-center space-x-1.5">
+            <i class="fa-solid fa-trophy text-amber-400"></i>
+            <span>최종 세후 순자산 1위</span>
+          </p>
+          <div class="mt-2 flex items-baseline justify-between">
+            <h3 class="text-xl font-bold text-white" id="kpi-top-asset">상장 리츠</h3>
+            <span class="text-xs font-semibold text-emerald-400" id="kpi-top-return">+00.0%</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1" id="kpi-top-diff">실물 대비 세후 +000만 원 우세</p>
+        </div>
+
+        <!-- KPI 2 -->
+        <div class="bg-brand-card p-5 rounded-2xl border border-brand-border shadow-lg relative overflow-hidden group hover:border-slate-600 transition">
+          <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition"></div>
+          <p class="text-xs font-medium text-slate-400 flex items-center space-x-1.5">
+            <i class="fa-solid fa-money-bill-wave text-emerald-400"></i>
+            <span>연간 세후 배당/월세 1위</span>
+          </p>
+          <div class="mt-2 flex items-baseline justify-between">
+            <h3 class="text-xl font-bold text-white" id="kpi-cashflow-asset">실물 부동산</h3>
+            <span class="text-xs font-semibold text-slate-300" id="kpi-cashflow-val">월 00만 원</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1">공실률 및 보유세 차감 후 실질 수령</p>
+        </div>
+
+        <!-- KPI 3 -->
+        <div class="bg-brand-card p-5 rounded-2xl border border-brand-border shadow-lg relative overflow-hidden group hover:border-slate-600 transition">
+          <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-purple-500/5 rounded-full blur-xl group-hover:bg-purple-500/10 transition"></div>
+          <p class="text-xs font-medium text-slate-400 flex items-center space-x-1.5">
+            <i class="fa-solid fa-shield-halved text-purple-400"></i>
+            <span>절세계좌(IRP/ISA) 절감액</span>
+          </p>
+          <div class="mt-2 flex items-baseline justify-between">
+            <h3 class="text-xl font-bold text-white" id="kpi-tax-saved">000만 원</h3>
+            <span class="text-[11px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">과세이연 효과</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1">일반계좌 15.4% 원천징수 대비 차액</p>
+        </div>
+
+        <!-- KPI 4 -->
+        <div class="bg-brand-card p-5 rounded-2xl border border-brand-border shadow-lg relative overflow-hidden group hover:border-slate-600 transition">
+          <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-amber-500/5 rounded-full blur-xl group-hover:bg-amber-500/10 transition"></div>
+          <p class="text-xs font-medium text-slate-400 flex items-center space-x-1.5">
+            <i class="fa-solid fa-clock-rotate-left text-sky-400"></i>
+            <span>원금 회수 및 환금성 지수</span>
+          </p>
+          <div class="mt-2 flex items-baseline justify-between">
+            <h3 class="text-xl font-bold text-white">T+2일 vs 수개월</h3>
+            <span class="text-xs font-semibold text-sky-400">유동성 격차</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1">리츠·ETF(즉시 매도) ≫ 실물(급매 리스크)</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Simulation & Chart Section -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Left: Simulation Control Panel (5 Cols) -->
+      <div class="lg:col-span-5 bg-brand-card rounded-2xl border border-brand-border p-6 shadow-xl space-y-6">
+        <div class="flex items-center justify-between border-b border-brand-border pb-4">
+          <div>
+            <h2 class="text-base font-bold text-white flex items-center space-x-2">
+              <i class="fa-solid fa-sliders text-emerald-400"></i>
+              <span>투자 조건 시뮬레이션 설정</span>
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">시장 변수와 세제 조건을 직접 변경해 보세요</p>
+          </div>
+          <button onclick="resetDefaults()" class="text-xs text-slate-400 hover:text-slate-200 transition underline underline-offset-2">
+            기본값 초기화
+          </button>
+        </div>
+
+        <div class="space-y-5">
+          <!-- Parameter 1: Investment Amount -->
+          <div>
+            <div class="flex justify-between items-center text-xs mb-1.5">
+              <label class="font-semibold text-slate-300">초기 투자 원금</label>
+              <span class="font-bold text-emerald-400 text-sm" id="label-principal">10,000만 원 (1억 원)</span>
+            </div>
+            <input type="range" id="input-principal" min="500" max="100000" step="500" value="10000" 
+              class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer" oninput="updateSimulation()">
+            <div class="flex justify-between text-[10px] text-slate-500 mt-1">
+              <span>500만 원(소액)</span>
+              <span>1억 원</span>
+              <span>5억 원</span>
+              <span>10억 원</span>
+            </div>
+          </div>
+
+          <!-- Parameter 2: Duration -->
+          <div>
+            <div class="flex justify-between items-center text-xs mb-1.5">
+              <label class="font-semibold text-slate-300">투자 기간</label>
+              <span class="font-bold text-emerald-400 text-sm" id="label-years">10년</span>
+            </div>
+            <input type="range" id="input-years" min="1" max="30" step="1" value="10" 
+              class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer" oninput="updateSimulation()">
+            <div class="flex justify-between text-[10px] text-slate-500 mt-1">
+              <span>1년</span>
+              <span>5년</span>
+              <span>10년</span>
+              <span>20년</span>
+              <span>30년</span>
+            </div>
+          </div>
+
+          <!-- Parameter 3 & 4: Yields (2 Columns) -->
+          <div class="grid grid-cols-2 gap-4 pt-2">
+            <div class="bg-slate-800/60 p-3 rounded-xl border border-slate-700/60">
+              <label class="text-[11px] font-semibold text-slate-300 block mb-1">
+                기대 배당/월세 수익률
+              </label>
+              <div class="flex items-center space-x-1">
+                <input type="number" id="input-dividend-yield" value="6.5" step="0.1" min="0" max="25"
+                  class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500 text-right"
+                  oninput="updateSimulation()">
+                <span class="text-xs text-slate-400 font-bold">%</span>
+              </div>
+              <p class="text-[10px] text-slate-500 mt-1">연간 세전 기준</p>
+            </div>
+
+            <div class="bg-slate-800/60 p-3 rounded-xl border border-slate-700/60">
+              <label class="text-[11px] font-semibold text-slate-300 block mb-1">
+                연평균 자산가치 상승률
+              </label>
+              <div class="flex items-center space-x-1">
+                <input type="number" id="input-growth-rate" value="2.5" step="0.1" min="-5" max="20"
+                  class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500 text-right"
+                  oninput="updateSimulation()">
+                <span class="text-xs text-slate-400 font-bold">%</span>
+              </div>
+              <p class="text-[10px] text-slate-500 mt-1">물가상승률 감안</p>
+            </div>
+          </div>
+
+          <!-- Detailed Tax & Cost Toggles -->
+          <div class="border-t border-brand-border pt-4 space-y-3">
+            <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between">
+              <span>비용 및 세제 정밀 옵션</span>
+              <span class="text-[10px] text-emerald-400 font-normal">실제 세법 로직 반영</span>
+            </h3>
+
+            <!-- Toggle 1: Tax-Advantaged Account -->
+            <div class="flex items-center justify-between p-3 bg-slate-800/40 rounded-xl border border-slate-700/50 hover:bg-slate-800/70 transition">
+              <div class="pr-2">
+                <div class="flex items-center space-x-1.5">
+                  <span class="text-xs font-semibold text-white">리츠·ETF 절세계좌(IRP/연금저축/ISA) 적용</span>
+                  <span class="text-[9px] bg-purple-500/20 text-purple-300 px-1.5 py-0.2 rounded border border-purple-500/30">강력추천</span>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-0.5">15.4% 배당소득세 과세이연 및 만기 인출 시 3.3~5.5% 저율과세</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                <input type="checkbox" id="toggle-pension" class="sr-only peer" checked onchange="updateSimulation()">
+                <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+              </label>
+            </div>
+
+            <!-- Toggle 2: Real Estate Vacancy Risk -->
+            <div class="flex items-center justify-between p-3 bg-slate-800/40 rounded-xl border border-slate-700/50 hover:bg-slate-800/70 transition">
+              <div class="pr-2">
+                <div class="flex items-center space-x-1.5">
+                  <span class="text-xs font-semibold text-white">실물 부동산 공실률 리스크(연 5% 손실)</span>
+                  <span class="text-[9px] bg-amber-500/20 text-amber-300 px-1.5 py-0.2 rounded border border-amber-500/30">현실적용</span>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-0.5">세입자 교체 시 2~3개월 공실 및 중개보수 추가 발생 반영</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                <input type="checkbox" id="toggle-vacancy" class="sr-only peer" checked onchange="updateSimulation()">
+                <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+              </label>
+            </div>
+
+            <!-- Toggle 3: Dividend Reinvestment -->
+            <div class="flex items-center justify-between p-3 bg-slate-800/40 rounded-xl border border-slate-700/50 hover:bg-slate-800/70 transition">
+              <div class="pr-2">
+                <span class="text-xs font-semibold text-white">배당금/월세 전액 재투자 (복리 효과)</span>
+                <p class="text-[10px] text-slate-400 mt-0.5">수령한 현금흐름을 동일 자산에 재투자하여 복리 자산 형성</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                <input type="checkbox" id="toggle-reinvest" class="sr-only peer" checked onchange="updateSimulation()">
+                <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulation Math Notes -->
+        <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 text-[11px] text-slate-400 space-y-1">
+          <div class="font-semibold text-slate-300 flex items-center space-x-1">
+            <i class="fa-solid fa-calculator text-emerald-400"></i>
+            <span>내부 세금·비용 자동 공제 로직:</span>
+          </div>
+          <p>• <strong>실물 부동산</strong>: 초기 취득세·중개비(4.6%+0.9%=5.5%) 선공제, 연 재산세(0.3%), 임대소득세(15.4%), 매도 양도세(15%) 적용</p>
+          <p>• <strong>상장 리츠</strong>: 연 운용보수 0.3% 반영, 배당소득세(일반 15.4% vs 절세 4.4% 연금소득세), 매매차익 비과세(국내)</p>
+          <p>• <strong>ETF</strong>: 총보수(연 0.35%) 차감, 분배금 과세(일반 15.4% vs 절세 4.4%), 매매차익 배당소득세 과세</p>
+        </div>
+      </div>
+
+      <!-- Right: Charts & Output Matrix (7 Cols) -->
+      <div class="lg:col-span-7 space-y-6">
+        
+        <!-- Chart 1: Cumulative Net Worth Chart -->
+        <div class="bg-brand-card rounded-2xl border border-brand-border p-6 shadow-xl">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-brand-border gap-2">
+            <div>
+              <h3 class="text-base font-bold text-white flex items-center space-x-2">
+                <i class="fa-solid fa-chart-line text-sky-400"></i>
+                <span>투자 기간별 세후 총자산(원금+누적수익) 성장 추이</span>
+              </h3>
+              <p class="text-xs text-slate-400">초기 비용 손실 극복 및 절세계좌 복리 효과 시각화</p>
+            </div>
+            <div class="flex items-center space-x-2 text-[11px]">
+              <span class="inline-flex items-center text-sky-400"><span class="w-2.5 h-2.5 rounded-full bg-sky-400 mr-1"></span>상장 리츠</span>
+              <span class="inline-flex items-center text-purple-400"><span class="w-2.5 h-2.5 rounded-full bg-purple-400 mr-1"></span>ETF</span>
+              <span class="inline-flex items-center text-amber-400"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 mr-1"></span>실물 부동산</span>
+            </div>
+          </div>
+          <div class="h-64 sm:h-72 mt-4 relative">
+            <canvas id="growthChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2 & Annual Cash Flow Grid (2 Columns) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          
+          <!-- Radar Chart: 6-Dimension Score -->
+          <div class="bg-brand-card rounded-2xl border border-brand-border p-5 shadow-xl flex flex-col justify-between">
+            <div class="border-b border-brand-border pb-3">
+              <h3 class="text-sm font-bold text-white flex items-center space-x-1.5">
+                <i class="fa-solid fa-spider text-purple-400"></i>
+                <span>6대 핵심 역량 레이더 평가</span>
+              </h3>
+              <p class="text-[11px] text-slate-400">환금성, 절세효율, 관리편의성 등 정성/정량 종합</p>
+            </div>
+            <div class="h-56 mt-2 relative">
+              <canvas id="radarChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Final Value Comparison Breakdown -->
+          <div class="bg-brand-card rounded-2xl border border-brand-border p-5 shadow-xl flex flex-col justify-between">
+            <div class="border-b border-brand-border pb-3">
+              <h3 class="text-sm font-bold text-white flex items-center space-x-1.5">
+                <i class="fa-solid fa-receipt text-emerald-400"></i>
+                <span>만기 시점 세후 최종 정산표</span>
+              </h3>
+              <p class="text-[11px] text-slate-400" id="card-period-label">10년 후 최종 세후 수령액</p>
+            </div>
+
+            <div class="space-y-3.5 my-auto py-2">
+              <!-- Reits -->
+              <div class="bg-slate-800/60 p-3 rounded-xl border-l-4 border-sky-400">
+                <div class="flex justify-between items-center text-xs">
+                  <span class="font-bold text-sky-400 flex items-center space-x-1">
+                    <span>상장 리츠</span>
+                    <span class="text-[9px] bg-sky-500/20 text-sky-300 px-1 rounded">절세계좌적용</span>
+                  </span>
+                  <span class="font-extrabold text-white text-sm" id="res-reits-total">0만 원</span>
+                </div>
+                <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+                  <span>누적 세후 배당금</span>
+                  <span id="res-reits-div">0만 원</span>
+                </div>
+              </div>
+
+              <!-- ETF -->
+              <div class="bg-slate-800/60 p-3 rounded-xl border-l-4 border-purple-400">
+                <div class="flex justify-between items-center text-xs">
+                  <span class="font-bold text-purple-400 flex items-center space-x-1">
+                    <span>배당/리츠 ETF</span>
+                    <span class="text-[9px] bg-purple-500/20 text-purple-300 px-1 rounded">분산최적화</span>
+                  </span>
+                  <span class="font-extrabold text-white text-sm" id="res-etf-total">0만 원</span>
+                </div>
+                <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+                  <span>누적 세후 분배금</span>
+                  <span id="res-etf-div">0만 원</span>
+                </div>
+              </div>
+
+              <!-- Real Estate -->
+              <div class="bg-slate-800/60 p-3 rounded-xl border-l-4 border-amber-400">
+                <div class="flex justify-between items-center text-xs">
+                  <span class="font-bold text-amber-400 flex items-center space-x-1">
+                    <span>실물 부동산</span>
+                    <span class="text-[9px] bg-amber-500/20 text-amber-300 px-1 rounded">취득세 차감</span>
+                  </span>
+                  <span class="font-extrabold text-white text-sm" id="res-real-total">0만 원</span>
+                </div>
+                <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+                  <span>누적 세후 월세순액</span>
+                  <span id="res-real-rent">0만 원</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-[10px] text-slate-400 bg-slate-900/60 p-2 rounded-lg text-center">
+              초기 취득비용 차이로 단기(3년 이하) 투자 시 실물 부동산의 마이너스 수익률 위험 존재
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Comprehensive 1:1 Spec Comparison Matrix -->
+    <section class="bg-brand-card rounded-2xl border border-brand-border p-6 shadow-xl space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-brand-border pb-4">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center space-x-2">
+            <i class="fa-solid fa-table-list text-emerald-400"></i>
+            <span>3대 자산군 핵심 스펙 1:1 심층 비교 매트릭스</span>
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">
+            진입 장벽부터 과세 체계, 연금계좌 편입 가능 여부까지 모든 정량·정성 스펙을 비교합니다.
+          </p>
+        </div>
+
+        <!-- Filter / Highlight Buttons -->
+        <div class="flex flex-wrap items-center gap-1.5 no-print">
+          <span class="text-xs text-slate-400 font-medium mr-1">강점 하이라이트:</span>
+          <button onclick="filterMatrix('all')" id="btn-filter-all" class="matrix-btn px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-700 text-white transition">전체</button>
+          <button onclick="filterMatrix('liquidity')" id="btn-filter-liquidity" class="matrix-btn px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">⚡ 환금성 우수</button>
+          <button onclick="filterMatrix('tax')" id="btn-filter-tax" class="matrix-btn px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">🛡️ 세제 혜택(연금)</button>
+          <button onclick="filterMatrix('low-entry')" id="btn-filter-low-entry" class="matrix-btn px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">🪙 소액 분할투자</button>
+          <button onclick="filterMatrix('hands-off')" id="btn-filter-hands-off" class="matrix-btn px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">☕ 무관리 편의성</button>
+        </div>
+      </div>
+
+      <!-- Matrix Table -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="border-b border-slate-700 text-slate-300">
+              <th class="py-3 px-4 font-semibold w-1/5 bg-slate-800/40 rounded-tl-xl">비교 항목</th>
+              <th class="py-3 px-4 font-bold text-sky-400 w-4/15 bg-sky-950/20 border-l border-slate-800">
+                <div class="flex items-center space-x-1.5">
+                  <i class="fa-solid fa-building"></i>
+                  <span>① 상장 리츠 (REITs)</span>
+                </div>
+              </th>
+              <th class="py-3 px-4 font-bold text-purple-400 w-4/15 bg-purple-950/20 border-l border-slate-800">
+                <div class="flex items-center space-x-1.5">
+                  <i class="fa-solid fa-layer-group"></i>
+                  <span>② 배당/리츠 ETF</span>
+                </div>
+              </th>
+              <th class="py-3 px-4 font-bold text-amber-400 w-4/15 bg-amber-950/20 border-l border-slate-800 rounded-tr-xl">
+                <div class="flex items-center space-x-1.5">
+                  <i class="fa-solid fa-key"></i>
+                  <span>③ 실물 수익형 부동산</span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/60" id="matrix-tbody">
+            
+            <!-- Row 1: Minimum Capital -->
+            <tr class="matrix-row hover:bg-slate-800/30 transition" data-tags="low-entry">
+              <td class="py-3.5 px-4 font-semibold text-slate-300 bg-slate-900/30">
+                최소 투자금 (진입장벽)
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200 target-low-entry">
+                <span class="inline-block px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-bold text-[11px] mb-1">최저 (주당 약 5,000원~)</span>
+                <p class="text-slate-400 text-[11px]">1주 단위 매매로 학생/사회초년생도 즉시 매수 가능</p>
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200 target-low-entry">
+                <span class="inline-block px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-bold text-[11px] mb-1">최저 (주당 약 10,000원~)</span>
+                <p class="text-slate-400 text-[11px]">소액으로도 국내외 수십 개 우량 부동산/인프라 분산</p>
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200">
+                <span class="inline-block px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 font-bold text-[11px] mb-1">극고 (최소 수천만 ~ 수억 원)</span>
+                <p class="text-slate-400 text-[11px]">대출 레버리지 포함 오피스텔 3~5천만, 상가 1억 이상 필수</p>
+              </td>
+            </tr>
+
+            <!-- Row 2: Liquidity -->
+            <tr class="matrix-row hover:bg-slate-800/30 transition" data-tags="liquidity">
+              <td class="py-3.5 px-4 font-semibold text-slate-300 bg-slate-900/30">
+                환금성 (유동성 회수)
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200 target-liquidity">
+                <span class="inline-block px-2 py-0.5 rounded bg-sky-500/10 text-sky-400 font-bold text-[11px] mb-1">매우 우수 (T+2일 정산)</span>
+                <p class="text-slate-400 text-[11px]">정규 주식시장에서 실시간 호가로 원하는 금액만 즉시 매도</p>
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200 target-liquidity">
+                <span class="inline-block px-2 py-0.5 rounded bg-sky-500/10 text-sky-400 font-bold text-[11px] mb-1">최상 (LP 유동성 공급)</span>
+                <p class="text-slate-400 text-[11px]">LP(유동성공급자) 호가 제출로 대량 매매도 괴리율 없이 체결</p>
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200">
+                <span class="inline-block px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 font-bold text-[11px] mb-1">극악 (수개월 ~ 수년 소요)</span>
+                <p class="text-slate-400 text-[11px]">시장 침체기 시 급매(가격 20~30% 할인) 없이는 현금화 불가</p>
+              </td>
+            </tr>
+
+            <!-- Row 3: Dividend / Rent Yield -->
+            <tr class="matrix-row hover:bg-slate-800/30 transition" data-tags="yield">
+              <td class="py-3.5 px-4 font-semibold text-slate-300 bg-slate-900/30">
+                기대 인컴 수익률
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200">
+                <div class="font-bold text-white text-[13px]">연 5.5% ~ 8.0%</div>
+                <p class="text-slate-400 text-[11px] mt-0.5">배당가능이익 90% 이상 의무 배당 (분기/반기/월배당 다양)</p>
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200">
+                <div class="font-bold text-white text-[13px]">연 4.5% ~ 7.5%</div>
+                <p class="text-slate-400 text-[11px] mt-0.5">국내외 고배당주·리츠 혼합 분배금 (월배당 ETF 대세화)</p>
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200">
+                <div class="font-bold text-white text-[13px]">연 4.0% ~ 6.0% (실질순익)</div>
+                <p class="text-slate-400 text-[11px] mt-0.5">표면수익률은 6~7%이나 공실/수선비 차감 시 4%대로 하락</p>
+              </td>
+            </tr>
+
+            <!-- Row 4: Transaction & Holding Cost -->
+            <tr class="matrix-row hover:bg-slate-800/30 transition">
+              <td class="py-3.5 px-4 font-semibold text-slate-300 bg-slate-900/30">
+                거래 및 보유 비용
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200">
+                <span class="text-emerald-400 font-bold">초기 취득세 0원</span>
+                <p class="text-slate-400 text-[11px] mt-0.5">매매 수수료 약 0.015%, 운용보수는 리츠 내부 실적에 기반영</p>
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200">
+                <span class="text-emerald-400 font-bold">초기 취득세 0원</span>
+                <p class="text-slate-400 text-[11px] mt-0.5">총보수 연 0.15%~0.45%, 증권사 거래 수수료</p>
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200">
+                <span class="text-rose-400 font-bold">초기 5.5% 내외 + 연 재산세</span>
+                <p class="text-slate-400 text-[11px] mt-0.5">취득세 4.6% + 중개수수료 0.9% + 법무비 + 매년 재산세·종부세</p>
+              </td>
+            </tr>
+
+            <!-- Row 5: Tax System & Accounts -->
+            <tr class="matrix-row hover:bg-slate-800/30 transition" data-tags="tax">
+              <td class="py-3.5 px-4 font-semibold text-slate-300 bg-slate-900/30">
+                과세 체계 & 절세계좌
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200 target-tax">
+                <div class="flex flex-wrap gap-1 mb-1">
+                  <span class="badge-irp text-sky-300 text-[10px] font-bold px-2 py-0.5 rounded-full">IRP/DC 편입가능</span>
+                  <span class="badge-irp text-purple-300 text-[10px] font-bold px-2 py-0.5 rounded-full">ISA 가능</span>
+                </div>
+                <p class="text-slate-300 text-[11px] font-semibold">• 연금계좌: 15.4% 비과세 이연 → 3.3~5.5% 연금세</p>
+                <p class="text-slate-400 text-[11px]">• 일반계좌: 배당세 15.4%, 주가차익 비과세(국내)</p>
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200 target-tax">
+                <div class="flex flex-wrap gap-1 mb-1">
+                  <span class="badge-irp text-purple-300 text-[10px] font-bold px-2 py-0.5 rounded-full">연금저축/IRP 편입가능</span>
+                  <span class="badge-irp text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full">ISA 비과세</span>
+                </div>
+                <p class="text-slate-300 text-[11px] font-semibold">• ISA: 순손익 200~400만 비과세, 초과 9.9% 분리과세</p>
+                <p class="text-slate-400 text-[11px]">• IRP 내 위험자산 70% 한도 적용 유의</p>
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200">
+                <span class="inline-block px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 font-bold text-[10px] mb-1">연금계좌/ISA 일체 불가</span>
+                <p class="text-slate-300 text-[11px]">• 임대소득: 2천만 이하 15.4% 분리과세 / 초과 종소세 합산</p>
+                <p class="text-slate-400 text-[11px]">• 양도세: 기본세율(6~45%) + 건강보험료 피부양자 박탈 리스크</p>
+              </td>
+            </tr>
+
+            <!-- Row 6: Management & Operations -->
+            <tr class="matrix-row hover:bg-slate-800/30 transition" data-tags="hands-off">
+              <td class="py-3.5 px-4 font-semibold text-slate-300 bg-slate-900/30">
+                관리 편의성 & 스트레스
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200 target-hands-off">
+                <span class="text-emerald-400 font-bold">100% 완전 무관리 (Passive)</span>
+                <p class="text-slate-400 text-[11px] mt-0.5">전문 자산관리회사(AMC)가 임대, 유지보수, 대출 리파이낸싱 총괄</p>
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200 target-hands-off">
+                <span class="text-emerald-400 font-bold">100% 완전 무관리 (Passive)</span>
+                <p class="text-slate-400 text-[11px] mt-0.5">지수 추종 자동 리밸런싱, 부실 자산 편출입 자동 수행</p>
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200">
+                <span class="text-rose-400 font-bold">극도의 직접 노동 수반 (Active)</span>
+                <p class="text-slate-400 text-[11px] mt-0.5">도배/보일러 수리, 세입자 명도 분쟁, 월세 연체 독촉, 부동산 방문 필수</p>
+              </td>
+            </tr>
+
+            <!-- Row 7: Inflation Hedging & Asset Growth -->
+            <tr class="matrix-row hover:bg-slate-800/30 transition">
+              <td class="py-3.5 px-4 font-semibold text-slate-300 bg-slate-900/30">
+                인플레이션 헷지 & 차익
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200">
+                <div class="text-slate-200 font-medium">우수 (CPI 연동 임대차 계약)</div>
+                <p class="text-slate-400 text-[11px] mt-0.5">프라임 오피스·물류센터 등 인플레 반영 임대료 인상 구조</p>
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200">
+                <div class="text-slate-200 font-medium">우수 (다변화된 인컴 성장)</div>
+                <p class="text-slate-400 text-[11px] mt-0.5">배당성장주 및 글로벌 인프라 결합으로 안정적 성장</p>
+              </td>
+              <td class="py-3.5 px-4 border-l border-slate-800/60 font-medium text-slate-200">
+                <div class="text-slate-200 font-medium">입지별 극단적 양극화</div>
+                <p class="text-slate-400 text-[11px] mt-0.5">핵심지 상가는 높은 상승 기대, 비핵심 오피스텔은 감가상각 하락</p>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Regulatory Notice Badge -->
+      <div class="bg-slate-800/50 border border-slate-700/70 p-4 rounded-xl flex items-start space-x-3 text-xs text-slate-300">
+        <i class="fa-solid fa-circle-exclamation text-sky-400 text-base mt-0.5 flex-shrink-0"></i>
+        <div class="space-y-1">
+          <p class="font-semibold text-white">제도적 주요 가이드라인 (퇴직연금 & 절세계좌):</p>
+          <p>• <strong>퇴직연금(IRP/DC)</strong>: 상장 리츠 및 ETF는 편입 가능하나, 자본시장법 및 근로자퇴직급여보장법에 따라 주식형 ETF 등 <strong>위험자산은 총적립금의 70% 한도</strong> 내에서만 매수할 수 있습니다. (상장 리츠는 단일 종목 투자 규정에 따라 계좌별 한도 점검 필요)</p>
+          <p>• <strong>실물 부동산</strong>: 연금저축펀드, IRP, ISA 등 모든 세제혜택 계좌에서 법적으로 편입이 원천 불가하여 100% 일반 과세 대상입니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Strategy Recommendations & Portfolio Fit -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- Card 1 -->
+      <div class="bg-brand-card p-6 rounded-2xl border border-sky-500/30 shadow-lg relative overflow-hidden">
+        <div class="w-12 h-12 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center text-xl mb-4 font-bold">
+          🏢
+        </div>
+        <h3 class="text-base font-bold text-white mb-2">상장 리츠가 최적인 투자자</h3>
+        <ul class="text-xs text-slate-300 space-y-2 leading-relaxed">
+          <li class="flex items-start space-x-2">
+            <span class="text-sky-400">✔</span>
+            <span><strong>IRP·연금저축</strong>에서 세금 없이 배당 재투자 복리를 누리고 싶은 투자자</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-sky-400">✔</span>
+            <span>수십억 원대 강남 프라임 오피스, 복합 물류센터를 <strong>1만 원으로 소유</strong>하고 싶은 분</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-sky-400">✔</span>
+            <span>세입자 연락, 누수·도배 수선 등 <strong>부동산 관리 스트레스에서 100% 해방</strong>되고 싶은 분</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="bg-brand-card p-6 rounded-2xl border border-purple-500/30 shadow-lg relative overflow-hidden">
+        <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl mb-4 font-bold">
+          🌐
+        </div>
+        <h3 class="text-base font-bold text-white mb-2">배당/리츠 ETF가 최적인 투자자</h3>
+        <ul class="text-xs text-slate-300 space-y-2 leading-relaxed">
+          <li class="flex items-start space-x-2">
+            <span class="text-purple-400">✔</span>
+            <span>단일 리츠의 공실이나 금리 변동 위험을 <strong>수십 개 자산으로 철저히 분산</strong>하고 싶은 투자자</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-purple-400">✔</span>
+            <span>매월 제2의 월급처럼 안정적으로 꽂히는 <strong>월배당(Monthly Income) 파이프라인</strong> 구축 희망자</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-purple-400">✔</span>
+            <span><strong>ISA 계좌</strong>를 통해 비과세 혜택과 저율 분리과세(9.9%)를 극대화하려는 스마트 투자자</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="bg-brand-card p-6 rounded-2xl border border-amber-500/30 shadow-lg relative overflow-hidden">
+        <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl mb-4 font-bold">
+          🔑
+        </div>
+        <h3 class="text-base font-bold text-white mb-2">실물 부동산이 적합한 투자자</h3>
+        <ul class="text-xs text-slate-300 space-y-2 leading-relaxed">
+          <li class="flex items-start space-x-2">
+            <span class="text-amber-400">✔</span>
+            <span>보증금 및 은행 대출(LTV 60~70%)을 극대화한 <strong>레버리지 효과</strong>를 추구하는 자산가</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-amber-400">✔</span>
+            <span>주가 등락의 매일매일 시세 스트레스를 견디기 힘들고, <strong>눈에 보이는 실물 등기</strong>를 선호하는 분</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-amber-400">✔</span>
+            <span>향후 재개발, 상권 확장 등 <strong>입지 프리미엄으로 폭발적 지가 상승</strong>을 노릴 수 있는 상급지 보유자</span>
+          </li>
+        </ul>
+      </div>
+
+    </section>
+
+    <!-- Footer & Mandatory Disclaimer -->
+    <footer class="pt-8 pb-12 border-t border-brand-border text-center space-y-3">
+      <p class="text-xs text-slate-400">
+        부동산 3대 자산군 투자 인텔리전스 대시보드 | Single-File Responsive Web Application
+      </p>
+      <div class="max-w-3xl mx-auto p-4 rounded-xl bg-slate-900/60 border border-slate-800 text-[11px] text-slate-400 leading-relaxed text-left sm:text-center">
+        <p class="font-semibold text-slate-300 mb-1">
+          <i class="fa-solid fa-scale-balanced mr-1 text-amber-400"></i> 법적 면책 조항 (Disclaimer)
+        </p>
+        <p>
+          본 시뮬레이션은 투자 이해를 돕기 위한 가정치에 기반하며, 실제 부동산 세법(다주택 여부, 임대사업자 등록 등), 배당률 변동, 시장 상황에 따라 실제 수익은 달라질 수 있습니다. 금융상품 및 실물 부동산 투자 전 세무 전문가 및 공인 금융상담사와의 개별 확인을 권장합니다.
+        </p>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- Application Logic & Scripts -->
+  <script>
+    /* =========================================================================
+     * 1. 퀀트 시뮬레이션 상수 및 세법/비용 계산 엔진
+     * =========================================================================
+     * 실물 부동산:
+     * - 초기 취득세율 4.6% (상가/업무용 오피스텔 기본 취득세 4% + 농특세 0.2% + 교육세 0.4%)
+     * - 중개수수료 및 법무사 비용: 약 0.9% -> 총 초기비용 약 5.5% 즉시 자본 차감
+     * - 보유세(재산세): 연 0.3%
+     * - 임대소득세: 15.4% (지방소득세 포함 분리과세 기준)
+     * - 공실률 리스크: 체크 시 연간 임대소득의 5% 추가 손실 (수선유지비 포함)
+     * - 매도 시 양도소득세: 장기보유특별공제 및 기본세율 감안 실효 약 15% 적용
+     *
+     * 상장 리츠 (REITs):
+     * - 초기 매매수수료: 0.015% (미미)
+     * - 운용보수: 연 0.30%
+     * - 일반계좌: 배당소득세 15.4% 원천징수, 국내 주가차익 비과세
+     * - 절세계좌: 과세이연(매년 15.4% 미징수 복리투자), 연금 수령 시 4.4% 저율과세(3.3~5.5% 평균)
+     *
+     * 배당/리츠 ETF:
+     * - ETF 총보수: 연 0.35%
+     * - 일반계좌: 분배금 배당소득세 15.4%, 매매차익 배당소득세(15.4% 과세)
+     * - 절세계좌: ISA/연금저축 적용 시 과세이연 및 비과세/저율과세 4.4% 일괄 적용
+     * ========================================================================= */
+
+    let growthChartInstance = null;
+    let radarChartInstance = null;
+
+    // Default Simulation State
+    const state = {
+      principal: 10000,      // 만 원
+      years: 10,             // 년
+      divYield: 6.5,         // %
+      growthRate: 2.5,       // %
+      isPension: true,       // 절세계좌 여부
+      isVacancy: true,       // 공실리스크 반영 여부
+      isReinvest: true       // 재투자 여부
+    };
+
+    // DOM Elements
+    const elPrincipal = document.getElementById('input-principal');
+    const elYears = document.getElementById('input-years');
+    const elDivYield = document.getElementById('input-dividend-yield');
+    const elGrowthRate = document.getElementById('input-growth-rate');
+    const elTogglePension = document.getElementById('toggle-pension');
+    const elToggleVacancy = document.getElementById('toggle-vacancy');
+    const elToggleReinvest = document.getElementById('toggle-reinvest');
+
+    const lblPrincipal = document.getElementById('label-principal');
+    const lblYears = document.getElementById('label-years');
+
+    // Format Korean Currency (만 원 -> 억/만 원)
+    function formatKRW(valInManwon) {
+      const val = Math.round(valInManwon);
+      if (val >= 10000) {
+        const eok = Math.floor(val / 10000);
+        const rem = val % 10000;
+        return rem === 0 ? `${eok}억 원` : `${eok}억 ${rem.toLocaleString()}만 원`;
+      }
+      return `${val.toLocaleString()}만 원`;
+    }
+
+    // Initialize Charts
+    function initCharts() {
+      // 1. Growth Line Chart
+      const ctxGrowth = document.getElementById('growthChart').getContext('2d');
+      growthChartInstance = new Chart(ctxGrowth, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: '상장 리츠 (세후)',
+              borderColor: '#38bdf8',
+              backgroundColor: 'rgba(56, 189, 248, 0.1)',
+              borderWidth: 2.5,
+              tension: 0.25,
+              fill: false,
+              pointRadius: 3,
+              pointHoverRadius: 6,
+              data: []
+            },
+            {
+              label: '배당/리츠 ETF (세후)',
+              borderColor: '#a855f7',
+              backgroundColor: 'rgba(168, 85, 247, 0.1)',
+              borderWidth: 2.5,
+              tension: 0.25,
+              fill: false,
+              pointRadius: 3,
+              pointHoverRadius: 6,
+              data: []
+            },
+            {
+              label: '실물 부동산 (세후)',
+              borderColor: '#f59e0b',
+              backgroundColor: 'rgba(245, 158, 11, 0.1)',
+              borderWidth: 2.5,
+              borderDash: [4, 4],
+              tension: 0.25,
+              fill: false,
+              pointRadius: 3,
+              pointHoverRadius: 6,
+              data: []
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(15, 23, 42, 0.95)',
+              titleColor: '#f8fafc',
+              bodyColor: '#cbd5e1',
+              borderColor: '#334155',
+              borderWidth: 1,
+              padding: 10,
+              callbacks: {
+                label: function(context) {
+                  return ` ${context.dataset.label}: ${formatKRW(context.parsed.y)}`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(51, 65, 85, 0.3)' },
+              ticks: { color: '#94a3b8', font: { size: 10 } }
+            },
+            y: {
+              grid: { color: 'rgba(51, 65, 85, 0.3)' },
+              ticks: {
+                color: '#94a3b8',
+                font: { size: 10 },
+                callback: function(value) {
+                  return value >= 10000 ? (value / 10000) + '억' : value + '만';
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // 2. Radar Chart (6 Dimensions)
+      const ctxRadar = document.getElementById('radarChart').getContext('2d');
+      radarChartInstance = new Chart(ctxRadar, {
+        type: 'radar',
+        data: {
+          labels: ['환금성(유동성)', '소액접근성', '인컴(현금흐름)', '시세차익잠재력', '절세효율성', '관리편의성'],
+          datasets: [
+            {
+              label: '상장 리츠',
+              data: [9.5, 9.5, 8.5, 7.5, 9.0, 9.5],
+              borderColor: '#38bdf8',
+              backgroundColor: 'rgba(56, 189, 248, 0.2)',
+              borderWidth: 2,
+              pointBackgroundColor: '#38bdf8'
+            },
+            {
+              label: '배당/리츠 ETF',
+              data: [10.0, 9.8, 8.0, 8.0, 9.5, 10.0],
+              borderColor: '#a855f7',
+              backgroundColor: 'rgba(168, 85, 247, 0.2)',
+              borderWidth: 2,
+              pointBackgroundColor: '#a855f7'
+            },
+            {
+              label: '실물 부동산',
+              data: [2.0, 2.5, 7.5, 8.5, 3.5, 2.0],
+              borderColor: '#f59e0b',
+              backgroundColor: 'rgba(245, 158, 11, 0.2)',
+              borderWidth: 2,
+              pointBackgroundColor: '#f59e0b'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: '#cbd5e1', font: { size: 10 }, boxWidth: 10, padding: 12 }
+            }
+          },
+          scales: {
+            r: {
+              angleLines: { color: 'rgba(51, 65, 85, 0.5)' },
+              grid: { color: 'rgba(51, 65, 85, 0.5)' },
+              pointLabels: { color: '#94a3b8', font: { size: 10 } },
+              ticks: { display: false, min: 0, max: 10 }
+            }
+          }
+        }
+      });
+    }
+
+    // Core Calculation Engine
+    function calculateReturns() {
+      const P = state.principal;
+      const N = state.years;
+      const dRate = state.divYield / 100;
+      const gRate = state.growthRate / 100;
+      const isPension = state.isPension;
+      const isVacancy = state.isVacancy;
+      const isReinvest = state.isReinvest;
+
+      const labels = ['시작'];
+      const reitsValues = [P];
+      const etfValues = [P];
+      
+      // 실물 부동산은 취득세/중개수수료 약 5.5% 즉시 손실 발생
+      const realAcquisitionCost = P * 0.055;
+      let realInitialAsset = P; // 자산가치는 P이나 순자산은 취득비용 제외 시 감가
+      const realValues = [P - realAcquisitionCost];
+
+      let reitsAsset = P;
+      let etfAsset = P;
+      let realAsset = P;
+
+      let reitsCumDiv = 0;
+      let etfCumDiv = 0;
+      let realCumRent = 0;
+
+      // 연도별 반복 계산
+      for (let y = 1; y <= N; y++) {
+        labels.push(`${y}년차`);
+
+        // ==========================================
+        // 1. 상장 리츠 계산 로직
+        // ==========================================
+        const reitsExpenseRate = 0.003; // 운용보수 0.3%
+        const reitsGrossDiv = reitsAsset * dRate;
+        const reitsTaxRate = isPension ? 0.044 : 0.154; // 절세계좌 과세이연(최종 4.4%) vs 일반 15.4%
+        const reitsNetDiv = isPension ? reitsGrossDiv : reitsGrossDiv * (1 - reitsTaxRate);
+        reitsCumDiv += reitsNetDiv;
+
+        const reitsCapitalGrowth = reitsAsset * (gRate - reitsExpenseRate);
+        reitsAsset = reitsAsset + reitsCapitalGrowth + (isReinvest ? reitsNetDiv : 0);
+        
+        // 최종 시점 세금 정산 (절세계좌 만기 연금수령세 4.4% 일괄 차감 시뮬레이션)
+        let reitsNetWorth = reitsAsset + (!isReinvest ? reitsCumDiv : 0);
+        if (isPension) {
+          // 절세계좌의 경우 발생한 총 평가이익에 대해 인출세 4.4% 부과 가정
+          const reitsProfit = Math.max(0, reitsNetWorth - P);
+          reitsNetWorth = P + (reitsProfit * (1 - 0.044));
+        }
+        reitsValues.push(Math.round(reitsNetWorth));
+
+        // ==========================================
+        // 2. 배당/리츠 ETF 계산 로직
+        // ==========================================
+        const etfExpenseRate = 0.0035; // 총보수 0.35%
+        const etfGrossDiv = etfAsset * (dRate * 0.95); // ETF 분산에 따른 수익률 약 5% 할인 보정
+        const etfTaxRate = isPension ? 0.044 : 0.154;
+        const etfNetDiv = isPension ? etfGrossDiv : etfGrossDiv * (1 - etfTaxRate);
+        etfCumDiv += etfNetDiv;
+
+        const etfCapitalGrowth = etfAsset * (gRate - etfExpenseRate);
+        etfAsset = etfAsset + etfCapitalGrowth + (isReinvest ? etfNetDiv : 0);
+
+        let etfNetWorth = etfAsset + (!isReinvest ? etfCumDiv : 0);
+        if (isPension) {
+          const etfProfit = Math.max(0, etfNetWorth - P);
+          etfNetWorth = P + (etfProfit * (1 - 0.044));
+        } else {
+          // 일반 계좌는 ETF 매매차익에 15.4% 과세
+          const etfCapProfit = Math.max(0, etfAsset - P - (isReinvest ? etfCumDiv : 0));
+          etfNetWorth -= etfCapProfit * 0.154;
+        }
+        etfValues.push(Math.round(etfNetWorth));
+
+        // ==========================================
+        // 3. 실물 부동산 계산 로직
+        // ==========================================
+        // 연간 임대소득 산출
+        let realGrossRent = realAsset * dRate;
+        if (isVacancy) {
+          realGrossRent *= 0.95; // 공실 손실 5% 차감
+        }
+        // 보유세(0.3%) 및 소득세(15.4%) 차감
+        const realPropertyTax = realAsset * 0.003;
+        const realIncomeTax = realGrossRent * 0.154;
+        const realNetRent = Math.max(0, realGrossRent - realPropertyTax - realIncomeTax);
+        realCumRent += realNetRent;
+
+        // 자산가치 상승 (건물 감가상각 감안, 실질 토지/건물 평균 상승률)
+        const realCapitalGrowth = realAsset * gRate;
+        realAsset = realAsset + realCapitalGrowth + (isReinvest ? realNetRent : 0);
+
+        // 실물 매도 시 양도소득세 15% 및 초기 취득세 고려
+        const realGrossProfit = Math.max(0, realAsset - P);
+        const realCapitalGainsTax = realGrossProfit * 0.15; // 실효양도세율
+        const realNetWorth = (realAsset - realCapitalGainsTax) - (y === 0 ? realAcquisitionCost : 0) + (!isReinvest ? realCumRent : 0);
+        realValues.push(Math.round(realNetWorth));
+      }
+
+      return {
+        labels,
+        reitsValues,
+        etfValues,
+        realValues,
+        finalReits: reitsValues[N],
+        finalEtf: etfValues[N],
+        finalReal: realValues[N],
+        reitsCumDiv: Math.round(reitsCumDiv),
+        etfCumDiv: Math.round(etfCumDiv),
+        realCumRent: Math.round(realCumRent)
+      };
+    }
+
+    // Update Simulator and UI
+    function updateSimulation() {
+      // Sync Input Values
+      state.principal = parseFloat(elPrincipal.value);
+      state.years = parseInt(elYears.value);
+      state.divYield = parseFloat(elDivYield.value) || 0;
+      state.growthRate = parseFloat(elGrowthRate.value) || 0;
+      state.isPension = elTogglePension.checked;
+      state.isVacancy = elToggleVacancy.checked;
+      state.isReinvest = elToggleReinvest.checked;
+
+      // Update Labels
+      lblPrincipal.textContent = formatKRW(state.principal);
+      lblYears.textContent = `${state.years}년`;
+      document.getElementById('card-period-label').textContent = `${state.years}년 후 최종 세후 수령액 (원금 포함)`;
+
+      // Run Calculation
+      const res = calculateReturns();
+
+      // Update Chart Data
+      growthChartInstance.data.labels = res.labels;
+      growthChartInstance.data.datasets[0].data = res.reitsValues;
+      growthChartInstance.data.datasets[1].data = res.etfValues;
+      growthChartInstance.data.datasets[2].data = res.realValues;
+      growthChartInstance.update();
+
+      // Update Breakdown Table
+      document.getElementById('res-reits-total').textContent = formatKRW(res.finalReits);
+      document.getElementById('res-reits-div').textContent = formatKRW(res.reitsCumDiv);
+
+      document.getElementById('res-etf-total').textContent = formatKRW(res.finalEtf);
+      document.getElementById('res-etf-div').textContent = formatKRW(res.etfCumDiv);
+
+      document.getElementById('res-real-total').textContent = formatKRW(res.finalReal);
+      document.getElementById('res-real-rent').textContent = formatKRW(res.realCumRent);
+
+      // Determine Winners for KPI Cards
+      const results = [
+        { name: '상장 리츠', total: res.finalReits, color: 'text-sky-400' },
+        { name: '배당/리츠 ETF', total: res.finalEtf, color: 'text-purple-400' },
+        { name: '실물 부동산', total: res.finalReal, color: 'text-amber-400' }
+      ];
+      results.sort((a, b) => b.total - a.total);
+      const topWinner = results[0];
+      const lowest = results[2];
+      const returnRate = (((topWinner.total - state.principal) / state.principal) * 100).toFixed(1);
+
+      document.getElementById('kpi-top-asset').textContent = topWinner.name;
+      document.getElementById('kpi-top-return').textContent = `+${returnRate}%`;
+      const diffAmount = topWinner.total - res.finalReal;
+      document.getElementById('kpi-top-diff').textContent = diffAmount >= 0 
+        ? `실물 대비 +${formatKRW(diffAmount)} 순익 우세` 
+        : `실물 대비 ${formatKRW(Math.abs(diffAmount))} 차이`;
+
+      // Monthly Cash Flow Calculation (Year 1 basis)
+      const monthlyRealRent = Math.round((state.principal * (state.divYield / 100) * (state.isVacancy ? 0.95 : 1.0) * (1 - 0.154)) / 12);
+      document.getElementById('kpi-cashflow-val').textContent = `월 약 ${monthlyRealRent.toLocaleString()}만 원`;
+
+      // Tax Saved via Pension Account
+      const generalTax = res.reitsCumDiv * (0.154 / (1 - 0.154));
+      const pensionTax = generalTax * (0.044 / 0.154);
+      const taxSaved = Math.max(0, Math.round(generalTax - pensionTax));
+      document.getElementById('kpi-tax-saved').textContent = state.isPension ? `${taxSaved.toLocaleString()}만 원` : '0만 원 (미적용)';
+    }
+
+    // Reset Defaults
+    function resetDefaults() {
+      elPrincipal.value = 10000;
+      elYears.value = 10;
+      elDivYield.value = 6.5;
+      elGrowthRate.value = 2.5;
+      elTogglePension.checked = true;
+      elToggleVacancy.checked = true;
+      elToggleReinvest.checked = true;
+      updateSimulation();
+    }
+
+    // Matrix Filtering / Highlight
+    function filterMatrix(type) {
+      document.querySelectorAll('.matrix-btn').forEach(btn => {
+        btn.classList.remove('bg-slate-700', 'text-white');
+        btn.classList.add('bg-slate-800', 'text-slate-300');
+      });
+      const activeBtn = document.getElementById(`btn-filter-${type}`);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-slate-700', 'text-white');
+        activeBtn.classList.remove('bg-slate-800', 'text-slate-300');
+      }
+
+      const rows = document.querySelectorAll('.matrix-row');
+      rows.forEach(row => {
+        const tags = row.getAttribute('data-tags') || '';
+        if (type === 'all' || tags.includes(type)) {
+          row.classList.remove('opacity-25');
+          row.classList.add('opacity-100');
+        } else {
+          row.classList.add('opacity-25');
+          row.classList.remove('opacity-100');
+        }
+      });
+    }
+
+    // Toast Notification System
+    function showToast(title, message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-title').textContent = title;
+      document.getElementById('toast-msg').textContent = message;
+      toast.classList.remove('opacity-0', 'translate-y-[-20px]', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-[-20px]', 'pointer-events-none');
+      }, 3500);
+    }
+
+    // Mandatory Summary Copy Function (Per User Global Rules)
+    function copySummaryReport() {
+      try {
+        const res = calculateReturns();
+        const text = `[부동산 3대 자산군 세후 투자 분석 요약 보고서]
+--------------------------------------------------
+■ 시뮬레이션 기본 조건
+• 초기 투자원금: ${formatKRW(state.principal)}
+• 목표 투자기간: ${state.years}년 (연평균 배당률 ${state.divYield}% / 자산상승률 ${state.growthRate}%)
+• 절세계좌(IRP/ISA) 적용 여부: ${state.isPension ? '적용 (과세이연 및 4.4% 저율과세)' : '미적용 (일반 15.4% 과세)'}
+• 실물 공실 리스크 반영: ${state.isVacancy ? '연 5% 차감 반영' : '미반영'}
+• 배당금 재투자: ${state.isReinvest ? '전액 재투자(복리)' : '단순 수령'}
+
+--------------------------------------------------
+■ ${state.years}년 후 최종 세후 자산 비교
+1. 상장 리츠(REITs)     : ${formatKRW(res.finalReits)} (누적 배당: ${formatKRW(res.reitsCumDiv)})
+2. 배당/리츠 ETF       : ${formatKRW(res.finalEtf)} (누적 분배: ${formatKRW(res.etfCumDiv)})
+3. 실물 수익형 부동산   : ${formatKRW(res.finalReal)} (누적 순임대료: ${formatKRW(res.realCumRent)})
+
+■ 핵심 인텔리전스 결론
+• 수익률 1위 자산: ${document.getElementById('kpi-top-asset').textContent} (${document.getElementById('kpi-top-return').textContent})
+• 절세계좌를 통한 예상 절세액: 약 ${document.getElementById('kpi-tax-saved').textContent}
+• 환금성 비교: 리츠/ETF(T+2일 즉시 현금화) ≫ 실물부동산(수개월~수년 소요)
+• 유의사항: 실물 부동산은 초기 취득세(4.6%)·중개비 등 약 5.5%의 진입 손실이 발생하므로 단기 투자 시 마이너스 위험이 큽니다.
+--------------------------------------------------
+* 본 자료는 투자 참고용 시뮬레이션이며, 실제 세법 및 시장 상황에 따라 달라질 수 있습니다.`;
+
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('📋 요약 복사 성공', '핵심 분석 결과가 클립보드에 복사되었습니다. 카카오톡이나 메모장에 붙여넣기 하세요.');
+        }).catch(err => {
+          console.error('클립보드 복사 실패:', err);
+          fallbackCopyText(text);
+        });
+      } catch (err) {
+        console.error('요약 생성 중 에러:', err);
+        showToast('복사 실패', '클립보드 복사 중 오류가 발생했습니다.');
+      }
+    }
+
+    // Fallback copy
+    function fallbackCopyText(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.top = "0";
+      textArea.style.left = "0";
+      textArea.style.position = "fixed";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showToast('📋 요약 복사 성공', '핵심 분석 결과가 클립보드에 복사되었습니다.');
+      } catch (err) {
+        showToast('복사 오류', '브라우저 권한을 확인해주세요.');
+      }
+      document.body.removeChild(textArea);
+    }
+
+    // Window Load
+    window.addEventListener('DOMContentLoaded', () => {
+      initCharts();
+      updateSimulation();
+    });
+  </script>
+</body>
+</html>

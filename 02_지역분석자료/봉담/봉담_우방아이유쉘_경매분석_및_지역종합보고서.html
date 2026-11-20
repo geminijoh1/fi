@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>봉담 우방아이유쉘 1단지 경매 물건(2025타경56772) 심층 분석 및 봉담 권역 종합 투자 보고서</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    * {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    }
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      body {
+        background-color: white !important;
+        color: black !important;
+      }
+      .page-break {
+        page-break-before: always;
+      }
+      .shadow-sm, .shadow-md, .shadow-lg {
+        box-shadow: none !important;
+      }
+      section {
+        break-inside: avoid-page;
+      }
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen">
+
+  <!-- 헤더 영역 (규칙 6: 파란색 P 사각 로고 일체 미삽입, 규칙 7: 요약 복사 기능 필수 탑재) -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="bg-emerald-600 text-white p-2 rounded-lg shadow-sm">
+          <i data-lucide="gavel" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="bg-red-100 text-red-800 text-xs font-bold px-2.5 py-0.5 rounded-full animate-pulse">2026.11.25(수) 입찰 D-5</span>
+            <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">수원지법 2025타경56772</span>
+            <span class="text-xs text-slate-500 hidden sm:inline">봉담 권역 개발호재 연계형</span>
+          </div>
+          <h1 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">봉담 우방아이유쉘1단지 102동 1301호 경매 및 권역 투자 심층 분석</h1>
+        </div>
+      </div>
+
+      <!-- 상단 액션 버튼 (규칙 7: 요약 복사 필수) -->
+      <div class="flex items-center space-x-2 no-print">
+        <button id="copySummaryBtn" onclick="copyExecutiveSummary()" class="inline-flex items-center space-x-1.5 px-3 py-2 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg shadow-sm transition-all duration-150 active:scale-95" title="메신저/카카오톡 공유용 핵심 요약 복사">
+          <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
+          <span>📋 요약 복사</span>
+        </button>
+        <button onclick="window.print()" class="inline-flex items-center space-x-1.5 px-3 py-2 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 rounded-lg shadow-sm transition-all duration-150" title="PDF 저장 및 인쇄">
+          <i data-lucide="printer" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">인쇄 / PDF</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 복사 완료 토스트 알림창 -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 hidden bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transition-all transform duration-300">
+    <div class="bg-emerald-500 text-white p-1 rounded-full">
+      <i data-lucide="check" class="w-4 h-4"></i>
+    </div>
+    <span class="text-sm font-medium">요약 보고서가 클립보드에 복사되었습니다! 카카오톡이나 메모장에 붙여넣기 하세요.</span>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- 0. 사건 긴급 요약 배너 -->
+    <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-900 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden">
+      <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+        <i data-lucide="trending-up" class="w-72 h-72"></i>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 relative z-10 items-center">
+        <div class="md:col-span-2 space-y-2">
+          <div class="flex items-center space-x-2">
+            <span class="px-2.5 py-1 bg-amber-400 text-slate-950 text-xs font-black rounded">최저가 70% 진행</span>
+            <span class="text-slate-300 text-xs">수원지방법원 경매4계 | 2026-11-25 매각</span>
+          </div>
+          <h2 class="text-2xl font-black text-white">화성시 봉담읍 수영리 우방아이유쉘1단지 102동 1301호</h2>
+          <p class="text-sm text-slate-300">전용 84.9964㎡ (25.7평) / 공급 35평형 / 23층 중 13층 로얄층 남서향 / 방 4개 혁신평면 / 수영초 초품아</p>
+        </div>
+        <div class="bg-white/10 backdrop-blur-md rounded-xl p-3.5 border border-white/10 text-center">
+          <div class="text-xs text-slate-300 font-medium">법원 감정가 (100%)</div>
+          <div class="text-xl font-bold text-white mt-1">4억 500만 원</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">평균 실거래가 4.19억 원</div>
+        </div>
+        <div class="bg-emerald-500/20 backdrop-blur-md rounded-xl p-3.5 border border-emerald-400/30 text-center">
+          <div class="text-xs text-emerald-300 font-bold">2회차 최저매각가격 (70%)</div>
+          <div class="text-2xl font-black text-emerald-400 mt-1">2억 8,350만 원</div>
+          <div class="text-[11px] text-emerald-200 mt-0.5 font-semibold">실거래가 대비 ▲1억 3,650만 원 저렴!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. 핵심 투자 포인트 4대 지표 카드 -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- 카드 1: 가격 안전마진 -->
+      <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">확실한 안전마진</span>
+          <i data-lucide="shield-check" class="w-5 h-5 text-blue-600"></i>
+        </div>
+        <div class="text-2xl font-black text-slate-900 tracking-tight">▲ 1억 3,650만</div>
+        <p class="text-xs text-slate-500 mt-1.5">최근 실거래가(4.20억) 대비 최저가 32.5% 할인, 일반 급매(3.80억) 대비 9,650만 원 저렴</p>
+      </div>
+
+      <!-- 카드 2: 권리분석 상태 -->
+      <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">권리 리스크 제로</span>
+          <i data-lucide="check-circle" class="w-5 h-5 text-emerald-600"></i>
+        </div>
+        <div class="text-2xl font-black text-slate-900 tracking-tight">100% 무하자</div>
+        <p class="text-xs text-slate-500 mt-1.5">말소기준권리 이후 근저당 전액 소멸, 대항력 있는 임차인 전무(소유자 세대 단독 전입)</p>
+      </div>
+
+      <!-- 카드 3: 전세가율 및 갭투자 -->
+      <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded">전세 시세 밴드</span>
+          <i data-lucide="coins" class="w-5 h-5 text-amber-600"></i>
+        </div>
+        <div class="text-2xl font-black text-slate-900 tracking-tight">2.7억 ~ 3.0억</div>
+        <p class="text-xs text-slate-500 mt-1.5">최저 입찰가가 전세 하단 수준, 3.1억 낙찰 후 2.9억 전세 세팅 시 실투자금 약 3천만 원</p>
+      </div>
+
+      <!-- 카드 4: 배후 인구 및 개발호재 -->
+      <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">봉담 권역 개발 1위</span>
+          <i data-lucide="sparkles" class="w-5 h-5 text-indigo-600"></i>
+        </div>
+        <div class="text-2xl font-black text-slate-900 tracking-tight">봉담3지구 신설역</div>
+        <p class="text-xs text-slate-500 mt-1.5">봉담3지구(69만평 1.8만세대) 승인, 수인분당선 오목천역(970m) 및 신설역 확정 호재</p>
+      </div>
+    </div>
+
+    <!-- 2. 제1편: 권리분석 및 물건 상세 매트릭스 -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- 물건 및 권리분석 카드 (7 cols) -->
+      <div class="lg:col-span-7 bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-5">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="file-check-2" class="w-5 h-5 text-emerald-600"></i>
+            <h3 class="font-bold text-slate-900 text-base">물건 개요 및 등기부 권리분석 (100% 안전)</h3>
+          </div>
+          <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">인수할 권리 없음</span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
+          <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+            <div class="text-xs text-slate-400">전용 / 공급면적</div>
+            <div class="font-bold text-slate-800 mt-0.5">85.0㎡ (25.71평) / 35평형</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+            <div class="text-xs text-slate-400">대지권 비율</div>
+            <div class="font-bold text-slate-800 mt-0.5">55.36㎡ (16.75평)</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+            <div class="text-xs text-slate-400">해당층 / 구조</div>
+            <div class="font-bold text-slate-800 mt-0.5">13층 (로얄층) / 방 4, 욕실 2</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+            <div class="text-xs text-slate-400">준공일 / 세대수</div>
+            <div class="font-bold text-slate-800 mt-0.5">2016.04.29 / 488세대</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+            <div class="text-xs text-slate-400">난방 / 현관</div>
+            <div class="font-bold text-slate-800 mt-0.5">도시가스 개별 / 계단식</div>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+            <div class="text-xs text-slate-400">입찰 보증금 (10%)</div>
+            <div class="font-bold text-emerald-600 mt-0.5">28,350,000원</div>
+          </div>
+        </div>
+
+        <!-- 등기부 권리 내역 표 -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left border border-slate-200 rounded-lg overflow-hidden">
+            <thead class="bg-slate-100 text-slate-700 font-semibold border-b border-slate-200">
+              <tr>
+                <th class="p-2.5">순번</th>
+                <th class="p-2.5">설정일자</th>
+                <th class="p-2.5">권리종류</th>
+                <th class="p-2.5">권리자</th>
+                <th class="p-2.5 text-right">채권액</th>
+                <th class="p-2.5 text-center">소멸 여부</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-slate-700">
+              <tr class="bg-emerald-50/50">
+                <td class="p-2.5 font-bold text-emerald-800">2</td>
+                <td class="p-2.5 font-semibold">2016.12.01</td>
+                <td class="p-2.5 font-bold text-emerald-900">근저당권 (말소기준)</td>
+                <td class="p-2.5">한국주택금융공사</td>
+                <td class="p-2.5 text-right font-medium">159,154,000원</td>
+                <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold rounded">말소</span></td>
+              </tr>
+              <tr>
+                <td class="p-2.5 text-slate-500">3</td>
+                <td class="p-2.5">2022.08.05</td>
+                <td class="p-2.5">근저당권</td>
+                <td class="p-2.5">비콜렉트대부(주)</td>
+                <td class="p-2.5 text-right">284,700,000원</td>
+                <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded">소멸</span></td>
+              </tr>
+              <tr>
+                <td class="p-2.5 text-slate-500">4</td>
+                <td class="p-2.5">2025.07.04</td>
+                <td class="p-2.5 text-red-600 font-semibold">임의경매</td>
+                <td class="p-2.5">한국주택금융공사</td>
+                <td class="p-2.5 text-right font-semibold">146,843,941원</td>
+                <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded">소멸</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 점유 및 명도 진단 -->
+        <div class="bg-amber-50/70 border border-amber-200/80 rounded-lg p-3.5 space-y-1.5 text-xs">
+          <div class="font-bold text-amber-900 flex items-center space-x-1.5">
+            <i data-lucide="alert-circle" class="w-4 h-4 text-amber-600"></i>
+            <span>점유 현황 및 명도(인도) 전략:</span>
+          </div>
+          <p class="text-amber-800 leading-relaxed">
+            법원 현황조사서상 채무자 겸 소유자(장OO) 세대만 전입되어 있으며, <strong>임차인은 전혀 없습니다</strong>. 대항력 있는 인수 보증금이 0원이므로 법적 리스크가 전혀 없으며, 매각잔금 납부와 동시에 '부동산 인도명령'을 신청할 수 있습니다. 점유 소유자와 원만한 이사비 협의(약 150만~250만 원)를 통해 1~2개월 내 인도 완료가 가능합니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- 3자 가격 비교 및 차트 (5 cols) -->
+      <div class="lg:col-span-5 bg-white rounded-xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between space-y-4">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+            <div class="flex items-center space-x-2">
+              <i data-lucide="bar-chart-3" class="w-5 h-5 text-blue-600"></i>
+              <h3 class="font-bold text-slate-900 text-base">3자 가격 비교 분석</h3>
+            </div>
+            <span class="text-xs text-slate-500">단위: 만 원</span>
+          </div>
+          <div class="h-60 w-full">
+            <canvas id="priceComparisonChart"></canvas>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 rounded-lg p-3 text-xs space-y-2 border border-slate-100">
+          <div class="flex justify-between items-center text-slate-700">
+            <span class="font-medium">최근 실거래가 (2026.10 20층)</span>
+            <span class="font-bold text-slate-900">4억 2,000만 원</span>
+          </div>
+          <div class="flex justify-between items-center text-slate-700">
+            <span class="font-medium">일반 급매 (106동 6층 전세낀매물)</span>
+            <span class="font-bold text-slate-900">3억 8,000만 원</span>
+          </div>
+          <div class="flex justify-between items-center text-emerald-800 bg-emerald-100/60 p-1.5 rounded">
+            <span class="font-bold">2회차 최저입찰가 (2026.11.25)</span>
+            <span class="font-black text-emerald-700">2억 8,350만 원 (70%)</span>
+          </div>
+          <div class="flex justify-between items-center text-blue-800">
+            <span class="font-medium">현재 전세 시세</span>
+            <span class="font-bold">2억 7,000만 ~ 3억 0,000만 원</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 3. 제2편: 실시간 인터랙티브 입찰가 & 수익률 시뮬레이터 -->
+    <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-4 gap-2">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="calculator" class="w-6 h-6 text-indigo-600"></i>
+          <div>
+            <h3 class="font-bold text-slate-900 text-lg">실시간 인터랙티브 입찰가 & 자금 시뮬레이터</h3>
+            <p class="text-xs text-slate-500">입찰 희망가를 입력하거나 슬라이더를 조정하면 대출금, 실투자금, 매도 차익 및 전세 갭투자금이 즉시 계산됩니다.</p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-2">
+          <span class="text-xs text-slate-500">빠른 선택:</span>
+          <button onclick="setBidPrice(28350)" class="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded font-semibold text-slate-700">최저가(2.835억)</button>
+          <button onclick="setBidPrice(30800)" class="px-2.5 py-1 text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded font-bold border border-indigo-200">추천가(3.08억)</button>
+          <button onclick="setBidPrice(32500)" class="px-2.5 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded font-semibold text-slate-700">안정가(3.25억)</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        <!-- 슬라이더 및 입력부 (5 cols) -->
+        <div class="lg:col-span-5 space-y-4">
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-xs font-bold text-slate-700">입찰 희망가 설정</label>
+              <span id="bidPriceDisplay" class="text-lg font-black text-indigo-600">3억 800만 원 (76.0%)</span>
+            </div>
+            <input id="bidSlider" type="range" min="28350" max="38000" step="50" value="30800" oninput="updateSimulation()" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+            <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+              <span>최저 2.835억 (70%)</span>
+              <span>추천 3.08억</span>
+              <span>일반급매 3.80억</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <div>
+              <label class="block text-slate-500 mb-1">예상 매도가 (원)</label>
+              <input id="targetSalePrice" type="number" value="415000000" step="1000000" onchange="updateSimulation()" class="w-full px-3 py-2 border border-slate-200 rounded-lg font-bold text-slate-800">
+            </div>
+            <div>
+              <label class="block text-slate-500 mb-1">예상 전세 세팅가 (원)</label>
+              <input id="targetLeasePrice" type="number" value="290000000" step="1000000" onchange="updateSimulation()" class="w-full px-3 py-2 border border-slate-200 rounded-lg font-bold text-slate-800">
+            </div>
+          </div>
+
+          <div class="bg-indigo-50/60 rounded-xl p-3.5 border border-indigo-100 text-xs text-indigo-950 space-y-1">
+            <div class="font-bold flex items-center space-x-1">
+              <i data-lucide="lightbulb" class="w-4 h-4 text-indigo-600"></i>
+              <span>낙찰 통계 기반 권장 가이드:</span>
+            </div>
+            <p class="leading-relaxed">
+              수영리 인근 양지마을쌍용예가 72.8% 낙찰, 봉담2지구 94% 낙찰을 감안할 때, 본 우방아이유쉘 물건은 <strong>75%~78% 구간(3억 0,500만 ~ 3억 1,800만 원)</strong>에서 경쟁 및 낙찰 확률이 가장 높습니다.
+            </p>
+          </div>
+        </div>
+
+        <!-- 시뮬레이션 결과 카드 (7 cols) -->
+        <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          
+          <!-- 전략 A: 단기 매매차익형 (매매사업자) -->
+          <div class="bg-gradient-to-br from-blue-50/80 to-white rounded-xl p-4 border border-blue-200 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-blue-800 bg-blue-100 px-2 py-0.5 rounded">전략 A: 단기 매매차익형</span>
+              <span class="text-xs text-blue-600 font-semibold">보유기간 3~4개월</span>
+            </div>
+            <div class="space-y-1.5 text-xs text-slate-600">
+              <div class="flex justify-between">
+                <span>경락잔금대출 (LTV 70%)</span>
+                <span id="loanAmount" class="font-semibold text-slate-800">2억 1,560만 원</span>
+              </div>
+              <div class="flex justify-between">
+                <span>취득세 + 법무 + 명도비</span>
+                <span id="costAmount" class="font-semibold text-slate-800">약 780만 원</span>
+              </div>
+              <div class="flex justify-between">
+                <span>초기 실투자금 (자부담)</span>
+                <span id="cashRequired" class="font-bold text-slate-900">1억 0,020만 원</span>
+              </div>
+              <div class="border-t border-blue-200 pt-2 flex justify-between items-center">
+                <span class="font-bold text-slate-800">세후 예상 순이익</span>
+                <span id="netProfit" class="text-lg font-black text-blue-700">약 7,150만 원</span>
+              </div>
+              <div class="flex justify-between items-center text-[11px] text-blue-600">
+                <span>실투자금 대비 수익률</span>
+                <span id="roiPercentage" class="font-bold text-sm">71.3% (연 환산 > 200%)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 전략 B: 전세 세팅 갭투자형 (중장기 보유) -->
+          <div class="bg-gradient-to-br from-emerald-50/80 to-white rounded-xl p-4 border border-emerald-200 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">전략 B: 전세 갭투자형</span>
+              <span class="text-xs text-emerald-600 font-semibold">봉담3지구 착공 향유</span>
+            </div>
+            <div class="space-y-1.5 text-xs text-slate-600">
+              <div class="flex justify-between">
+                <span>낙찰가 + 부대비용</span>
+                <span id="totalInvestCost" class="font-semibold text-slate-800">3억 1,580만 원</span>
+              </div>
+              <div class="flex justify-between">
+                <span>신규 전세 세팅금</span>
+                <span class="font-semibold text-emerald-700">2억 9,000만 원</span>
+              </div>
+              <div class="border-t border-emerald-200 pt-2 flex justify-between items-center">
+                <span class="font-bold text-slate-800">최종 묶이는 실투자금</span>
+                <span id="gapAmount" class="text-lg font-black text-emerald-700">약 2,580만 원</span>
+              </div>
+              <p class="text-[11px] text-slate-500 leading-tight pt-1">
+                전세가율 약 90% 이상 세팅으로 실투자 약 2천만 원대 초소액 갭투자가 가능하며, 봉담3지구 신설역 개통 및 도시개발 완공 시 시세 차익 1억 원 이상 추가 확보 가능.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. 제3편: 봉담 권역 5대 도시개발 및 교통망 연계 분석 -->
+    <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-5">
+      <div class="flex items-center space-x-2 border-b border-slate-100 pb-3">
+        <i data-lucide="map-pin" class="w-5 h-5 text-indigo-600"></i>
+        <h3 class="font-bold text-slate-900 text-base">봉담 권역 5대 대규모 도시개발 및 교통망 호재 연계</h3>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- 1. 봉담3 공공주택지구 -->
+        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs font-bold rounded">3기 신도시급 앵커</span>
+            <span class="text-xs text-slate-400">우방아이유쉘 바로 인접</span>
+          </div>
+          <h4 class="font-bold text-slate-900 text-sm">봉담3 공공주택지구</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            <strong>69만 평, 18,270세대(4.2만 명).</strong> 2025년 12월 국토부 지구계획 최종 승인. 수인분당선 신설역(천천역) 3.4만㎡ 복합환승센터 및 4만 평 자족 R&D 용지 조성.
+          </p>
+        </div>
+
+        <!-- 2. 효행지구 도시개발 -->
+        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="px-2 py-0.5 bg-indigo-100 text-indigo-800 text-xs font-bold rounded">1.7조 원 메머드 사업</span>
+            <span class="text-xs text-slate-400">농어촌공사 주도</span>
+          </div>
+          <h4 class="font-bold text-slate-900 text-sm">효행지구 도시개발사업</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            <strong>41.8만 평, 1.2만 세대.</strong> 봉담과 수원 권선구의 경계를 잇는 친환경 주거단지로 봉담 전체의 주거 위상을 서수원급으로 견인.
+          </p>
+        </div>
+
+        <!-- 3. 교통 인프라 퀀텀점프 -->
+        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-xs font-bold rounded">트리플 철도망</span>
+            <span class="text-xs text-slate-400">2026~2030 개통축</span>
+          </div>
+          <h4 class="font-bold text-slate-900 text-sm">철도 및 도로망 확장</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            <strong>수인분당선 오목천역(970m)</strong> 수원역 2정거장(GTX-C 연계), <strong>인천발 KTX 어천역(2026 완공)</strong>, 신분당선 봉담 연장(호매실~봉담) 강남 40분대.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. 제4편: KCB 금융 빅데이터 & PropX 공급 사이클 검증 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      
+      <!-- KCB 빅데이터 차트 -->
+      <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="users" class="w-5 h-5 text-blue-600"></i>
+            <h3 class="font-bold text-slate-900 text-base">KCB 빅데이터: 화성시 전입 비중 1위 (봉담읍)</h3>
+          </div>
+          <span class="text-xs font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">6.33% 압도적 1위</span>
+        </div>
+        <div class="h-56 w-full">
+          <canvas id="migrationChart"></canvas>
+        </div>
+        <p class="text-xs text-slate-500 leading-relaxed">
+          KCB K-Atlas 분석 결과 봉담읍은 화성시 28개 읍면동 중 전입률 1위(6.33%), 출퇴근 통근 비중 1위(4.85%)를 기록하여 수원·화성·용인 직주근접 배후 주거지로서 가장 두터운 실수요층을 입증했습니다.
+        </p>
+      </div>
+
+      <!-- PropX 공급 사이클 차트 -->
+      <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="building" class="w-5 h-5 text-emerald-600"></i>
+            <h3 class="font-bold text-slate-900 text-base">PropX 공급 분석: 2024년 피크 후 입주 급감</h3>
+          </div>
+          <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">미분양 57호 (Zero)</span>
+        </div>
+        <div class="h-56 w-full">
+          <canvas id="supplyChart"></canvas>
+        </div>
+        <p class="text-xs text-slate-500 leading-relaxed">
+          2024년 봉담프라이드시티 4,034세대 대규모 입주 충격을 완전히 흡수 완료하였으며, 2025~2027년 연간 공급량이 1천 세대 이하로 급감하여 매물 품귀 및 전세가 상승세가 뚜렷합니다.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- 6. 제5편: 최종 입찰 가이드 및 체크리스트 -->
+    <div class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-2xl p-6 shadow-xl space-y-5">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="check-square" class="w-6 h-6 text-emerald-400"></i>
+          <h3 class="font-black text-white text-lg">최종 투자의견 및 입찰 준비 체크리스트</h3>
+        </div>
+        <span class="px-3 py-1 bg-emerald-500 text-slate-950 font-black text-xs rounded-full">투자의견: 강력 매수 (STRONG BUY)</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-slate-300">
+        <div class="space-y-3">
+          <h4 class="font-bold text-white text-sm flex items-center space-x-1.5">
+            <i data-lucide="target" class="w-4 h-4 text-amber-400"></i>
+            <span>최종 입찰 가격 결정 가이드</span>
+          </h4>
+          <ul class="space-y-2 leading-relaxed">
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400 font-bold">1.</span>
+              <span><strong>보수적 수익형 (적극 추천): 3억 0,500만 ~ 3억 1,500만 원</strong> (감정가 대비 75.3%~77.7%). 실거래가 대비 1억 원 이상의 안전마진 유지.</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400 font-bold">2.</span>
+              <span><strong>실거주 확실 낙찰형: 3억 2,000만 ~ 3억 2,800만 원</strong> (감정가 대비 79.0%~81.0%). 일반 급매(3.8억) 대비 5,200만 원 저렴한 확실한 메리트.</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400 font-bold">3.</span>
+              <span><strong>전세 세팅 플랜:</strong> 낙찰 후 2.9억 원 전세 계약 시 묶이는 종잣돈은 약 2,500만~3,000만 원 수준에 불과함.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <h4 class="font-bold text-white text-sm flex items-center space-x-1.5">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-emerald-400"></i>
+            <span>2026.11.25 입찰 당일 필수 지참물</span>
+          </h4>
+          <ul class="space-y-2 leading-relaxed">
+            <li class="flex items-center space-x-2">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i>
+              <span><strong>입찰보증금: 28,350,000원</strong> (전날 시중은행에서 자기앞수표 1장으로 발행 준비)</span>
+            </li>
+            <li class="flex items-center space-x-2">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i>
+              <span><strong>신분증 및 도장</strong> (주민등록증/운전면허증, 인감도장 또는 지장 가능)</span>
+            </li>
+            <li class="flex items-center space-x-2">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i>
+              <span><strong>법원 도착:</strong> 수원지방법원 본원(수원시 영통구 하동) 10:20까지 도착 (마감 11:00)</span>
+            </li>
+            <li class="flex items-center space-x-2">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i>
+              <span><strong>사건번호 정확 기재:</strong> '2025타경56772' 물건번호 없음에 유의</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 하단 푸터 -->
+  <footer class="bg-white border-t border-slate-200 mt-12 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 space-y-1">
+      <p class="font-semibold text-slate-700">화성시 봉담 우방아이유쉘1단지 102동 1301호 경매물건(2025타경56772) 심층 분석 보고서</p>
+      <p>데이터 출처: 대법원 법원경매정보(e옥션), 네이버페이 부동산, 국토교통부 실거래가, 부동산R114 PropX, KCB K-Atlas 2.0</p>
+      <p class="text-[11px] text-slate-400">본 보고서는 투자 참고용 분석 자료이며, 최종 입찰 및 투자 결정에 따른 책임은 투자자 본인에게 있습니다.</p>
+    </div>
+  </footer>
+
+  <!-- 스크립트: 아이콘 로드, 차트 렌더링, 시뮬레이터 로직, 요약 복사 기능 -->
+  <script>
+    // Lucide 아이콘 초기화
+    lucide.createIcons();
+
+    // 1. 가격 비교 차트 (Chart.js)
+    const ctxPrice = document.getElementById('priceComparisonChart').getContext('2d');
+    new Chart(ctxPrice, {
+      type: 'bar',
+      data: {
+        labels: ['실거래가(20층)', '감정평가액', '일반급매(6층)', '경매최저가(70%)', '전세시세'],
+        datasets: [{
+          data: [42000, 40500, 38000, 28350, 29000],
+          backgroundColor: [
+            '#3b82f6',
+            '#94a3b8',
+            '#f59e0b',
+            '#10b981',
+            '#6366f1'
+          ],
+          borderRadius: 6,
+          barPercentage: 0.65
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.raw.toLocaleString() + ' 만 원';
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            min: 20000,
+            max: 45000,
+            ticks: {
+              callback: function(value) {
+                return (value / 10000).toFixed(1) + '억';
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // 2. KCB 전입 비중 차트
+    const ctxMigration = document.getElementById('migrationChart').getContext('2d');
+    new Chart(ctxMigration, {
+      type: 'bar',
+      data: {
+        labels: ['봉담읍(1위)', '동탄7동', '남양읍', '향남읍', '동탄5동'],
+        datasets: [{
+          data: [6.33, 4.45, 4.35, 4.12, 3.89],
+          backgroundColor: ['#2563eb', '#93c5fd', '#cbd5e1', '#cbd5e1', '#cbd5e1'],
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(v) { return v + '%'; }
+            }
+          }
+        }
+      }
+    });
+
+    // 3. PropX 공급 물량 추이 차트
+    const ctxSupply = document.getElementById('supplyChart').getContext('2d');
+    new Chart(ctxSupply, {
+      type: 'line',
+      data: {
+        labels: ['2023년', '2024년(피크)', '2025년', '2026년', '2027년'],
+        datasets: [{
+          label: '봉담 권역 입주 물량(호)',
+          data: [1850, 4034, 862, 806, 258],
+          borderColor: '#10b981',
+          backgroundColor: 'rgba(16, 185, 129, 0.1)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 5,
+          pointBackgroundColor: '#10b981'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(v) { return v.toLocaleString() + '호'; }
+            }
+          }
+        }
+      }
+    });
+
+    // 4. 입찰가 시뮬레이션 로직
+    function setBidPrice(priceManwon) {
+      document.getElementById('bidSlider').value = priceManwon;
+      updateSimulation();
+    }
+
+    function updateSimulation() {
+      const bidManwon = parseInt(document.getElementById('bidSlider').value, 10);
+      const bidWon = bidManwon * 10000;
+      const ratio = ((bidWon / 405000000) * 100).toFixed(1);
+
+      document.getElementById('bidPriceDisplay').innerText = 
+        `${(bidManwon / 10000).toFixed(2)}억 원 (${ratio}%)`;
+
+      // 대출 및 비용 계산 (단기매도형)
+      const loan = Math.round(bidWon * 0.7);
+      const acquisitionTax = Math.round(bidWon * 0.011); // 1.1%
+      const legalAndEviction = 4500000; // 법무+명도비
+      const interest = Math.round(loan * 0.04 * (3 / 12)); // 3개월 이자 4%
+      const totalCost = bidWon + acquisitionTax + legalAndEviction + interest;
+      const cashReq = totalCost - loan;
+
+      const targetSale = parseInt(document.getElementById('targetSalePrice').value, 10);
+      const grossProfit = targetSale - totalCost;
+      const netProfit = Math.round(grossProfit * 0.78); // 매매사업자 소득세율 감안
+      const roi = ((netProfit / cashReq) * 100).toFixed(1);
+
+      document.getElementById('loanAmount').innerText = (loan / 100000000).toFixed(2) + '억 원';
+      document.getElementById('costAmount').innerText = '약 ' + Math.round((acquisitionTax + legalAndEviction + interest) / 10000).toLocaleString() + '만 원';
+      document.getElementById('cashRequired').innerText = (cashReq / 100000000).toFixed(2) + '억 원';
+      document.getElementById('netProfit').innerText = '약 ' + (netProfit / 10000).toLocaleString() + '만 원';
+      document.getElementById('roiPercentage').innerText = roi + '%';
+
+      // 전세 갭투자 계산
+      const targetLease = parseInt(document.getElementById('targetLeasePrice').value, 10);
+      const totalAcquisition = bidWon + acquisitionTax + legalAndEviction;
+      const gap = totalAcquisition - targetLease;
+      document.getElementById('totalInvestCost').innerText = (totalAcquisition / 100000000).toFixed(2) + '억 원';
+      document.getElementById('gapAmount').innerText = '약 ' + Math.round(gap / 10000).toLocaleString() + '만 원';
+    }
+
+    // 초기 시뮬레이션 실행
+    updateSimulation();
+
+    // 5. [규칙 7] 요약 복사 기능 함수 구현
+    function copyExecutiveSummary() {
+      const summaryText = `[봉담 우방아이유쉘1단지 102동 1301호 경매물건(2025타경56772) 핵심 요약]
+
+1. 사건 개요
+- 사건번호: 수원지방법원 본원 2025타경56772 (임의경매)
+- 매각기일: 2026년 11월 25일(수) 10:00 (2회차 기일, D-5)
+- 소재지: 경기도 화성시 봉담읍 수영리 674 우방아이유쉘1단지 102동 13층 1301호
+- 면적: 전용 84.9964㎡ (25.71평) / 공급 35평형 (방 4, 욕실 2, 23층 중 13층 로얄층 남서향)
+- 감정가: 405,000,000원 (100%)
+- 최저가: 283,500,000원 (감정가 대비 70%)
+- 입찰보증금: 28,350,000원 (수표 1장 준비)
+
+2. 권리분석 및 점유 상태
+- 100% 무하자 클린 물건 (말소기준 2016.12.01 한국주택금융공사 근저당 이후 전액 소멸)
+- 채무자 겸 소유자 단독 전입, 대항력 있는 임차보증금 전무 (인수 권리 0원)
+- 소유자 실거주 중으로 낙찰 후 원만한 이사비 협의(약 150만~250만) 후 인도명령 가능
+
+3. 3자 가격 비교 및 안전마진
+- 최근 최고 실거래가: 4억 2,000만 원 (2026.10, 20층)
+- 일반 급매(네이버 등록): 3억 8,000만 원 (106동 6층, 전세낀매물)
+- 경매 최저가: 2억 8,350만 원 (실거래가 대비 ▲1억 3,650만 원, 일반급매 대비 ▲9,650만 원 저렴)
+- 현재 전세 시세: 2억 7,000만 ~ 3억 원 (최저가가 전세 하단가 수준으로 하방 안전판 완벽)
+
+4. 권장 입찰가 및 수익 시뮬레이션
+- 추천 입찰가: 3억 0,500만 ~ 3억 1,500만 원 (감정가 대비 75.3%~77.7%)
+- [단기 매매 전략]: 3.08억 낙찰 ➔ 4.15억 매도 시 세후 약 7,150만 원 순익 (실투자 약 1억 원, 수익률 71%)
+- [전세 갭투자 전략]: 3.08억 낙찰 ➔ 2.9억 전세 세팅 시 실투자 약 2,500만~3,000만 원의 초소액 갭투자 완성
+
+5. 지역 개발 호재 결합
+- 봉담3 공공주택지구(69만 평, 18,270세대) 2025.12 국토부 최종 승인 완료 (신설역사 확정)
+- 수인분당선 오목천역(970m) 수원역 2정거장, KTX 어천역(2026 완공), 수영초 초품아 단지
+- KCB 빅데이터: 화성시 28개 읍면동 중 봉담읍 전입률 1위(6.33%), 통근율 1위(4.85%)
+- 2024년 4천세대 입주 소화 후 공급 물량 급감, 미분양 제로(57호) 청정지역
+
+* 입찰 준비: 2026.11.25(수) 10:20까지 수원지방법원 본원 경매법정 도착 (신분증, 도장, 보증금 28,350,000원)`;
+
+      navigator.clipboard.writeText(summaryText).then(function() {
+        const toast = document.getElementById('toastNotification');
+        toast.classList.remove('hidden');
+        setTimeout(() => {
+          toast.classList.add('hidden');
+        }, 3500);
+      }).catch(function(err) {
+        alert("요약 내용이 클립보드에 복사되었습니다!\n\n" + summaryText.substring(0, 200) + "...");
+      });
+    }
+  </script>
+</body>
+</html>

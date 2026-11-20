@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[경매분석] 수원 오목천동 남광하우스토리 105동 1102호 (2025타경1691)</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      body {
+        background-color: white !important;
+      }
+      .page-break {
+        page-break-before: always;
+      }
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- 상단 네비게이션 / 액션 바 (규칙 6 준수: 로고 삽입 금지, 규칙 7 준수: 요약 복사 버튼 필수) -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200 px-6 py-4 shadow-sm no-print">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800">
+          <i class="fa-solid fa-gavel mr-1.5"></i> 법원경매 심층분석
+        </span>
+        <h1 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+          수원 권선구 오목천동 남광하우스토리 105동 1102호
+        </h1>
+        <span class="text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-medium">2025타경1691</span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <!-- 📋 요약 복사 버튼 (규칙 7 표준 구현) -->
+        <button id="copySummaryBtn" onclick="copyAuctionSummary()" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition active:scale-95">
+          <i class="fa-regular fa-clipboard"></i>
+          <span>📋 요약 복사</span>
+        </button>
+        <!-- 인쇄 버튼 -->
+        <button onclick="window.print()" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-slate-800 hover:bg-slate-900 text-white shadow-sm transition active:scale-95">
+          <i class="fa-solid fa-print"></i>
+          <span>보고서 인쇄</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 토스트 알림 컴포넌트 -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 hidden bg-slate-900 text-white text-sm px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 transition-opacity duration-300">
+    <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+    <span id="toastMsg">요약 보고서가 클립보드에 복사되었습니다!</span>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+
+    <!-- 히어로 배너: 핵심 지표 요약 -->
+    <div class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 rounded-2xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+      <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <div>
+          <span class="text-indigo-400 text-xs sm:text-sm font-medium tracking-wide uppercase">수원지방법원 본원 임의경매</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold mt-1">2025타경1691</h2>
+          <p class="text-slate-300 text-sm mt-1">경기도 수원시 권선구 오목천동 962 남광하우스토리 105동 11층 1102호 (전용 84.97㎡ / 32평형)</p>
+        </div>
+        <div class="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/10 text-right">
+          <p class="text-xs text-indigo-200">2회차 매각기일</p>
+          <p class="text-xl sm:text-2xl font-bold text-amber-400 mt-0.5">2026년 12월 8일 (화) 10:00</p>
+          <p class="text-xs text-slate-300 mt-1">입찰보증금 (10%): 30,380,000원</p>
+        </div>
+      </div>
+
+      <!-- 4대 메트릭 카드 -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 pt-4 border-t border-white/10">
+        <div class="bg-white/5 rounded-xl p-3.5 border border-white/5">
+          <span class="text-xs text-slate-400">감정평가액</span>
+          <p class="text-lg sm:text-xl font-bold text-white mt-0.5">4억 3,400만 원</p>
+          <span class="text-[11px] text-slate-400">100% 기준가</span>
+        </div>
+        <div class="bg-indigo-500/20 rounded-xl p-3.5 border border-indigo-500/30">
+          <span class="text-xs text-indigo-300 font-semibold">2회차 최저매각가</span>
+          <p class="text-lg sm:text-xl font-bold text-amber-300 mt-0.5">3억 380만 원</p>
+          <span class="text-[11px] text-emerald-300 font-medium">감정가 대비 70% (-30%)</span>
+        </div>
+        <div class="bg-white/5 rounded-xl p-3.5 border border-white/5">
+          <span class="text-xs text-slate-400">최근 실거래가</span>
+          <p class="text-lg sm:text-xl font-bold text-white mt-0.5">4.48억 ~ 4.50억</p>
+          <span class="text-[11px] text-emerald-400 font-semibold">안전마진 약 1.44억 원</span>
+        </div>
+        <div class="bg-white/5 rounded-xl p-3.5 border border-white/5">
+          <span class="text-xs text-slate-400">오목천역 거리</span>
+          <p class="text-lg sm:text-xl font-bold text-emerald-300 mt-0.5">도보 4~5분</p>
+          <span class="text-[11px] text-slate-300">2번 출구 약 250m 초역세권</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 핵심 분석 탭 그리드 -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- 좌측 2열: 상세 분석 내용 -->
+      <div class="lg:col-span-2 space-y-6">
+
+        <!-- 1. 권리분석 및 명도 검토 -->
+        <section class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-shield-halved text-emerald-600"></i>
+              권리분석 및 명도 난이도 검토
+            </h3>
+            <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-emerald-100 text-emerald-800">
+              안전등급: 100% 무하자 클린
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5">
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 space-y-2">
+              <span class="text-xs font-semibold text-slate-500 uppercase">등기부 권리 분석</span>
+              <p class="text-sm font-bold text-slate-800">말소기준권리: 2019.09.23 근저당권</p>
+              <ul class="text-xs text-slate-600 space-y-1.5 pt-1">
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-emerald-500 mt-0.5"></i>
+                  <span>말소기준권리보다 앞서는 선순위 권리 전무</span>
+                </li>
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-emerald-500 mt-0.5"></i>
+                  <span>후순위 근저당, 가압류, 임의경매 개시결정 <strong>낙찰 시 전액 소멸</strong></span>
+                </li>
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-emerald-500 mt-0.5"></i>
+                  <span>낙찰자가 추가 인수할 등기상 금전 부담: <strong>0원</strong></span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 space-y-2">
+              <span class="text-xs font-semibold text-slate-500 uppercase">점유 및 명도 난이도</span>
+              <p class="text-sm font-bold text-slate-800">점유자: 소유자(채무자) 세대 점유</p>
+              <ul class="text-xs text-slate-600 space-y-1.5 pt-1">
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-emerald-500 mt-0.5"></i>
+                  <span>대항력 있는 선순위 임차보증금 인수 <strong>없음 (0원)</strong></span>
+                </li>
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-emerald-500 mt-0.5"></i>
+                  <span>잔금 납부와 동시에 <strong>부동산 인도명령</strong> 신청 대상</span>
+                </li>
+                <li class="flex items-start gap-1.5">
+                  <i class="fa-solid fa-check text-emerald-500 mt-0.5"></i>
+                  <span>이사 협의 기간 1~2개월 및 적정 이사비(150만~250만) 협상 권장</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. 시세 매트릭스 및 가격 차트 -->
+        <section class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-chart-line text-indigo-600"></i>
+              실거래가 vs 매물 호가 vs 경매 최저가 비교
+            </h3>
+            <span class="text-xs text-slate-500">전용 84.97㎡ 기준</span>
+          </div>
+
+          <!-- 차트 영역 -->
+          <div class="mt-4 h-64">
+            <canvas id="priceComparisonChart"></canvas>
+          </div>
+
+          <!-- 가격표 그리드 -->
+          <div class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+            <div class="p-3 rounded-lg bg-slate-50 border border-slate-100">
+              <span class="text-[11px] text-slate-500">경매 2회차 최저가</span>
+              <p class="text-sm sm:text-base font-bold text-amber-600 mt-1">3억 380만</p>
+              <span class="text-[10px] text-slate-400">평당 약 926만</span>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-50 border border-slate-100">
+              <span class="text-[11px] text-slate-500">전세 시세</span>
+              <p class="text-sm sm:text-base font-bold text-slate-700 mt-1">2.7억 ~ 3.0억</p>
+              <span class="text-[10px] text-slate-400">전세가율 ~65%</span>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-50 border border-slate-100">
+              <span class="text-[11px] text-slate-500">감정평가액</span>
+              <p class="text-sm sm:text-base font-bold text-slate-700 mt-1">4억 3,400만</p>
+              <span class="text-[10px] text-slate-400">기준 시점 감정가</span>
+            </div>
+            <div class="p-3 rounded-lg bg-emerald-50 border border-emerald-200">
+              <span class="text-[11px] text-emerald-800 font-semibold">최근 실거래가</span>
+              <p class="text-sm sm:text-base font-bold text-emerald-600 mt-1">4.48억 ~ 4.50억</p>
+              <span class="text-[10px] text-emerald-700 font-bold">마진 약 1.44억</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. 비교 분석: 오목천 남광하우스토리 vs 봉담 우방아이유쉘 -->
+        <section class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-code-compare text-blue-600"></i>
+              동일 생활권 경매 2건 1:1 맞비교 분석
+            </h3>
+            <span class="text-xs text-indigo-600 font-semibold">오목천역 인접 2개 물건</span>
+          </div>
+
+          <div class="overflow-x-auto mt-4">
+            <table class="w-full text-xs sm:text-sm text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                  <th class="p-3">항목</th>
+                  <th class="p-3 text-blue-900 bg-blue-50/50">오목천 남광하우스토리 (본건)</th>
+                  <th class="p-3 text-indigo-900 bg-indigo-50/50">봉담 우방아이유쉘 1단지</th>
+                  <th class="p-3">비교 우위 & 핵심 포인트</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-slate-700">
+                <tr>
+                  <td class="p-3 font-semibold bg-slate-50">사건번호 / 기일</td>
+                  <td class="p-3 font-medium text-blue-800">2025타경1691 / <strong>12.08(화)</strong></td>
+                  <td class="p-3 font-medium text-indigo-800">2025타경56772 / <strong>11.25(수)</strong></td>
+                  <td class="p-3 text-slate-600">남광 물건이 준비 기간 2주 여유</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold bg-slate-50">행정구역</td>
+                  <td class="p-3 font-bold text-blue-600">수원시 권선구 오목천동</td>
+                  <td class="p-3">화성시 봉담읍 수영리</td>
+                  <td class="p-3 text-blue-600 font-semibold">남광 우위 (수원 특례시 프리미엄)</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold bg-slate-50">오목천역 접근성</td>
+                  <td class="p-3 font-bold text-blue-600">도보 4~5분 (약 250m)</td>
+                  <td class="p-3">도보 15분 (약 970m) / 버스</td>
+                  <td class="p-3 text-blue-600 font-semibold">남광 압도적 우위 (초역세권)</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold bg-slate-50">연식 / 상품성</td>
+                  <td class="p-3">2007년식 (19년차 구축) / 3룸</td>
+                  <td class="p-3 font-bold text-indigo-600">2016년식 (10년차 준신축) / 4룸</td>
+                  <td class="p-3 text-indigo-600 font-semibold">우방 압도적 우위 (신축 쾌적성)</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold bg-slate-50">최저입찰가</td>
+                  <td class="p-3">303,800,000원 (3.038억)</td>
+                  <td class="p-3 font-bold text-indigo-600">283,500,000원 (2.835억)</td>
+                  <td class="p-3 text-indigo-600 font-semibold">우방 2,030만 원 저렴</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold bg-slate-50">최근 실거래가</td>
+                  <td class="p-3 font-bold text-slate-900">4억 4,800만 ~ 4.50억</td>
+                  <td class="p-3 font-bold text-slate-900">4억 2,000만 원</td>
+                  <td class="p-3 text-slate-600">남광 시세가 약 3천만 원 높음</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold bg-slate-50">안전마진</td>
+                  <td class="p-3 font-bold text-emerald-600">약 1억 4,420만 원 (-32.2%)</td>
+                  <td class="p-3 font-bold text-emerald-600">약 1억 3,650만 원 (-32.5%)</td>
+                  <td class="p-3 text-emerald-600 font-semibold">두 건 모두 1.4억 안팎 마진 확보</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold bg-slate-50">주요 미래 호재</td>
+                  <td class="p-3 text-blue-800">효행지구 바로 남측 인접</td>
+                  <td class="p-3 text-indigo-800">봉담3 공공주택지구 직접 접경</td>
+                  <td class="p-3 text-slate-600">투자자 취향 및 전략에 따른 선택</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- 우측 1열: 입찰 가이드 및 시뮬레이터 -->
+      <div class="space-y-6">
+
+        <!-- 입찰가 시뮬레이션 카드 -->
+        <div class="bg-gradient-to-br from-indigo-900 to-slate-900 text-white rounded-2xl p-6 shadow-md">
+          <h3 class="text-base font-bold text-white flex items-center gap-2 pb-3 border-b border-white/10">
+            <i class="fa-solid fa-calculator text-amber-400"></i>
+            적정 입찰가 시뮬레이터
+          </h3>
+
+          <div class="mt-4 space-y-4 text-xs sm:text-sm">
+            <div class="p-3.5 rounded-xl bg-white/10 border border-white/10">
+              <span class="text-amber-300 font-semibold text-xs">A안. 수익 극대화형 (보수적)</span>
+              <p class="text-xl font-extrabold text-white mt-1">3억 3,500만 ~ 3억 4,500만</p>
+              <p class="text-slate-300 text-xs mt-1">실거래 대비 안전마진: <strong>약 1억 500만 ~ 1억 1,500만 원</strong></p>
+              <p class="text-[11px] text-slate-400 mt-0.5">※ 인테리어 리모델링 비용(약 2,500만) 충당 후에도 큰 수익</p>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/10 border border-white/10">
+              <span class="text-emerald-300 font-semibold text-xs">B안. 낙찰 우선형 (실거주 목적)</span>
+              <p class="text-xl font-extrabold text-white mt-1">3억 5,800만 ~ 3억 6,500만</p>
+              <p class="text-slate-300 text-xs mt-1">실거래 대비 안전마진: <strong>약 8,500만 ~ 9,200만 원</strong></p>
+              <p class="text-[11px] text-slate-400 mt-0.5">※ 일반 급매 호가 대비 약 7~8천만 원 저렴한 확실한 매수선</p>
+            </div>
+
+            <div class="pt-2 text-xs text-slate-300 space-y-1">
+              <p>• <strong>필수 입찰보증금:</strong> 30,380,000원 (수표 1장)</p>
+              <p>• <strong>취득세율:</strong> 1주택자 기준 1.1% (약 370만~400만 원)</p>
+              <p>• <strong>잔금 대출:</strong> 무주택자 LTV 최대 70~80% (약 2.4억~2.7억 가능)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 입지 분석 카드 -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2 pb-2 border-b border-slate-100">
+            <i class="fa-solid fa-map-location-dot text-indigo-600"></i>
+            입지 및 생활 인프라 평점
+          </h3>
+
+          <div class="space-y-3 text-xs sm:text-sm">
+            <div>
+              <div class="flex justify-between font-semibold text-slate-700">
+                <span>지하철 접근성 (오목천역)</span>
+                <span class="text-indigo-600">95점 (도보 4분)</span>
+              </div>
+              <div class="w-full bg-slate-100 rounded-full h-2 mt-1">
+                <div class="bg-indigo-600 h-2 rounded-full" style="width: 95%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between font-semibold text-slate-700">
+                <span>초등학교 통학 (오현초)</span>
+                <span class="text-indigo-600">90점 (도보 5분)</span>
+              </div>
+              <div class="w-full bg-slate-100 rounded-full h-2 mt-1">
+                <div class="bg-indigo-600 h-2 rounded-full" style="width: 90%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between font-semibold text-slate-700">
+                <span>주변 개발 호재 (효행지구)</span>
+                <span class="text-indigo-600">92점 (직접 인접)</span>
+              </div>
+              <div class="w-full bg-slate-100 rounded-full h-2 mt-1">
+                <div class="bg-indigo-600 h-2 rounded-full" style="width: 92%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between font-semibold text-slate-700">
+                <span>단지 연식 및 신축성</span>
+                <span class="text-amber-600">65점 (19년차 구축)</span>
+              </div>
+              <div class="w-full bg-slate-100 rounded-full h-2 mt-1">
+                <div class="bg-amber-500 h-2 rounded-full" style="width: 65%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-slate-100 text-xs text-slate-600 leading-relaxed">
+            💡 <strong>에디터 최종 코멘트:</strong><br>
+            초역세권의 출퇴근 편리함과 수원시 행정구역 프리미엄을 원한다면 <strong>남광하우스토리</strong>가 제격이며, 신축의 쾌적함과 저렴한 분양가·아이 키우는 환경을 원한다면 <strong>봉담 우방아이유쉘</strong>이 유리합니다.
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer class="mt-12 py-6 border-t border-slate-200 text-center text-xs text-slate-400 no-print">
+    본 보고서는 법원경매 정보, 국토교통부 실거래가, 부동산 플랫폼 공시 데이터를 기반으로 산출된 투자 참고용 자료입니다.
+  </footer>
+
+  <!-- 차트 스크립트 -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const ctx = document.getElementById('priceComparisonChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['경매 최저가(2회)', '전세 시세(상한)', '감정평가액', '일반 매물호가', '최근 실거래가'],
+          datasets: [{
+            label: '가격 (단위: 만 원)',
+            data: [30380, 30000, 43400, 45500, 44900],
+            backgroundColor: [
+              'rgba(245, 158, 11, 0.85)', // 경매 최저가 (amber)
+              'rgba(148, 163, 184, 0.7)', // 전세 (slate)
+              'rgba(99, 102, 241, 0.7)',  // 감정가 (indigo)
+              'rgba(59, 130, 246, 0.7)',  // 매물호가 (blue)
+              'rgba(16, 185, 129, 0.85)'  // 실거래가 (emerald)
+            ],
+            borderColor: [
+              'rgb(245, 158, 11)',
+              'rgb(148, 163, 184)',
+              'rgb(99, 102, 241)',
+              'rgb(59, 130, 246)',
+              'rgb(16, 185, 129)'
+            ],
+            borderWidth: 1.5,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const val = context.raw;
+                  const eok = (val / 10000).toFixed(2);
+                  return `${context.dataset.label}: ${val.toLocaleString()}만 원 (${eok}억)`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              min: 20000,
+              max: 50000,
+              ticks: {
+                callback: function(value) {
+                  return (value / 10000) + '억';
+                }
+              }
+            }
+          }
+        }
+      });
+    });
+
+    // 📋 요약 복사 기능 (규칙 7 구현)
+    function copyAuctionSummary() {
+      const summaryText = `[경매 물건 분석 요약] 수원 오목천동 남광하우스토리 105동 1102호
+==================================================
+1. 사건 기본 정보
+- 사건번호: 수원지방법원 2025타경1691 (임의경매)
+- 매각기일: 2026.12.08(화) 10:00 (2회차 기일)
+- 대상부동산: 경기도 수원시 권선구 오목천동 962 남광하우스토리 105동 11층 1102호
+- 면적/층수: 전용 84.97㎡ (32평형) / 15층 중 11층 (남향 로얄층)
+
+2. 가격 및 안전마진
+- 감정평가액: 4억 3,400만 원 (100%)
+- 최저매각가: 3억 380만 원 (70%) / 보증금: 3,038만 원
+- 최근 실거래가: 4억 4,800만 ~ 4억 5,000만 원
+- 전세 시세: 2억 7,000만 ~ 3억 원
+- 확정 안전마진: 최근 실거래 대비 약 1억 4,420만 원 저렴 (-32.2%)
+
+3. 권리분석 및 명도
+- 말소기준권리: 2019.09.23 근저당권 (낙찰 시 모든 등기상 권리 소멸)
+- 임차인 현황: 대항력 있는 임차인 없음 (소유자 단독 점유)
+- 인수 권리: 0원 (100% 무하자 클린 물건, 인도명령 대상)
+
+4. 핵심 입지 및 호재
+- 수인분당선 오목천역 2번 출구 도보 4~5분(약 250m) 초역세권
+- 수원 오현초등학교 도보 5분 통학 안심 학세권
+- 바로 남측 효행지구(41.8만 평, 1.2만 세대) 도시개발 직접 수혜
+
+5. 추천 입찰가
+- 수익형(보수적): 3억 3,500만 ~ 3억 4,500만 원 (1억 마진 확보)
+- 낙찰우선형(실거주): 3억 5,800만 ~ 3억 6,500만 원 (시세 대비 8~9천만 저렴)`;
+
+      navigator.clipboard.writeText(summaryText).then(function() {
+        showToast("요약 보고서가 클립보드에 복사되었습니다! 카카오톡이나 메모장에 붙여넣기 하세요.");
+      }).catch(function(err) {
+        alert("클립보드 복사 중 오류가 발생했습니다. 수동으로 복사해주세요.");
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      const toastMsg = document.getElementById("toastMsg");
+      toastMsg.innerText = msg;
+      toast.classList.remove("hidden");
+      setTimeout(() => {
+        toast.classList.add("hidden");
+      }, 3500);
+    }
+  </script>
+</body>
+</html>

@@ -9,6 +9,7 @@ import os
 import sys
 import re
 import glob
+import shutil
 import warnings
 import logging
 
@@ -25,6 +26,27 @@ from openpyxl.worksheet.datavalidation import DataValidation
 MASTER_EXCEL = "경매_급매_통합관리장.xlsx"
 DIR_AUCTION = "01_경매매물"
 DIR_EXPRESS = "02_일반급매"
+DIR_AUCTION_DONE = os.path.join(DIR_AUCTION, "_완료")
+DIR_EXPRESS_DONE = os.path.join(DIR_EXPRESS, "_완료")
+
+
+def move_to_done(file_path, done_dir):
+    """
+    분석이 완료된 파일을 '_완료' 보관 폴더로 안전하게 이동
+    - 이미 동일한 파일명이 보관 폴더에 존재할 경우 덮어쓰기(갱신) 처리
+    - 에러 발생 시에도 전체 자동화 파이프라인이 멈추지 않도록 예외 처리
+    """
+    try:
+        os.makedirs(done_dir, exist_ok=True)
+        base_name = os.path.basename(file_path)
+        dest_path = os.path.join(done_dir, base_name)
+        if os.path.exists(dest_path):
+            os.remove(dest_path)
+        shutil.move(file_path, dest_path)
+        return True
+    except Exception as e:
+        print(f"    [보관 이동 실패] {os.path.basename(file_path)}: {e}")
+        return False
 
 # 팔레트 및 서식
 navy_dark = PatternFill(start_color="1B365D", end_color="1B365D", fill_type="solid")
@@ -288,16 +310,33 @@ def build_integrated_master():
     while ws_master.cell(row=current_row, column=3).value:
         current_row += 1
 
-    # 2. 경매 매물 스캔 (01_경매매물)
-    auction_files = glob.glob(os.path.join(DIR_AUCTION, "*.pdf"))
-    print(f"\n[1/2] '01_경매매물' 폴더 스캔: 총 {len(auction_files)}개 PDF 발견")
+    # 2. 경매 매물 스캔 (01_경매매물) - '_완료' 하위 폴더를 제외하고 신규 PDF 파일만 수집
+    os.makedirs(DIR_AUCTION, exist_ok=True)
+    os.makedirs(DIR_AUCTION_DONE, exist_ok=True)
+    auction_files = [
+        os.path.join(DIR_AUCTION, f) for f in os.listdir(DIR_AUCTION)
+        if os.path.isfile(os.path.join(DIR_AUCTION, f)) and f.lower().endswith(".pdf")
+    ]
+    print(f"\n[1/2] '01_경매매물' 폴더 스캔: 신규 대상 {len(auction_files)}개 PDF 발견")
     added_count = 0
 
     for f in auction_files:
         try:
+            fname = os.path.basename(f)
+            # 1단계 고속화: 파일명에서 사건번호 사전 추출 -> 이미 등록된 건은 무거운 PDF 열기 없이 즉시 보관함 이동
+            fname_case_match = re.search(r"(\d{4}\s*타경\s*\d+)", fname)
+            if fname_case_match:
+                quick_case = fname_case_match.group(1).replace(" ", "")
+                if quick_case in existing_keys:
+                    print(f"  - 이미 등록됨 (사전 필터링 건너뜀 -> '_완료' 이동): {quick_case}")
+                    move_to_done(f, DIR_AUCTION_DONE)
+                    continue
+
+            # 2단계: 신규 파일만 정밀 PDF 파싱 실행
             d = parse_auction_pdf(f)
             if d["case_no"] in existing_keys:
-                print(f"  - 이미 등록됨 (건너뜀): {d['case_no']}")
+                print(f"  - 이미 등록됨 (파싱 확인 후 '_완료' 이동): {d['case_no']}")
+                move_to_done(f, DIR_AUCTION_DONE)
                 continue
 
             formula_cost = f'=IF(B{current_row}="🏛️경매", Q{current_row}+N{current_row}+(Q{current_row}*0.011)+800000+(P{current_row}*0.004), Q{current_row}+N{current_row}+(Q{current_row}*0.011)+800000+(Q{current_row}*0.004)+(P{current_row}*0.004))'
@@ -341,20 +380,35 @@ def build_integrated_master():
             print(f"  + [신규 추가] {d['case_no']} | {d['location'][:25]}")
             current_row += 1
             added_count += 1
+
+            # 등록 완료 후 완료 보관 폴더로 이동하여 다음 실행 시 불필요한 스캔 방지
+            move_to_done(f, DIR_AUCTION_DONE)
         except Exception as e:
             print(f"  [경고] 파일 파싱 실패: {os.path.basename(f)} ({e})")
 
-    # 3. 일반 급매물 스캔 (02_일반급매)
-    express_files = glob.glob(os.path.join(DIR_EXPRESS, "*.*"))
-    print(f"\n[2/2] '02_일반급매' 폴더 스캔: 총 {len(express_files)}개 파일 발견")
+    # 3. 일반 급매물 스캔 (02_일반급매) - '_완료' 하위 폴더를 제외하고 신규 파일만 수집
+    os.makedirs(DIR_EXPRESS, exist_ok=True)
+    os.makedirs(DIR_EXPRESS_DONE, exist_ok=True)
+    express_files = [
+        os.path.join(DIR_EXPRESS, f) for f in os.listdir(DIR_EXPRESS)
+        if os.path.isfile(os.path.join(DIR_EXPRESS, f)) and (f.lower().endswith(".txt") or f.lower().endswith(".pdf"))
+    ]
+    print(f"\n[2/2] '02_일반급매' 폴더 스캔: 신규 대상 {len(express_files)}개 파일 발견")
 
     for f in express_files:
-        if not (f.endswith(".txt") or f.endswith(".pdf")):
-            continue
         try:
+            fname = os.path.basename(f).replace(".txt", "").replace(".pdf", "")
+            quick_case = f"급매-{fname[:12]}"
+            # 사전 필터링
+            if quick_case in existing_keys:
+                print(f"  - 이미 등록됨 (사전 필터링 건너뜀 -> '_완료' 이동): {quick_case}")
+                move_to_done(f, DIR_EXPRESS_DONE)
+                continue
+
             d = parse_express_file(f)
             if d["case_no"] in existing_keys:
-                print(f"  - 이미 등록됨 (건너뜀): {d['case_no']}")
+                print(f"  - 이미 등록됨 (파싱 확인 후 '_완료' 이동): {d['case_no']}")
+                move_to_done(f, DIR_EXPRESS_DONE)
                 continue
 
             formula_cost = f'=IF(B{current_row}="🏛️경매", Q{current_row}+N{current_row}+(Q{current_row}*0.011)+800000+(P{current_row}*0.004), Q{current_row}+N{current_row}+(Q{current_row}*0.011)+800000+(Q{current_row}*0.004)+(P{current_row}*0.004))'
@@ -398,6 +452,9 @@ def build_integrated_master():
             print(f"  + [신규 추가] {d['case_no']} | {d['location'][:25]}")
             current_row += 1
             added_count += 1
+
+            # 등록 완료 후 완료 보관 폴더로 이동하여 다음 실행 시 불필요한 스캔 방지
+            move_to_done(f, DIR_EXPRESS_DONE)
         except Exception as e:
             print(f"  [경고] 급매 파일 파싱 실패: {os.path.basename(f)} ({e})")
 
@@ -562,7 +619,9 @@ def build_integrated_master():
         wb.save(MASTER_EXCEL)
         print("\n=======================================================================")
         print(f"  [성공] 마스터 엑셀 갱신 완료: '{MASTER_EXCEL}'")
-        print(f"  - 새로 추가된 매물: {added_count}건 (기존 등록 건은 자동 유지)")
+        print(f"  - 신규 등록된 매물: {added_count}건")
+        print(f"  - 완료된 파일은 각 폴더 내 '_완료' 보관함으로 자동 격리되었습니다.")
+        print(f"  - 다음 실행 시에는 '_완료'를 건너뛰고 신규 파일만 초고속 스캔합니다.")
         print("=======================================================================\n")
         return added_count
     except PermissionError:
